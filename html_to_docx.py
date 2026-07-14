@@ -17,7 +17,7 @@ import copy
 
 BASE_DIR = Path("f:/Downloads/Antariksh_Task/LOC_CubeSat")
 HTML_FILE = BASE_DIR / "LOC_CubeSat_Report.html"
-OUT_FILE  = BASE_DIR / "LOC_CubeSat_Report.docx"
+OUT_FILE  = BASE_DIR / "LOC_CubeSat_Report_Final.docx"
 
 # ── Read HTML ─────────────────────────────────────────────────────────────────
 with open(HTML_FILE, "r", encoding="utf-8") as f:
