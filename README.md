@@ -292,7 +292,7 @@ The full TA-format report is in [`LOC_CubeSat_Report.html`](LOC_CubeSat_Report.h
 
 <div align="center">
 
-**Submit: 18 July 2026 · Eval: 19 July 2026 · No Extensions**  
+**Submit: 18 July 2026 
 *Team Antariksh · RVCE · LOC CubeSat Group Task*
 
 </div>
