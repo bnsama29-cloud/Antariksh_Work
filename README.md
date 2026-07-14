@@ -276,7 +276,7 @@ The full TA-format report is in [`LOC_CubeSat_Report.html`](LOC_CubeSat_Report.h
 - 9 real research paper references
 - 3 Fusion 360 CAD placeholders (auto-load when images are added)
 
-**To convert to PDF:** Open in Chrome → Ctrl+P → Save as PDF
+
 
 ---
 
