@@ -165,7 +165,10 @@ CONCLUSION: Better bioshield --> W. dermatitidis (CH-3) -- CHALLENGER WINS
 
 ## 🔌 Electronics Simulation (Wokwi — Arduino)
 
-The hardware control logic was validated using [Wokwi.com](https://wokwi.com) — a free online Arduino circuit simulator. The virtual circuit includes:
+The hardware control logic was validated using Wokwi — a free online Arduino circuit simulator.
+🔗 **[View and run the live simulation here](https://wokwi.com/projects/469545305911934977)**
+
+The virtual circuit includes:
 
 | Component | Pin | Role |
 |-----------|-----|------|
