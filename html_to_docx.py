@@ -441,7 +441,8 @@ add_para(doc, ("The South Atlantic Anomaly (SAA) is a region over South America 
                "elevated trapped proton flux. During ISS passes through the SAA — occurring approximately 6 "
                "times per 24-hour period — dose rates increase by a factor of 2-4x above the GCR background. "
                "Our simulation models SAA passages as Gaussian-shaped dose-rate spikes with peak values of "
-               "650-700 uGy/hr occurring every ~4 hours in the 48-hour simulation window."))
+               "650-700 uGy/hr occurring every ~4 hours in the 48-hour simulation window (a simplified uniform SAA "
+               "interval is assumed for the mathematical model)."))
 
 doc.add_page_break()
 

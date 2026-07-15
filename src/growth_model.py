@@ -31,10 +31,12 @@ K_CH3 = 1.0            # g/L
 
 N0    = 0.01           # g/L — inoculation density (same for both)
 
-# Valve modifier: nutrient restriction under high radiation (valve = OPEN means shielding open)
-# When valve OPEN → cell exposure is higher → we REDUCE nutrient → r_eff = 0.5 * r
-VALVE_OPEN_MODIFIER   = 0.5   # nutrient-limited growth during high-radiation event
-VALVE_CLOSED_MODIFIER = 1.0   # full nutrient supply
+# Valve modifier: nutrient flow control
+# Note: Typically, "OPEN" means nutrients flow. In our logic, state '1' means the high-radiation 
+# threshold is triggered (SAA). During these events, we RESTRICT nutrient flow to study stress response.
+# Therefore: State 1 (Triggered) = Valve Restricted; State 0 (Normal) = Valve Open
+VALVE_RESTRICTED_MODIFIER = 0.5   # nutrient-limited growth during high-radiation event (state = 1)
+VALVE_OPEN_MODIFIER       = 1.0   # full nutrient supply during normal conditions (state = 0)
 
 # OD600 calibration constant (empirical): OD600 ≈ kOD * N
 # Beer-Lambert: OD = log10(I0 / I_transmitted)
@@ -50,10 +52,10 @@ def get_modifier(t, strain="ch2"):
     idx = int(np.searchsorted(time_points, t, side="right") - 1)
     idx = max(0, min(idx, len(valve_arr) - 1))
     valve = valve_arr[idx]
-    if valve == 1:      # OPEN — high radiation event, nutrient valve restricted
+    if valve == 1:      # Triggered (High Radiation) - Nutrient Valve RESTRICTED
+        return VALVE_RESTRICTED_MODIFIER
+    else:               # Normal (Low Radiation) - Nutrient Valve OPEN
         return VALVE_OPEN_MODIFIER
-    else:
-        return VALVE_CLOSED_MODIFIER
 
 # ── ODE definition ────────────────────────────────────────────────────────────
 def logistic_ode(t, y, r, K, strain):
