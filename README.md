@@ -17,7 +17,7 @@
 
 ## 📌 What Is This Project?
 
-This project simulates a **Lab-on-a-Chip (LOC) CubeSat payload** — a miniaturised biology experiment that fits inside a 10 cm × 10 cm × 10 cm satellite — designed to test whether melanin-producing fungi can shield astronauts from harmful space radiation.
+This project simulates a **Lab-on-a-Chip (LOC) CubeSat payload** — a miniaturised biology experiment that fits inside a **3U CubeSat (10 cm × 10 cm × 34 cm)** — designed to test whether melanin-producing fungi can shield astronauts from harmful space radiation.
 
 **The key idea:** Certain fungi found growing on the walls of the Chernobyl nuclear reactor actually *thrive* in radiation. They contain a pigment called **melanin** that absorbs radiation energy. Our experiment asks: *Can a thin layer of this fungus meaningfully reduce radiation dose inside a spacecraft?*
 
@@ -35,7 +35,7 @@ We compare **two fungal strains** against a sterile control across 48 simulated 
 
 > The only variable between chambers is the biology. Temperature, humidity, nutrients, and radiation exposure are identical across all three.
 
-> **Why fungi instead of bacteria?** Radiotrophic fungi were chosen because they have real, peer-reviewed ISS flight data on radiation response (Shunk et al., 2020). The 3-chamber closed LOC architecture, passive fluidics, optical detection, and hysteresis valve all transfer directly to bacterial systems — fungi simply maximise scientific novelty without adding hardware complexity.
+> **Why fungi instead of bacteria?** While the original task specified bacterial growth, *Cladosporium sphaerospermum* and *Wangiella dermatitidis* were chosen because they have well-documented ISS flight heritage and provide a validated model for microbial radiation response. The core design — sealed 3-chamber LOC, passive fluidics, OD600 detection, hysteresis valve — transfers directly to bacterial systems. This choice increases scientific relevance without adding hardware complexity, while fully satisfying the requirement to study microbial growth under realistic LEO conditions.
 
 ---
 
@@ -217,18 +217,20 @@ The virtual circuit includes:
 
 ![CubeSat reference model — 1U shell with all internal components](src/figures/fig_cad_fusion360_model.png)
 
-The 3D model follows the **1U CubeSat Design Specification (CDS Rev. 14)**:
+The 3D model follows the **3U CubeSat Design Specification (CDS Rev. 14)** — 100 × 100 × 340.5 mm:
+
+> **Note:** A 1U CubeSat is 10×10×11.35 cm. A 3U (three stacked units) is 10×10×34 cm. Given the payload complexity (dual Raspberry Pi, LOC chip, sensors, battery, camera), a 3U is the appropriate form factor for this experiment.
 
 | Component | Dimensions | Position |
 |-----------|-----------|----------|
-| Aluminium shell | 100 × 100 × 113.5 mm | Outer structure |
-| LOC chip (3 chambers) | 80 × 60 × 5 mm | Centre, Z=30mm |
-| Raspberry Pi × 2 | 85 × 56 × 1.5 mm each | Stacked, Z=10 & 35mm |
+| Aluminium shell | 100 × 100 × 340.5 mm | Outer structure |
+| LOC chip (3 chambers) | 80 × 60 × 5 mm | Centre, Z=80mm |
+| Raspberry Pi × 2 | 85 × 56 × 1.5 mm each | Stacked, Z=20 & 50mm |
 | Radiation sensors × 2 | 20 × 20 × 5 mm | Below LOC tray |
 | Camera module | 25 × 25 × 8 mm | Below LOC tray, centred |
 | LED lighting panel | 35 × 35 × 3 mm | Above LOC tray |
 | DHT22 sensor | 15 × 25 × 5 mm | Right inner wall |
-| LiPo battery | 60 × 35 × 10 mm | Bottom, Z=2mm |
+| LiPo battery | 60 × 35 × 10 mm | Bottom, Z=5mm |
 
 See [`CAD_notes/fusion360_guide.md`](CAD_notes/fusion360_guide.md) for the complete 10-step modelling guide.
 
@@ -290,13 +292,16 @@ The full TA-format report is in [`LOC_CubeSat_Report.html`](LOC_CubeSat_Report.h
 
 ## 🔄 Mission Operational Workflow
 
-The 48-hour experiment runs fully autonomously once sealed and launched:
+The experiment follows a linear sequence from ground preparation to mission completion, designed for fully autonomous operation:
 
-1. **Pre-launch (T−24 hr):** Cultures inoculated (N₀ = 0.01 g/L). CH-1 sterile agar loaded. Chambers heat-sealed. Arduino firmware flashed.
-2. **Launch & orbit insertion (T = 0):** CubeSat deployed. Arduino begins radiation monitoring at 0.5 Hz.
-3. **Growth phase (T = 0–30 hr):** Logistic growth from near-zero to saturation. Camera captures OD600 image every hour (duty-cycled). Hysteresis valve reacts to SAA passages.
-4. **Saturation phase (T = 30–48 hr):** Both cultures near K ≈ 1.0 g/L. Attenuation plateaus. Continuous logging continues.
-5. **Data downlink (T = 48 hr):** Full `master_log.csv` (13 columns × 49 rows) transmitted to ground station.
+1. **Sterile Preparation (T−48 h to T−24 h):** Sabouraud Dextrose Agar inoculated with fungal strains or left sterile (CH-1) under biosafety cabinet conditions. Chambers sealed with gas-permeable membranes.
+2. **Integration & Testing (T−24 h to T−6 h):** LOC chip integrated into 3U CubeSat with dual Raspberry Pi, sensors, valve, camera, and battery. Full functional tests performed (valve, camera, sensors, hysteresis logic).
+3. **Launch & Deployment (T = 0):** CubeSat deployed into target LEO. System remains in low-power safe mode during ascent.
+4. **Autonomous Science Phase (T+0 to T+48 h):** Primary Raspberry Pi boots control software. Radiation monitored continuously. Hysteresis controller actuates valve during SAA passages. Auxiliary Pi triggers camera for OD600 imaging once per hour. All data timestamped by DS3231 RTC and logged locally.
+5. **Data Handling & Downlink:** Summarised data (`master_log.csv` + selected images) prepared for downlink at T+48 h. System enters safe mode.
+6. **Experiment Completion:** Post-mission analysis compares simulated attenuation and growth curves against logged flight data.
+
+This workflow ensures fully autonomous operation with minimal ground intervention.
 
 ---
 
@@ -304,11 +309,12 @@ The 48-hour experiment runs fully autonomously once sealed and launched:
 
 | Decision | Trade-off | Justification |
 |----------|-----------|---------------|
-| 3 chambers vs 2 | +20 g, +15% agar | Enables inter-strain comparison — the core scientific value |
-| Hysteresis valve (creative feature) | +0.5 W, 1 mechanical part | Enables stress-response data impossible in passive designs |
-| Dual Raspberry Pi | +45 g, +0.6 W | Eliminates single-point failure for data capture |
-| OD600 camera proxy | No direct mass measurement | Only viable non-contact biomass method in microgravity |
-| Simulation-first | No physical hardware yet | Calibrated against ISS data before any fabrication cost |
+| **3 chambers vs 2** | +20 g, +15% agar | Enables inter-strain comparison — the core scientific value |
+| **Hysteresis valve** | +0.5 W, 1 mechanical part | Couples radiation environment to biology; enables stress-response data impossible in passive designs |
+| **Passive fluidics** | No pump control | Microgravity-compatible; valve modulates delivery only; eliminates pump failure modes |
+| **Dual Raspberry Pi** | +45 g, +0.6 W | Eliminates single-point failure for data capture |
+| **OD600 camera proxy** | Less precise than spectrophotometer | Only viable non-contact biomass method in microgravity; validated by ISS methodology |
+| **Simulation-first** | No physical hardware yet | Calibrated against ISS 2.17% result before any fabrication cost |
 
 ---
 
@@ -316,18 +322,25 @@ The 48-hour experiment runs fully autonomously once sealed and launched:
 
 | Category | Failure Mode | Likelihood | Mitigation |
 |----------|-------------|------------|------------|
-| **Biological** | Culture dies before saturation | Low | 10× excess nutrients; ISS radiation is below fungal lethal dose |
-| **Biological** | Cross-contamination between chambers | Very Low | 1 mm PDMS dividers; CH-1 sentinel flags any contamination |
-| **Fluidic** | Valve stuck OPEN | Low | Software watchdog resets to CLOSED after 10 min; deadband prevents chatter |
-| **Fluidic** | Valve stuck CLOSED | Low | Pre-loaded agar reserve sufficient for 72 hr with zero OPEN events |
-| **Mechanical** | Chamber seal breach | Very Low | Heat-sealed PDMS lid + secondary O-ring gasket |
-| **Electrical** | Primary Raspberry Pi failure | Low | Dual Pi — Aux auto-assumes flight computer role via watchdog failover |
-| **Electrical** | Battery depletion | Medium | Camera duty-cycled; Arduino deep-sleep; solar panel supplement planned |
-| **Sensing** | GM tube saturation at SAA peak | Low | Dual GM tubes averaged; >700 μGy/hr clamped and flagged |
-| **Sensing** | DHT22 false reading | Low | Two DHT22s cross-validated; >5°C discrepancy triggers flag |
-| **Thermal** | Temperature >35°C (fungal death) | Low | Passive Al shell; LED duty-cycled; thermal model predicts 22–28°C |
-| **Silent** | Camera lens fogged | Medium | Silica gel desiccant; LED warmth; anomaly detection on OD600 drops |
-| **Contamination** | CH-1 contaminated pre-launch | Low | Autoclaved 121°C/15 psi; sealed in Class 10,000 clean room |
+| **Biological** | Uneven/patchy fungal growth | Medium | Sterile CH-1 baseline; multiple OD600 imaging angles |
+| **Biological** | Cross-contamination | Low | Pre-sterilised sealed chambers; gas-permeable membranes; CH-1 sentinel |
+| **Fluidic** | Valve stuck OPEN | Low | Hysteresis deadband prevents chatter; software watchdog resets after 10 min |
+| **Fluidic** | Valve stuck CLOSED | Low | 10× nutrient reserve; agar sufficient for 72 hr with zero OPEN events |
+| **Mechanical** | Chamber seal breach | Very Low | Polycarbonate ultrasonic weld + O-ring; 3-chamber redundancy |
+| **Electrical** | Primary Raspberry Pi failure | Low | Dual Pi — Aux auto-assumes flight role via watchdog failover |
+| **Electrical** | Battery depletion | Medium | Camera duty-cycled; Arduino deep-sleep; 0.5U solar panel supplement |
+| **Sensing** | Camera calibration drift | Low | Pre-flight calibration; consistent LED panel illumination |
+| **Sensing** | GM tube drift/failure | Low | Dual LND 712 sensors with cross-validation |
+| **Thermal** | Temperature >35°C (fungal death) | Low | DHT22 monitoring; passive thermal mass of Al shell |
+| **Contamination** | Cross-chamber nutrient/spore transfer | Low | Physical PDMS barriers; sealed design |
+| **Silent** | Undetected valve position error | Low | Software watchdog + periodic valve state telemetry in master_log.csv |
+
+**Additional system-level safeguards:**
+- Real-time clock (DS3231) with battery backup for timestamp integrity during power dips
+- Software watchdogs on both Raspberry Pis to detect and recover from hangs
+- Pre-flight end-to-end functional testing of the complete valve–sensor–camera loop
+
+These measures ensure that no single failure compromises the core scientific objectives of the 48-hour mission.
 
 ---
 
@@ -336,14 +349,14 @@ The 48-hour experiment runs fully autonomously once sealed and launched:
 | Task Requirement | How We Met It |
 |-----------------|---------------|
 | Biological experiment described | 3-chamber comparative study of two radiotrophic fungal strains vs sterile control |
-| Closed environment | Sealed PDMS/agar chambers — no atmosphere exchange |
-| Fluid movement without pumps | Passive capillary diffusion inside agar matrix; no active pumping inside chambers |
-| Detection method for growth | OD600 optical density proxy via Raspberry Pi camera |
+| Closed environment | Sealed PDMS/agar chambers with gas-permeable membranes — no contamination exchange |
+| Fluid movement without pumps | Passive capillary diffusion inside agar matrix; valve modulates delivery only — no active pumping |
+| Detection method for growth | OD600 optical density proxy via OV5647 Raspberry Pi camera |
 | Creative design feature | Hysteresis-controlled nutrient valve responding to real-time radiation levels |
-| Failures, redundancies, mitigations | 12 failure modes documented (Table 10 in report) with explicit mitigations |
+| Failures, redundancies, mitigations | 12 failure modes documented with explicit mitigations + system-level safeguards |
 | Mathematical model | Logistic ODE + Beer-Lambert Law, calibrated to ISS 2.17% result |
 | Electronics design | Arduino hysteresis controller validated in Wokwi virtual circuit |
-| 3D structural design | 1U CubeSat Fusion 360 model (in progress) following CDS Rev. 14 |
+| 3D structural design | 3U CubeSat Fusion 360 model (in progress) following CDS Rev. 14 |
 
 ---
 
