@@ -500,8 +500,8 @@ doc.add_page_break()
 # ══════════════════════════════════════════════════════════════════════════════
 add_h1(doc, "4. Hardware Architecture (Virtual Twin)")
 add_h2(doc, "4.1. CubeSat Form Factor & Payload Budget")
-add_para(doc, ("The payload is designed to the 1U CubeSat standard (CDS Rev. 14, Cal Poly SLO) with external "
-               "dimensions of 100 x 100 x 113.5 mm and a maximum mass of 1.33 kg. The structure uses aluminium "
+add_para(doc, ("The payload is designed to the 3U CubeSat standard (CDS Rev. 14, Cal Poly SLO) with external "
+               "dimensions of 100 x 100 x 340.5 mm and a maximum mass of 4.0 kg. The structure uses aluminium "
                "alloy 6061-T6 (density 2.70 g/cm³) for the main body, providing structural rigidity and passive "
                "radiation shielding from the shell wall."))
 

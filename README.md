@@ -215,7 +215,7 @@ The virtual circuit includes:
 
 ### Reference Layout
 
-![CubeSat reference model — 1U shell with all internal components](src/figures/fig_cad_fusion360_model.png)
+![CubeSat reference model — 3U shell with all internal components](src/figures/fig_cad_isometric.png)
 
 The 3D model follows the **3U CubeSat Design Specification (CDS Rev. 14)** — 100 × 100 × 340.5 mm:
 
