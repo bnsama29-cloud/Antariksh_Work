@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LOC CubeSat 3U — Interactive Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0f1e;
+      --panel: #0f1729;
+      --border: rgba(99,179,237,0.15);
+      --accent: #63b3ed;
+      --accent2: #9f7aea;
+      --green: #68d391;
+      --yellow: #f6e05e;
+      --red: #fc8181;
+      --pink: #f687b3;
+      --text: #e2e8f0;
+      --muted: #718096;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      grid-template-rows: 64px 1fr 120px;
+    }
+
+    /* ─── Header ─── */
+    header {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      background: rgba(15,23,41,0.95);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+    }
+    .logo { display: flex; align-items: center; gap: 12px; }
+    .logo-icon {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, #63b3ed, #9f7aea);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+    .logo h1 { font-size: 16px; font-weight: 700; letter-spacing: 0.5px; }
+    .logo span { font-size: 12px; color: var(--muted); display: block; }
+
+    .header-pills { display: flex; gap: 8px; }
+    .pill {
+      padding: 6px 14px; border-radius: 999px; font-size: 11px; font-weight: 600;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .pill.live { background: rgba(104,211,145,0.15); color: var(--green); border: 1px solid rgba(104,211,145,0.3); }
+    .pill.orbit { background: rgba(99,179,237,0.12); color: var(--accent); border: 1px solid var(--border); }
+    .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* ─── 3D Viewport ─── */
+    #viewport {
+      position: relative;
+      background: radial-gradient(ellipse at center, #0d1a35 0%, #060b18 100%);
+      overflow: hidden;
+    }
+    #three-canvas { display: block; width: 100%; height: 100%; }
+
+    /* View controls */
+    .view-controls {
+      position: absolute; top: 16px; left: 16px;
+      display: flex; gap: 8px; flex-direction: column;
+    }
+    .view-btn {
+      padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 600;
+      background: rgba(15,23,41,0.85); border: 1px solid var(--border);
+      color: var(--text); cursor: pointer; transition: all 0.2s;
+      backdrop-filter: blur(8px); white-space: nowrap;
+    }
+    .view-btn:hover, .view-btn.active {
+      background: rgba(99,179,237,0.2); border-color: var(--accent); color: var(--accent);
+    }
+
+    /* Inside button */
+    .inside-btn {
+      position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+      padding: 12px 28px; border-radius: 999px; font-size: 14px; font-weight: 700;
+      background: linear-gradient(135deg, #63b3ed, #9f7aea);
+      border: none; color: #fff; cursor: pointer;
+      transition: all 0.3s; box-shadow: 0 4px 24px rgba(99,179,237,0.35);
+      letter-spacing: 0.3px;
+    }
+    .inside-btn:hover { transform: translateX(-50%) scale(1.06); box-shadow: 0 8px 32px rgba(99,179,237,0.5); }
+
+    /* Tooltip */
+    #tooltip {
+      position: absolute; pointer-events: none;
+      background: rgba(10,15,30,0.95); border: 1px solid var(--accent);
+      border-radius: 10px; padding: 10px 14px; font-size: 12px;
+      max-width: 200px; display: none; backdrop-filter: blur(8px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
+    #tooltip h4 { color: var(--accent); font-size: 13px; margin-bottom: 4px; }
+    #tooltip p { color: var(--muted); line-height: 1.5; }
+
+    /* Axes HUD */
+    .axes-label {
+      position: absolute; bottom: 16px; right: 16px;
+      font-size: 11px; color: var(--muted); font-family: 'JetBrains Mono', monospace;
+      background: rgba(15,23,41,0.7); border: 1px solid var(--border);
+      border-radius: 8px; padding: 8px 12px; backdrop-filter: blur(8px);
+    }
+
+    /* ─── Right Panel ─── */
+    .side-panel {
+      background: var(--panel); border-left: 1px solid var(--border);
+      overflow-y: auto; display: flex; flex-direction: column; gap: 0;
+    }
+    .side-panel::-webkit-scrollbar { width: 4px; }
+    .side-panel::-webkit-scrollbar-track { background: transparent; }
+    .side-panel::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    .panel-section { padding: 16px; border-bottom: 1px solid var(--border); }
+    .panel-section h3 {
+      font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: 1.5px;
+      text-transform: uppercase; margin-bottom: 12px;
+    }
+
+    /* Component list */
+    .comp-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 10px; border-radius: 8px; cursor: pointer;
+      transition: all 0.2s; margin-bottom: 4px;
+      border: 1px solid transparent;
+    }
+    .comp-item:hover { background: rgba(99,179,237,0.08); border-color: var(--border); }
+    .comp-item.selected { background: rgba(99,179,237,0.12); border-color: rgba(99,179,237,0.4); }
+    .comp-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .comp-item .comp-info { flex: 1; }
+    .comp-item .comp-name { font-size: 12px; font-weight: 600; }
+    .comp-item .comp-sub { font-size: 10px; color: var(--muted); }
+    .comp-item .comp-badge {
+      font-size: 9px; font-weight: 700; padding: 2px 6px;
+      border-radius: 4px; background: rgba(255,255,255,0.06);
+    }
+    .vis-toggle {
+      width: 28px; height: 16px; background: rgba(255,255,255,0.1);
+      border-radius: 999px; cursor: pointer; position: relative;
+      transition: all 0.2s; flex-shrink: 0;
+    }
+    .vis-toggle.on { background: var(--accent); }
+    .vis-toggle::after {
+      content: ''; position: absolute; width: 12px; height: 12px;
+      border-radius: 50%; background: white; top: 2px; left: 2px;
+      transition: all 0.2s;
+    }
+    .vis-toggle.on::after { left: 14px; }
+
+    /* Telemetry cards */
+    .telem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .telem-card {
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      border-radius: 8px; padding: 10px;
+    }
+    .telem-card .t-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+    .telem-card .t-val { font-size: 18px; font-weight: 700; font-family: 'JetBrains Mono', monospace; margin: 4px 0; }
+    .telem-card .t-unit { font-size: 9px; color: var(--muted); }
+    .telem-card.green .t-val { color: var(--green); }
+    .telem-card.blue .t-val { color: var(--accent); }
+    .telem-card.yellow .t-val { color: var(--yellow); }
+    .telem-card.purple .t-val { color: var(--accent2); }
+
+    /* Mini chart */
+    .mini-chart { height: 48px; position: relative; margin-top: 4px; }
+    canvas.mini-chart-canvas { width: 100%; height: 100%; }
+
+    /* ─── Bottom Bar ─── */
+    .bottom-bar {
+      grid-column: 1 / -1;
+      background: rgba(15,23,41,0.95); border-top: 1px solid var(--border);
+      display: flex; align-items: center; gap: 0; overflow-x: auto;
+      padding: 0 16px;
+    }
+    .sim-tab {
+      padding: 0 20px; height: 100%; display: flex; align-items: center;
+      font-size: 12px; font-weight: 600; cursor: pointer; border-right: 1px solid var(--border);
+      color: var(--muted); transition: all 0.2s; white-space: nowrap;
+    }
+    .sim-tab:hover { color: var(--text); }
+    .sim-tab.active { color: var(--accent); background: rgba(99,179,237,0.07); }
+    .sim-content { flex: 1; padding: 0 24px; display: flex; align-items: center; gap: 24px; overflow: hidden; }
+    .sim-metric { display: flex; flex-direction: column; min-width: 80px; }
+    .sim-metric span:first-child { font-size: 10px; color: var(--muted); }
+    .sim-metric span:last-child { font-size: 14px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+    .sim-bar { flex: 1; }
+    .bar-outer { height: 6px; background: rgba(255,255,255,0.07); border-radius: 3px; overflow: hidden; position: relative; }
+    .bar-inner { height: 100%; border-radius: 3px; transition: width 1s ease; position: relative; overflow: hidden; }
+    .bar-inner::after {
+      content: ''; position: absolute; top: 0; left: -40%; width: 40%; height: 100%;
+      background: rgba(255,255,255,0.25); animation: shimmer 2s infinite;
+    }
+    @keyframes shimmer { 0%{left:-40%} 100%{left:140%} }
+  </style>
+</head>
+<body>
+
+<!-- ─── Header ─── -->
+<header>
+  <div class="logo">
+    <div class="logo-icon">🛰️</div>
+    <div>
+      <h1>LOC CubeSat 3U — Mission Dashboard</h1>
+      <span>Lab-on-Chip Radiation Biology Payload · Orbit LEO 400km</span>
+    </div>
+  </div>
+  <div class="header-pills">
+    <div class="pill live"><div class="dot"></div>TELEMETRY LIVE</div>
+    <div class="pill orbit">🌍 LEO 400 km</div>
+    <div class="pill orbit" id="clock-pill">--:--:-- UTC</div>
+  </div>
+</header>
+
+<!-- ─── 3D Viewport ─── -->
+<div id="viewport">
+  <canvas id="three-canvas"></canvas>
+
+  <div class="view-controls">
+    <button class="view-btn active" onclick="setView('iso')">⬡ Isometric</button>
+    <button class="view-btn" onclick="setView('front')">⬛ Front</button>
+    <button class="view-btn" onclick="setView('side')">◧ Section Cut</button>
+    <button class="view-btn" onclick="setView('top')">⊙ Top</button>
+    <button class="view-btn" onclick="toggleExplode()">💥 Explode</button>
+    <button class="view-btn" onclick="toggleRotate()">🔄 Auto-Rotate</button>
+  </div>
+
+  <button class="inside-btn" onclick="toggleInside()" id="inside-btn">👁 See What's Inside</button>
+
+  <div id="tooltip">
+    <h4 id="tt-name">Component</h4>
+    <p id="tt-desc">Description</p>
+  </div>
+
+  <div class="axes-label">
+    <div>X: 100mm · Y: 340.5mm · Z: 100mm</div>
+    <div style="margin-top:4px;color:#63b3ed">CubeSat 3U Standard</div>
+  </div>
+</div>
+
+<!-- ─── Right Panel ─── -->
+<div class="side-panel">
+
+  <div class="panel-section">
+    <h3>Payload Components</h3>
+    <div id="comp-list"></div>
+  </div>
+
+  <div class="panel-section">
+    <h3>Live Telemetry</h3>
+    <div class="telem-grid">
+      <div class="telem-card green">
+        <div class="t-label">Temp</div>
+        <div class="t-val" id="t-temp">23.4</div>
+        <div class="t-unit">°C · DHT22</div>
+      </div>
+      <div class="telem-card blue">
+        <div class="t-label">Humidity</div>
+        <div class="t-val" id="t-hum">61.2</div>
+        <div class="t-unit">% RH · DHT22</div>
+      </div>
+      <div class="telem-card yellow">
+        <div class="t-label">Radiation</div>
+        <div class="t-val" id="t-rad">482</div>
+        <div class="t-unit">μGy/hr · Geiger</div>
+      </div>
+      <div class="telem-card purple">
+        <div class="t-label">Battery</div>
+        <div class="t-val" id="t-bat">87</div>
+        <div class="t-unit">% · 18650</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel-section">
+    <h3>Valve State</h3>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+      <div id="valve-dot" style="width:12px;height:12px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)"></div>
+      <span id="valve-text" style="font-size:13px;font-weight:600">CLOSED — Normal Mode</span>
+    </div>
+    <div style="font-size:11px;color:var(--muted)">Threshold: 500 μGy/hr open · 350 μGy/hr close</div>
+  </div>
+
+  <div class="panel-section">
+    <h3>OD600 Biology Proxy</h3>
+    <div style="display:flex;gap:8px;flex-direction:column">
+      <div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+          <span style="font-size:11px">CH-1 Control Agar</span>
+          <span style="font-size:11px;font-family:'JetBrains Mono'" id="od1">0.42</span>
+        </div>
+        <div class="bar-outer"><div class="bar-inner" id="b1" style="width:42%;background:linear-gradient(90deg,#63b3ed,#9f7aea)"></div></div>
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+          <span style="font-size:11px">CH-2 C.sphaerospermum</span>
+          <span style="font-size:11px;font-family:'JetBrains Mono'" id="od2">0.67</span>
+        </div>
+        <div class="bar-outer"><div class="bar-inner" id="b2" style="width:67%;background:linear-gradient(90deg,#68d391,#38a169)"></div></div>
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+          <span style="font-size:11px">CH-3 W.dermatitidis</span>
+          <span style="font-size:11px;font-family:'JetBrains Mono'" id="od3">0.55</span>
+        </div>
+        <div class="bar-outer"><div class="bar-inner" id="b3" style="width:55%;background:linear-gradient(90deg,#f6ad55,#ed8936)"></div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ─── Bottom Simulation Bar ─── -->
+<div class="bottom-bar">
+  <div class="sim-tab active" onclick="switchSim('orbit')">🌍 Orbit Sim</div>
+  <div class="sim-tab" onclick="switchSim('power')">⚡ Power Budget</div>
+  <div class="sim-tab" onclick="switchSim('flux')">☢️ Radiation Flux</div>
+  <div class="sim-content" id="sim-content">
+    <!-- filled by JS -->
+  </div>
+</div>
+
+<!-- Three.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.134.0/examples/js/controls/OrbitControls.js"></script>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// THREE.JS SCENE SETUP
+// ═══════════════════════════════════════════════════════════
+const canvas = document.getElementById('three-canvas');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.2;
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
+camera.position.set(4, 5, 7);
+camera.lookAt(0, 1.5, 0);
+
+const controls = new THREE.OrbitControls(camera, canvas);
+controls.enableDamping = true;
+controls.dampingFactor = 0.06;
+controls.minDistance = 2;
+controls.maxDistance = 20;
+controls.target.set(0, 1.5, 0);
+
+// Resize
+function onResize() {
+  const vp = document.getElementById('viewport');
+  const w = vp.clientWidth, h = vp.clientHeight;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+}
+onResize();
+new ResizeObserver(onResize).observe(document.getElementById('viewport'));
+
+// ─── Lights ───
+scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
+dirLight.position.set(5, 10, 6);
+dirLight.castShadow = true;
+scene.add(dirLight);
+const fillLight = new THREE.PointLight(0x63b3ed, 1.5, 30);
+fillLight.position.set(-4, 2, 4);
+scene.add(fillLight);
+const rimLight = new THREE.PointLight(0x9f7aea, 0.8, 20);
+rimLight.position.set(4, 6, -4);
+scene.add(rimLight);
+
+// Stars
+(function(){
+  const geo = new THREE.BufferGeometry();
+  const N = 1200;
+  const pos = new Float32Array(N * 3);
+  for (let i = 0; i < N*3; i++) pos[i] = (Math.random()-0.5) * 150;
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  scene.add(new THREE.Points(geo, new THREE.PointsMaterial({color:0xffffff, size:0.12, transparent:true, opacity:0.6})));
+})();
+
+// ─── Materials ───
+const matAlum = new THREE.MeshStandardMaterial({ color: 0xc0c8d0, metalness:0.9, roughness:0.25 });
+const matAlumDark = new THREE.MeshStandardMaterial({ color: 0x8898a8, metalness:0.8, roughness:0.3 });
+const matPCB = new THREE.MeshStandardMaterial({ color: 0x2d6a4f, metalness:0.1, roughness:0.6 });
+const matPCBgold = new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness:0.9, roughness:0.1 });
+const matChip = new THREE.MeshStandardMaterial({ color: 0x1a1a2e, metalness:0.7, roughness:0.2 });
+const matClear = new THREE.MeshStandardMaterial({ color: 0xc8f0e0, transparent:true, opacity:0.35, roughness:0.05, metalness:0 });
+const matClearRim = new THREE.MeshStandardMaterial({ color: 0x88cfc0, transparent:true, opacity:0.5, roughness:0.1 });
+const matDHT = new THREE.MeshStandardMaterial({ color: 0xeeeeee, roughness:0.7 });
+const matDHTgrid = new THREE.MeshStandardMaterial({ color: 0xaaaaaa, roughness:0.8 });
+const matGeiger = new THREE.MeshStandardMaterial({ color: 0xcc4444, metalness:0.3, roughness:0.6 });
+const matGeigerPCB = new THREE.MeshStandardMaterial({ color: 0x224455, roughness:0.5 });
+const matCamera = new THREE.MeshStandardMaterial({ color: 0x1155cc, roughness:0.4, metalness:0.5 });
+const matCameraLens = new THREE.MeshStandardMaterial({ color: 0x080808, roughness:0, metalness:1 });
+const matBattery = new THREE.MeshStandardMaterial({ color: 0x111111, roughness:0.8 });
+const matLED = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xffffff, emissiveIntensity: 0.5, transparent: true, opacity: 0.8 });
+const matWire = (c) => new THREE.MeshStandardMaterial({ color: c, roughness: 0.9 });
+const matPanel = new THREE.MeshStandardMaterial({ color: 0x334455, roughness: 0.4 });
+
+// ─── Helper: Box ───
+function box(w,h,d, mat, x,y,z) {
+  const m = new THREE.Mesh(new THREE.BoxGeometry(w,h,d), mat);
+  m.position.set(x,y,z);
+  m.castShadow = true; m.receiveShadow = true;
+  return m;
+}
+
+// ═══════════════════════════════════════════════════════════
+// BUILD CUBESAT (matching fig_cad_section.png exactly)
+// ═══════════════════════════════════════════════════════════
+// Scale: 1 unit = 100mm → so CubeSat is 1 × 3.405 × 1
+
+const cubesat = new THREE.Group();
+scene.add(cubesat);
+
+// ─── Frame (4 corner rails) ───
+const RAIL_W = 0.085;
+const RAIL_H = 3.405;
+const railPositions = [
+  [ 0.46,  0, -0.46],
+  [-0.46,  0, -0.46],
+  [ 0.46,  0,  0.46],
+  [-0.46,  0,  0.46],
+];
+const railGroup = new THREE.Group();
+for (const [rx,_,rz] of railPositions) {
+  const r = box(RAIL_W, RAIL_H, RAIL_W, matAlum, rx, RAIL_H/2, rz);
+  railGroup.add(r);
+}
+// Horizontal crossbars at top/bottom/middle
+for (let y of [0.01, 3.395, 1.14, 2.27]) {
+  const b1 = box(1.0, RAIL_W, RAIL_W, matAlumDark, 0, y, 0.46);
+  const b2 = box(1.0, RAIL_W, RAIL_W, matAlumDark, 0, y, -0.46);
+  const b3 = box(RAIL_W, RAIL_W, 1.0, matAlumDark, 0.46, y, 0);
+  const b4 = box(RAIL_W, RAIL_W, 1.0, matAlumDark, -0.46, y, 0);
+  railGroup.add(b1,b2,b3,b4);
+}
+cubesat.add(railGroup);
+
+// ─── End Plates ───
+const topPlate = box(0.9, 0.04, 0.9, matAlum, 0, 3.38, 0);
+const botPlate = box(0.9, 0.04, 0.9, matAlum, 0, 0.02, 0);
+const plateGrp = new THREE.Group();
+plateGrp.add(topPlate, botPlate);
+cubesat.add(plateGrp);
+
+// ─── LED Lighting Panel (top) ───
+const ledPanel = box(0.82, 0.015, 0.82, matLED, 0, 3.34, 0);
+cubesat.add(ledPanel);
+// small LED spots
+for (let xi = -1; xi <= 1; xi++) for (let zi = -1; zi <= 1; zi++) {
+  const led = box(0.05, 0.01, 0.05, new THREE.MeshStandardMaterial({color:0xffffff,emissive:0xffffff,emissiveIntensity:2}), xi*0.25, 3.35, zi*0.25);
+  cubesat.add(led);
+}
+
+// ─── Raspberry Pi Zone (two boards stacked, ~Y=2.3-2.7) ───
+const piGrp = new THREE.Group();
+// PCB
+const pi1 = box(0.65, 0.015, 0.3, matPCB, 0, 2.7, 0.05);
+const pi2 = box(0.65, 0.015, 0.3, matPCB, 0, 2.5, 0.05);
+piGrp.add(pi1, pi2);
+// chips on pi1
+for (let i = -1; i <=1; i++) { piGrp.add(box(0.07,0.02,0.07, matChip, i*0.15, 2.72, 0.05)); }
+// header pins (gold)
+piGrp.add(box(0.22,0.03,0.04, matPCBgold, -0.22, 2.715, -0.06));
+piGrp.add(box(0.22,0.03,0.04, matPCBgold, -0.22, 2.515, -0.06));
+// USB ports
+piGrp.add(box(0.06,0.025,0.05, matAlum, 0.28, 2.715, -0.1));
+piGrp.add(box(0.06,0.025,0.05, matAlum, 0.21, 2.715, -0.1));
+// Chips on pi2
+for (let i = -1; i <=1; i++) { piGrp.add(box(0.06,0.02,0.06, matChip, i*0.14, 2.52, 0.05)); }
+// Mounting standoffs
+for (const [sx,sz] of [[-0.28,0.12],[0.28,0.12],[-0.28,-0.1],[0.28,-0.1]]) {
+  piGrp.add(box(0.025,0.18,0.025, matAlum, sx, 2.61, sz));
+}
+// Rainbow ribbon cable
+for (let ci = 0; ci < 8; ci++) {
+  const colors = [0xff0000,0xff6600,0xffff00,0x00ff00,0x0066ff,0x6600ff,0xff00ff,0xffffff];
+  const wm = box(0.012, 0.6, 0.012, new THREE.MeshStandardMaterial({color:colors[ci],roughness:0.9}), -0.3 + ci*0.04, 2.1, 0.12);
+  piGrp.add(wm);
+}
+cubesat.add(piGrp);
+
+// ─── Tray shelf between Raspberry Pi and LOC chip ───
+cubesat.add(box(0.85, 0.018, 0.85, matAlumDark, 0, 2.36, 0));
+
+// ─── LOC Biology Tray (3-chamber, ~Y=1.7-2.1) ───
+const locGrp = new THREE.Group();
+// outer dish base (ellipse-like)
+const dishGeo = new THREE.CylinderGeometry(0.35, 0.35, 0.04, 48);
+const dish = new THREE.Mesh(dishGeo, matClearRim);
+dish.position.set(0, 1.88, 0);
+locGrp.add(dish);
+// inner contents (slightly smaller, tinted)
+const innerDish = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.03, 48), new THREE.MeshStandardMaterial({color:0xd4f5e9, transparent:true, opacity:0.5}));
+innerDish.position.set(0, 1.9, 0);
+locGrp.add(innerDish);
+// divider walls (2 vertical plates inside dish)
+locGrp.add(box(0.01, 0.06, 0.6, matClearRim, -0.14, 1.91, 0));
+locGrp.add(box(0.01, 0.06, 0.6, matClearRim,  0.14, 1.91, 0));
+// Chamber labels (use tiny colored tabs)
+locGrp.add(box(0.05, 0.015, 0.05, new THREE.MeshStandardMaterial({color:0xcccccc}), -0.22, 1.92, 0.18));
+locGrp.add(box(0.05, 0.015, 0.05, new THREE.MeshStandardMaterial({color:0x68d391}), 0, 1.92, 0.18));
+locGrp.add(box(0.05, 0.015, 0.05, new THREE.MeshStandardMaterial({color:0xf6ad55}), 0.22, 1.92, 0.18));
+// Tray mount plate
+locGrp.add(box(0.82, 0.015, 0.82, matAlumDark, 0, 1.84, 0));
+cubesat.add(locGrp);
+
+// ─── Tray shelf below LOC ───
+cubesat.add(box(0.85, 0.018, 0.85, matAlumDark, 0, 1.6, 0));
+
+// ─── DHT22 Sensor (left wall, ~Y=2.0) ───
+const dhtGrp = new THREE.Group();
+dhtGrp.add(box(0.04, 0.2, 0.18, matDHT, -0.42, 2.0, 0));
+// grid holes (simulated)
+for (let row = -2; row <= 2; row++) for (let col = -2; col <= 2; col++) {
+  dhtGrp.add(box(0.005, 0.022, 0.022, matDHTgrid, -0.405, 2.0 + row*0.03, col*0.03));
+}
+// pins
+for (let p = -1; p <= 1; p++) {
+  dhtGrp.add(box(0.008, 0.06, 0.008, matPCBgold, -0.41 + p*0.015, 1.88, 0));
+}
+cubesat.add(dhtGrp);
+
+// ─── Radiation Sensors / Geiger (Y=1.25) ───
+const geigerGrp = new THREE.Group();
+// PCB base
+geigerGrp.add(box(0.22, 0.015, 0.22, matGeigerPCB, 0.08, 1.4, -0.1));
+// Pink sensor modules (matching the fig_cad_section.png)
+geigerGrp.add(box(0.08, 0.06, 0.08, new THREE.MeshStandardMaterial({color:0xe879f9,roughness:0.5}), 0.03, 1.43, -0.1));
+geigerGrp.add(box(0.08, 0.06, 0.08, new THREE.MeshStandardMaterial({color:0xe879f9,roughness:0.5}), 0.14, 1.43, -0.1));
+// Tube (geiger tube cylinder)
+const tubeGeo = new THREE.CylinderGeometry(0.025, 0.025, 0.18, 16);
+const tube = new THREE.Mesh(tubeGeo, matGeiger);
+tube.rotation.z = Math.PI/2;
+tube.position.set(0.08, 1.47, -0.05);
+geigerGrp.add(tube);
+cubesat.add(geigerGrp);
+
+// ─── Camera Module (Y=1.0, blue, ~matching the blue box in fig) ───
+const camGrp = new THREE.Group();
+camGrp.add(box(0.2, 0.16, 0.2, matCamera, 0, 1.08, 0.05));
+// Lens
+const lens = new THREE.Mesh(new THREE.CylinderGeometry(0.04,0.04,0.04,32), matCameraLens);
+lens.position.set(0, 1.18, 0.05);
+camGrp.add(lens);
+// Ribbon
+camGrp.add(box(0.015, 0.3, 0.12, new THREE.MeshStandardMaterial({color:0xddddcc,roughness:0.8}), 0.1, 1.22, 0));
+cubesat.add(camGrp);
+
+// ─── 18650 Battery Pack (bottom, ~Y=0.3) ───
+const batGrp = new THREE.Group();
+batGrp.add(box(0.78, 0.55, 0.78, matBattery, 0, 0.33, 0));
+// battery cells (barely visible inside)
+for (let bi = -1; bi <= 1; bi++) {
+  batGrp.add(box(0.16, 0.5, 0.16, new THREE.MeshStandardMaterial({color:0x222222,metalness:0.6,roughness:0.3}), bi*0.22, 0.33, 0));
+}
+// positive terminals
+for (let bi = -1; bi <= 1; bi++) {
+  batGrp.add(box(0.06, 0.01, 0.06, matPCBgold, bi*0.22, 0.59, 0));
+}
+cubesat.add(batGrp);
+
+// ─── Wiring (rainbow ribbon cables along the side) ───
+const wireColors = [0xff2200, 0xff8800, 0xffee00, 0x00dd44, 0x2288ff, 0x8844ff, 0xff44aa, 0xffffff];
+for (let i = 0; i < wireColors.length; i++) {
+  cubesat.add(box(0.012, 2.8, 0.012, new THREE.MeshStandardMaterial({color:wireColors[i],roughness:0.9}), -0.35, 1.5, 0.4));
+}
+
+// ═══════════════════════════════════════════════════════════
+// COMPONENT REGISTRY (for panel + tooltip)
+// ═══════════════════════════════════════════════════════════
+const components = [
+  { name: 'LED Lighting Panel', sub: 'Top · White LED Array', color: '#f6e05e', obj: ledPanel, badge:'ILLUM', desc:'Provides controlled illumination for the OD600 camera readings of all 3 biology chambers.' },
+  { name: 'Raspberry Pi Zero W ×2', sub: 'OBC · Dual Stack', color: '#68d391', obj: piGrp, badge:'OBC', desc:'Dual-board On-Board Computer. Primary board runs sensor polling; secondary runs image capture at 2 fps.' },
+  { name: 'LOC Biology Tray', sub: '3-Chamber Microfluidic Chip', color: '#63b3ed', obj: locGrp, badge:'BIO', desc:'3-chamber Lab-on-Chip tray: CH-1 Control Agar, CH-2 C.sphaerospermum, CH-3 W.dermatitidis.' },
+  { name: 'DHT22 Sensor', sub: 'Left Wall · Temp + Humidity', color: '#9f7aea', obj: dhtGrp, badge:'ENV', desc:'Monitors internal temperature (±0.5°C) and humidity (±2–5% RH) to validate biosample conditions.' },
+  { name: 'Geiger Counter SBM-20', sub: 'Radiation Sensors ×2', color: '#f687b3', obj: geigerGrp, badge:'RAD', desc:'Two Geiger-Müller tubes measure ionising radiation flux (μGy/hr). Drives the hysteresis valve logic.' },
+  { name: 'Camera Module V2', sub: 'OV5647 · 5MP', color: '#4299e1', obj: camGrp, badge:'IMG', desc:'Raspberry Pi Camera V2 (OV5647) mounted pointing upward at the LOC tray for OD600 proxy measurements.' },
+  { name: '18650 Battery Pack', sub: 'LiPo · 3S2P · Bottom', color: '#68d391', obj: batGrp, badge:'PWR', desc:'3S2P lithium-ion 18650 pack (~14.8V, 5200mAh). Provides all payload power via the EPS bus.' },
+  { name: 'Aluminum Frame', sub: '3U CubeSat Rail Structure', color: '#a0aec0', obj: railGroup, badge:'STR', desc:'6061-T6 aluminium rails and end plates conforming to CubeSat Design Spec (CDS) Rev 13. 100×100×340.5mm.' },
+];
+
+// Build component panel
+const compList = document.getElementById('comp-list');
+let selectedComp = null;
+components.forEach((c, i) => {
+  const div = document.createElement('div');
+  div.className = 'comp-item';
+  div.innerHTML = `
+    <div class="comp-dot" style="background:${c.color}"></div>
+    <div class="comp-info">
+      <div class="comp-name">${c.name}</div>
+      <div class="comp-sub">${c.sub}</div>
+    </div>
+    <div class="comp-badge">${c.badge}</div>
+    <div class="vis-toggle on" data-idx="${i}"></div>
+  `;
+  div.addEventListener('click', (e) => {
+    if (e.target.classList.contains('vis-toggle')) return;
+    document.querySelectorAll('.comp-item').forEach(el => el.classList.remove('selected'));
+    div.classList.add('selected');
+    highlightComponent(c.obj, c.name, c.desc);
+  });
+  div.querySelector('.vis-toggle').addEventListener('click', (e) => {
+    const tog = e.currentTarget;
+    tog.classList.toggle('on');
+    c.obj.visible = tog.classList.contains('on');
+  });
+  compList.appendChild(div);
+});
+
+// ─── Highlight ───
+let origEmissives = new Map();
+function highlightComponent(obj, name, desc) {
+  // Reset all
+  components.forEach(c => {
+    c.obj.traverse(m => { if(m.isMesh && m.material) { m.material.emissiveIntensity = m.material._origEI ?? 0; }});
+  });
+  // Highlight chosen
+  obj.traverse(m => {
+    if (m.isMesh && m.material) {
+      m.material._origEI = m.material._origEI ?? 0;
+      m.material.emissive = new THREE.Color(0x63b3ed);
+      m.material.emissiveIntensity = 0.4;
+    }
+  });
+  // Camera fly-to
+  const box3 = new THREE.Box3().setFromObject(obj);
+  const center = new THREE.Vector3();
+  box3.getCenter(center);
+  controls.target.copy(center);
+}
+
+// ─── Tooltip on hover ───
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+const tooltip = document.getElementById('tooltip');
+
+canvas.addEventListener('mousemove', (e) => {
+  const rect = canvas.getBoundingClientRect();
+  mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+  mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+  raycaster.setFromCamera(mouse, camera);
+  const allMeshes = [];
+  components.forEach(c => c.obj.traverse(m => { if(m.isMesh) { m.userData.compIdx = components.indexOf(c); allMeshes.push(m); } }));
+  const hits = raycaster.intersectObjects(allMeshes);
+  if (hits.length) {
+    const idx = hits[0].object.userData.compIdx;
+    if (idx !== undefined) {
+      const c = components[idx];
+      document.getElementById('tt-name').textContent = c.name;
+      document.getElementById('tt-desc').textContent = c.desc;
+      tooltip.style.display = 'block';
+      tooltip.style.left = (e.clientX - canvas.getBoundingClientRect().left + 16) + 'px';
+      tooltip.style.top = (e.clientY - canvas.getBoundingClientRect().top + 16) + 'px';
+      return;
+    }
+  }
+  tooltip.style.display = 'none';
+});
+
+// ═══════════════════════════════════════════════════════════
+// VIEWS
+// ═══════════════════════════════════════════════════════════
+let autoRotate = false;
+let isExploded = false;
+let isInside = false;
+const EXPLODE_TARGETS = [
+  { obj: plateGrp, origY: 0, explodeY: 1.8 },
+  { obj: ledPanel, origY: 0, explodeY: 1.6 },
+  { obj: piGrp, origY: 0, explodeY: 1.1 },
+  { obj: locGrp, origY: 0, explodeY: 0.5 },
+  { obj: geigerGrp, origY: 0, explodeY: -0.3 },
+  { obj: camGrp, origY: 0, explodeY: -0.7 },
+  { obj: batGrp, origY: 0, explodeY: -1.2 },
+];
+EXPLODE_TARGETS.forEach(e => { e.origY = e.obj.position.y; });
+
+function lerpObj(obj, targetY, t) {
+  obj.position.y += (targetY - obj.position.y) * t;
+}
+
+function toggleExplode() {
+  isExploded = !isExploded;
+  // rails expand outward when exploded
+  railGroup.children.forEach(rail => { rail.userData.explode = isExploded; });
+}
+
+function toggleRotate() {
+  autoRotate = !autoRotate;
+  document.querySelectorAll('.view-btn').forEach(b => { if(b.textContent.includes('Rotate')) b.classList.toggle('active', autoRotate); });
+}
+
+let sectionMode = false;
+function setView(v) {
+  document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  sectionMode = false;
+  cubesat.rotation.y = 0;
+  switch(v) {
+    case 'iso':   animCam(4, 5, 7); break;
+    case 'front': animCam(0, 1.7, 8); break;
+    case 'side':  animCam(8, 1.7, 0); sectionMode = true; break;
+    case 'top':   animCam(0, 10, 0.01); break;
+  }
+}
+
+function animCam(tx, ty, tz) {
+  const start = camera.position.clone();
+  const end = new THREE.Vector3(tx, ty, tz);
+  let t = 0;
+  function step() { t += 0.035; camera.position.lerpVectors(start, end, Math.min(t, 1)); if(t < 1) requestAnimationFrame(step); }
+  step();
+}
+
+// Inside/outside toggle
+function toggleInside() {
+  isInside = !isInside;
+  document.getElementById('inside-btn').textContent = isInside ? '🔒 Show Exterior' : '👁 See What\'s Inside';
+  // Make the frame walls translucent or solid
+  railGroup.traverse(m => {
+    if (m.isMesh) {
+      m.material.transparent = isInside;
+      m.material.opacity = isInside ? 0.18 : 1.0;
+    }
+  });
+  plateGrp.traverse(m => {
+    if (m.isMesh) {
+      m.material.transparent = isInside;
+      m.material.opacity = isInside ? 0.15 : 1.0;
+    }
+  });
+  if (isInside) { animCam(3.5, 3.5, 5); }
+  else { animCam(4, 5, 7); }
+}
+
+// ═══════════════════════════════════════════════════════════
+// BOTTOM SIM BAR
+// ═══════════════════════════════════════════════════════════
+function switchSim(id) {
+  document.querySelectorAll('.sim-tab').forEach(t => t.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  const c = document.getElementById('sim-content');
+  if (id === 'orbit') {
+    c.innerHTML = `
+      <div class="sim-metric"><span>Altitude</span><span style="color:#63b3ed">400 km</span></div>
+      <div class="sim-metric"><span>Velocity</span><span style="color:#68d391">7.67 km/s</span></div>
+      <div class="sim-metric"><span>Period</span><span style="color:#9f7aea">92.6 min</span></div>
+      <div class="sim-metric"><span>Inclination</span><span style="color:#f6e05e">51.6°</span></div>
+      <div class="sim-bar"><div style="font-size:10px;color:#718096;margin-bottom:4px">SAA Exposure Window</div>
+        <div class="bar-outer"><div class="bar-inner" id="saa-bar" style="width:35%;background:linear-gradient(90deg,#f6ad55,#fc8181)"></div></div></div>`;
+  } else if (id === 'power') {
+    c.innerHTML = `
+      <div class="sim-metric"><span>Solar Input</span><span style="color:#f6e05e">+2.8W</span></div>
+      <div class="sim-metric"><span>OBC Draw</span><span style="color:#fc8181">-0.8W</span></div>
+      <div class="sim-metric"><span>Sensors</span><span style="color:#fc8181">-0.3W</span></div>
+      <div class="sim-metric"><span>Camera</span><span style="color:#fc8181">-0.5W</span></div>
+      <div class="sim-metric"><span>Net</span><span style="color:#68d391">+1.2W</span></div>
+      <div class="sim-bar"><div style="font-size:10px;color:#718096;margin-bottom:4px">Battery State of Charge</div>
+        <div class="bar-outer"><div class="bar-inner" id="bat-bar" style="width:87%;background:linear-gradient(90deg,#68d391,#38a169)"></div></div></div>`;
+  } else {
+    c.innerHTML = `
+      <div class="sim-metric"><span>GCR Baseline</span><span style="color:#63b3ed">200 μGy/hr</span></div>
+      <div class="sim-metric"><span>SAA Peak</span><span style="color:#fc8181">672 μGy/hr</span></div>
+      <div class="sim-metric"><span>Current</span><span style="color:#f6e05e" id="sim-rad">482 μGy/hr</span></div>
+      <div class="sim-metric"><span>Valve</span><span style="color:#68d391" id="sim-valve">CLOSED</span></div>
+      <div class="sim-bar"><div style="font-size:10px;color:#718096;margin-bottom:4px">Flux Level vs Threshold</div>
+        <div class="bar-outer"><div class="bar-inner" id="rad-bar" style="width:65%;background:linear-gradient(90deg,#9f7aea,#e879f9)"></div></div></div>`;
+  }
+}
+switchSim('orbit');
+
+// ═══════════════════════════════════════════════════════════
+// LIVE TELEMETRY SIMULATION
+// ═══════════════════════════════════════════════════════════
+let rad = 482, radDir = 1;
+let time = 0;
+function updateTelemetry() {
+  time++;
+  // Radiation oscillates with SAA pass
+  rad += radDir * (1.5 + Math.random() * 3);
+  if (rad > 670) radDir = -1;
+  if (rad < 200) radDir = 1;
+  // Valve logic
+  const valve = rad > 500;
+  document.getElementById('valve-dot').style.background = valve ? 'var(--red)' : 'var(--green)';
+  document.getElementById('valve-dot').style.boxShadow = `0 0 10px ${valve ? 'var(--red)' : 'var(--green)'}`;
+  document.getElementById('valve-text').textContent = valve ? 'OPEN — SAA Pass Mode' : 'CLOSED — Normal Mode';
+  // Temp/hum drift
+  const temp = (23.4 + Math.sin(time/40)*2.1).toFixed(1);
+  const hum = (61.2 + Math.sin(time/30)*4).toFixed(1);
+  const bat = Math.max(75, (87 - time*0.01)).toFixed(0);
+  document.getElementById('t-temp').textContent = temp;
+  document.getElementById('t-hum').textContent = hum;
+  document.getElementById('t-rad').textContent = rad.toFixed(0);
+  document.getElementById('t-bat').textContent = bat;
+  // OD600 growth
+  const od1 = Math.min(0.99, 0.42 + time*0.0002).toFixed(2);
+  const od2 = Math.min(0.99, 0.67 + time*0.0004).toFixed(2);
+  const od3 = Math.min(0.99, 0.55 + time*0.0003).toFixed(2);
+  document.getElementById('od1').textContent = od1;
+  document.getElementById('od2').textContent = od2;
+  document.getElementById('od3').textContent = od3;
+  document.getElementById('b1').style.width = (od1*100)+'%';
+  document.getElementById('b2').style.width = (od2*100)+'%';
+  document.getElementById('b3').style.width = (od3*100)+'%';
+  // Sim bar rad
+  const rEl = document.getElementById('sim-rad');
+  if (rEl) { rEl.textContent = rad.toFixed(0)+' μGy/hr'; rEl.style.color = valve ? '#fc8181' : '#f6e05e'; }
+  const vEl = document.getElementById('sim-valve');
+  if (vEl) { vEl.textContent = valve ? 'OPEN' : 'CLOSED'; vEl.style.color = valve ? '#fc8181' : '#68d391'; }
+  const rbEl = document.getElementById('rad-bar');
+  if (rbEl) rbEl.style.width = Math.min(100,(rad/670*100)).toFixed(1)+'%';
+  // SAA bar
+  const saaEl = document.getElementById('saa-bar');
+  if (saaEl) { const p = Math.max(0,Math.min(100,(rad-200)/470*100)); saaEl.style.width = p.toFixed(1)+'%'; }
+}
+setInterval(updateTelemetry, 600);
+
+// Clock
+setInterval(() => {
+  const now = new Date();
+  document.getElementById('clock-pill').textContent = now.toISOString().slice(11,19) + ' UTC';
+}, 1000);
+
+// ═══════════════════════════════════════════════════════════
+// ANIMATE
+// ═══════════════════════════════════════════════════════════
+let clock = new THREE.Clock();
+function animate() {
+  requestAnimationFrame(animate);
+  const dt = clock.getDelta();
+  if (autoRotate) cubesat.rotation.y += dt * 0.4;
+
+  // Explode lerp
+  EXPLODE_TARGETS.forEach(e => {
+    const ty = isExploded ? e.origY + e.explodeY : e.origY;
+    lerpObj(e.obj, ty, 0.06);
+  });
+
+  // Rail glow when inside mode
+  if (isInside) {
+    fillLight.intensity = 2.5 + Math.sin(clock.getElapsedTime()*2) * 0.5;
+  } else {
+    fillLight.intensity = 1.5;
+  }
+
+  controls.update();
+  renderer.render(scene, camera);
+}
+animate();
+</script>
+</body>
+</html>
