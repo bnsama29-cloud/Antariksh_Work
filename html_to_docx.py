@@ -402,8 +402,8 @@ add_para(doc, ("The simulation pipeline comprises six Python modules — a synth
                "a hysteresis control system, a logistic growth ODE solver, a Beer-Lambert attenuation model, an "
                "integration engine, and a dashboard visualisation system. An electronics simulation was additionally "
                "implemented using the Wokwi platform (Arduino Uno), validating the hardware control logic in a "
-               "virtual circuit environment. The 3D structural model is designed in Autodesk Fusion 360 to the 1U "
-               "CubeSat standard (100 x 100 x 113.5 mm)."))
+               "virtual circuit environment. The 3D structural model is designed in Autodesk Fusion 360 to the 3U "
+               "CubeSat standard (100 x 100 x 340.5 mm)."))
 add_para(doc, ("Simulation results confirm that C. sphaerospermum (CH-2) achieves 2.169% peak attenuation, "
                "validating the model against the ISS experimental reference. The challenger strain W. dermatitidis "
                "(CH-3) achieves 2.593% peak attenuation — exceeding the baseline by 19.6% — owing to its higher "
@@ -432,7 +432,7 @@ add_para(doc, ("The primary radiation sources in LEO are Galactic Cosmic Rays (G
                "particles, which are biologically highly damaging due to their large ionisation cross-sections."))
 add_para(doc, ("At 400 km, the geomagnetic field provides partial shielding from lower-energy GCR particles, "
                "but offers minimal protection from HZE nuclei, which are the primary concern for long-duration "
-               "biological experiments. The 1U aluminium CubeSat wall (1.5 mm, 6061 alloy) provides an "
+               "biological experiments. The 3U aluminium CubeSat wall (1.5 mm, 6061 alloy) provides an "
                "additional ~0.4 g/cm squared areal density of passive shielding."))
 
 add_h2(doc, "2.3. South Atlantic Anomaly")
