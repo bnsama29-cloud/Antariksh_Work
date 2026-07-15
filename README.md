@@ -131,6 +131,7 @@ CONCLUSION: Better bioshield --> W. dermatitidis (CH-3) -- CHALLENGER WINS
 
 ---
 
+
 ## 📈 Simulation Figures
 
 ### Fig 1 — LEO Radiation Flux Profile & Hysteresis Valve State
@@ -140,49 +141,49 @@ CONCLUSION: Better bioshield --> W. dermatitidis (CH-3) -- CHALLENGER WINS
 
 ---
 
-### Fig 2 — Fungal Biomass Growth (Logistic S-Curve)
-> Both strains grow from near-zero to full saturation over ~30 hours. The characteristic S-shape (slow start → rapid growth → plateau) is the logistic curve, matching real fungal growth behaviour.
-
-![Fig 2: Logistic growth curves for both strains](src/figures/fig2_growth_curves.png)
-
----
-
-### Fig 3 — Radiation Attenuation Comparison ← The Main Result
-> CH-3 (*W. dermatitidis*) consistently attenuates more radiation than CH-2. The ISS reference line (2.17%) confirms our model is correctly calibrated. The shaded area shows CH-3's advantage.
-
-![Fig 3: Attenuation comparison with ISS reference line](src/figures/fig3_attenuation.png)
-
----
-
-### Fig 4 — OD600 Camera Proxy (What the Camera Sees)
-> OD600 (Optical Density at 600 nm wavelength) is a standard measure of how cloudy a culture is — cloudier = more biomass. The auxiliary Raspberry Pi camera tracks this as a proxy for growth.
-
-![Fig 4: OD600 optical density proxy over time](src/figures/fig4_od600_proxy.png)
-
----
-
-### Fig 5 - Power Budget Feasibility
-> A critical engineering requirement. This simulation models the continuous duty-cycled average draw (387 mW) against the 0.5U solar panel generation (~750 mW during sunlit phases). The net positive generation keeps the 6.66 Wh battery at maximum capacity for the full 48-hour mission.
-
-![Fig 5: Power Budget](src/figures/fig5_power_budget.png)
-
----
-
-### Fig 6 - Valve State Timeline
+### Fig 2 - Valve State Timeline
 > A discrete step-plot showing the precise timing and duration of the 11 hysteresis valve actuations during South Atlantic Anomaly passes.
 
-![Fig 6: Valve Timeline](src/figures/fig6_valve_timeline.png)
+![Fig 2: Valve Timeline](src/figures/fig6_valve_timeline.png)
 
 ---
 
-### Fig 7 - OD600 Correlation
+### Fig 3 - Fungal Biomass Growth (Logistic S-Curve)
+> Microgravity stimulates a 23% increase in *C. sphaerospermum* intrinsic growth rate. Both fungi successfully reach the 1.0 g/L carrying capacity. The slight slope variations align perfectly with the nutrient restrictions applied when the valve is OPEN.
+
+![Fig 3: Logistic growth curves for both strains](src/figures/fig2_growth_curves.png)
+
+---
+
+### Fig 4 - OD600 Correlation
 > Demonstrates the linear calibration relationship (K_OD600 = 3.0) between the simulated fungal biomass and the optical density proxy measurement.
 
-![Fig 7: OD600 Correlation](src/figures/fig7_od600_correlation.png)
+![Fig 4: OD600 Correlation](src/figures/fig7_od600_correlation.png)
 
 ---
 
-### Fig 8 — Hysteresis Controller Validation
+### Fig 5 - OD600 Camera Proxy (What the Camera Sees)
+> OD600 (Optical Density at 600 nm wavelength) is a standard measure of how cloudy a culture is - cloudier = more biomass. The auxiliary Raspberry Pi camera tracks this as a proxy for growth.
+
+![Fig 5: OD600 optical density proxy over time](src/figures/fig4_od600_proxy.png)
+
+---
+
+### Fig 6 - Radiation Attenuation Comparison — The Main Result
+> CH-3 (*W. dermatitidis*) consistently attenuates more radiation than CH-2. The ISS reference line (2.17%) confirms our model is correctly calibrated. The shaded area shows CH-3's advantage.
+
+![Fig 6: Attenuation comparison with ISS reference line](src/figures/fig3_attenuation.png)
+
+---
+
+### Fig 7 - Power Budget Feasibility
+> A critical engineering requirement. This simulation models the continuous duty-cycled average draw (387 mW) against the 0.5U solar panel generation (~750 mW during sunlit phases). The net positive generation keeps the 6.66 Wh battery at maximum capacity for the full 48-hour mission.
+
+![Fig 7: Power Budget](src/figures/fig5_power_budget.png)
+
+---
+
+### Fig 8 - Hysteresis Controller Validation
 > Validates the control logic: valve switches OPEN when flux crosses 500 μGy/hr (upper line), and only closes when flux drops below 350 μGy/hr (lower line). The gap between thresholds = deadband (prevents rapid switching).
 
 ![Fig 8: Hysteresis validation plot](src/figures/hysteresis_validation.png)
@@ -404,58 +405,4 @@ These measures ensure that no single failure compromises the core scientific obj
 **Submit: 18 July 2026 
 *Team Antariksh · RVCE · LOC CubeSat Group Task*
 
-</div>### Fig 1 - LEO Radiation Flux Profile & Hysteresis Valve State
-> Simulates a typical 48-hour LEO orbit crossing the South Atlantic Anomaly (SAA) ~6 times per day. The red shaded regions show exactly when our controller forces the nutrient valve OPEN based on radiation levels.
-
-![Fig 1: Radiation flux with SAA spikes and valve state](src/figures/fig1_flux_valve.png)
-
----
-
-### Fig 2 - Valve State Timeline
-> A discrete step-plot showing the precise timing and duration of the 11 hysteresis valve actuations during South Atlantic Anomaly passes.
-
-![Fig 2: Valve Timeline](src/figures/fig6_valve_timeline.png)
-
----
-
-### Fig 3 - Fungal Biomass Growth (Logistic S-Curve)
-> Microgravity stimulates a 23% increase in *C. sphaerospermum* intrinsic growth rate. Both fungi successfully reach the 1.0 g/L carrying capacity. The slight slope variations align perfectly with the nutrient restrictions applied when the valve is OPEN.
-
-![Fig 3: Logistic growth curves for both strains](src/figures/fig2_growth_curves.png)
-
----
-
-### Fig 4 - OD600 Correlation
-> Demonstrates the linear calibration relationship (K_OD600 = 3.0) between the simulated fungal biomass and the optical density proxy measurement.
-
-![Fig 4: OD600 Correlation](src/figures/fig7_od600_correlation.png)
-
----
-
-### Fig 5 - OD600 Camera Proxy (What the Camera Sees)
-> OD600 (Optical Density at 600 nm wavelength) is a standard measure of how cloudy a culture is - cloudier = more biomass. The auxiliary Raspberry Pi camera tracks this as a proxy for growth.
-
-![Fig 5: OD600 optical density proxy over time](src/figures/fig4_od600_proxy.png)
-
----
-
-### Fig 6 - Radiation Attenuation Comparison — The Main Result
-> CH-3 (*W. dermatitidis*) consistently attenuates more radiation than CH-2. The ISS reference line (2.17%) confirms our model is correctly calibrated. The shaded area shows CH-3's advantage.
-
-![Fig 6: Attenuation comparison with ISS reference line](src/figures/fig3_attenuation.png)
-
----
-
-### Fig 7 - Power Budget Feasibility
-> A critical engineering requirement. This simulation models the continuous duty-cycled average draw (387 mW) against the 0.5U solar panel generation (~750 mW during sunlit phases). The net positive generation keeps the 6.66 Wh battery at maximum capacity for the full 48-hour mission.
-
-![Fig 7: Power Budget](src/figures/fig5_power_budget.png)
-
----
-
-### Fig 8 - Hysteresis Controller Validation
-> Validates the control logic: valve switches OPEN when flux crosses 500 μGy/hr (upper line), and only closes when flux drops below 350 μGy/hr (lower line). The gap between thresholds = deadband (prevents rapid switching).
-
-![Fig 8: Hysteresis validation plot](src/figures/hysteresis_validation.png)
-
-
+</div>
