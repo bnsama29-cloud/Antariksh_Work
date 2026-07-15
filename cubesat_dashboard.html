@@ -233,10 +233,10 @@
   <canvas id="three-canvas"></canvas>
 
   <div class="view-controls">
-    <button class="view-btn active" onclick="setView('iso')">⬡ Isometric</button>
-    <button class="view-btn" onclick="setView('front')">⬛ Front</button>
-    <button class="view-btn" onclick="setView('side')">◧ Section Cut</button>
-    <button class="view-btn" onclick="setView('top')">⊙ Top</button>
+    <button class="view-btn active" onclick="setView('iso',this)">⬡ Isometric</button>
+    <button class="view-btn" onclick="setView('front',this)">⬛ Front</button>
+    <button class="view-btn" onclick="setView('side',this)">◧ Section Cut</button>
+    <button class="view-btn" onclick="setView('top',this)">⊙ Top</button>
     <button class="view-btn" onclick="toggleExplode()">💥 Explode</button>
     <button class="view-btn" onclick="toggleRotate()">🔄 Auto-Rotate</button>
   </div>
@@ -328,9 +328,9 @@
 
 <!-- ─── Bottom Simulation Bar ─── -->
 <div class="bottom-bar">
-  <div class="sim-tab active" onclick="switchSim('orbit')">🌍 Orbit Sim</div>
-  <div class="sim-tab" onclick="switchSim('power')">⚡ Power Budget</div>
-  <div class="sim-tab" onclick="switchSim('flux')">☢️ Radiation Flux</div>
+  <div class="sim-tab active" onclick="switchSim('orbit',this)">🌍 Orbit Sim</div>
+  <div class="sim-tab" onclick="switchSim('power',this)">⚡ Power Budget</div>
+  <div class="sim-tab" onclick="switchSim('flux',this)">☢️ Radiation Flux</div>
   <div class="sim-content" id="sim-content">
     <!-- filled by JS -->
   </div>
@@ -713,9 +713,9 @@ function toggleRotate() {
 }
 
 let sectionMode = false;
-function setView(v) {
+function setView(v, el) {
   document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
-  event.currentTarget.classList.add('active');
+  if (el) el.classList.add('active');
   sectionMode = false;
   cubesat.rotation.y = 0;
   switch(v) {
@@ -758,9 +758,9 @@ function toggleInside() {
 // ═══════════════════════════════════════════════════════════
 // BOTTOM SIM BAR
 // ═══════════════════════════════════════════════════════════
-function switchSim(id) {
+function switchSim(id, el) {
   document.querySelectorAll('.sim-tab').forEach(t => t.classList.remove('active'));
-  event.currentTarget.classList.add('active');
+  if (el) el.classList.add('active'); else document.querySelectorAll('.sim-tab')[['orbit','power','flux'].indexOf(id)]?.classList.add('active');
   const c = document.getElementById('sim-content');
   if (id === 'orbit') {
     c.innerHTML = `
@@ -789,7 +789,7 @@ function switchSim(id) {
         <div class="bar-outer"><div class="bar-inner" id="rad-bar" style="width:65%;background:linear-gradient(90deg,#9f7aea,#e879f9)"></div></div></div>`;
   }
 }
-switchSim('orbit');
+switchSim('orbit', null);
 
 // ═══════════════════════════════════════════════════════════
 // LIVE TELEMETRY SIMULATION
