@@ -307,7 +307,7 @@ Without gravity, there is no settling — fungi grow as a **uniform monolayer**,
 ## 💻 Academic Report
 
 The full TA-format report can be viewed interactively in your browser here:
-👉 **[View Interactive Web Report](https://raw.githack.com/bnsama29-cloud/Antariksh_Work/main/LOC_CubeSat/LOC_CubeSat_Report.html)**
+👉 **[View Interactive Web Report](https://raw.githack.com/bnsama29-cloud/Antariksh_Work/main/LOC_CubeSat_Report.html)**
 
 *(If the link above does not work, you can download `LOC_CubeSat_Report.html` and open it locally).* It includes:
 - Cover page, Table of Contents, List of Figures
