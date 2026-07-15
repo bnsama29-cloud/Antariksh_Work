@@ -305,7 +305,10 @@ Without gravity, there is no settling — fungi grow as a **uniform monolayer**,
 
 ## 💻 Academic Report
 
-The full TA-format report is in [`LOC_CubeSat_Report.html`](LOC_CubeSat_Report.html). To view it with all its interactive formatting and images, you must **download the file** (or the whole repository) and open it in your web browser. It includes:
+The full TA-format report can be viewed interactively in your browser here:
+👉 **[View Interactive Web Report](https://raw.githack.com/bnsama29-cloud/Antariksh_Work/main/LOC_CubeSat/LOC_CubeSat_Report.html)**
+
+*(If the link above does not work, you can download `LOC_CubeSat_Report.html` and open it locally).* It includes:
 - Cover page, Table of Contents, List of Figures
 - All 9 sections with in-depth content
 - All simulation figures and equations
