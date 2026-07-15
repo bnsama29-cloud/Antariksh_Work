@@ -215,7 +215,7 @@ The virtual circuit includes:
 
 ### Reference Layout
 
-![3U CubeSat Internal Layout Reference — 100x100x340.5mm chassis showing biology tray, dual Raspberry Pis, and sensors](src/figures/fig_cad_isometric.png)
+![3U CubeSat Internal Layout Reference - 100x100x340.5mm chassis showing biology tray, dual Raspberry Pis, and sensors](src/figures/fig_cad_section.png)
 
 The 3D model follows the **3U CubeSat Design Specification (CDS Rev. 14)** — 100 × 100 × 340.5 mm:
 
