@@ -328,7 +328,7 @@ This workflow ensures fully autonomous operation with minimal ground interventio
 | **Fluidic** | Valve stuck CLOSED | Low | 10× nutrient reserve; agar sufficient for 72 hr with zero OPEN events |
 | **Mechanical** | Chamber seal breach | Very Low | Polycarbonate ultrasonic weld + O-ring; 3-chamber redundancy |
 | **Electrical** | Primary Raspberry Pi failure | Low | Dual Pi — Aux auto-assumes flight role via watchdog failover |
-| **Electrical** | Battery depletion | Medium | Camera duty-cycled; Arduino deep-sleep; 0.5U solar panel supplement |
+| **Electrical** | Battery depletion | Medium | Camera duty-cycled; Raspberry Pi low-power modes; 0.5U solar panel supplement |
 | **Sensing** | Camera calibration drift | Low | Pre-flight calibration; consistent LED panel illumination |
 | **Sensing** | GM tube drift/failure | Low | Dual LND 712 sensors with cross-validation |
 | **Thermal** | Temperature >35°C (fungal death) | Low | DHT22 monitoring; passive thermal mass of Al shell |
