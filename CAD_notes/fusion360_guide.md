@@ -14,11 +14,11 @@ Instead of drawing rectangles that "look like" an Arduino, we are going to impor
 
 1. Create a free account on **[GrabCAD.com](https://grabcad.com/)**.
 2. Search and download the `.step` (or `.f3d` or `.iges`) files for the following components:
-   - **"Arduino Uno"** (or Raspberry Pi Zero if preferred for space)
+   - **"Raspberry Pi Zero W"** (we use two of these)
    - **"DHT22 sensor"**
-   - **"Geiger Counter Module"** (or just use a generic PCB model to represent the radiation sensor)
-   - **"16x2 LCD Display"** (if you want to mount it to the exterior for the render)
-   - **"5mm LED"**
+   - **"Geiger Counter Module"** (or small generic PCBs for the radiation sensors)
+   - **"Camera Module (OV5647 or similar Pi camera)"**
+   - **"LiPo Battery Pack"**
 3. Save all these downloaded `.step` files into a folder on your computer called `CubeSat_CAD_Parts`.
 
 ---
@@ -65,23 +65,21 @@ Instead of drawing rectangles that "look like" an Arduino, we are going to impor
 *Now we bring in the photorealistic downloaded parts.*
 
 1. **Upload to Fusion:** Open your Fusion 360 Data Panel (grid icon, top left) → Click **Upload** → Select all the `.step` files you downloaded from GrabCAD. Wait for them to process.
-2. **Import the Arduino:** 
-   - Right-click the uploaded Arduino Uno in the Data Panel and select **"Insert into Current Design"**.
-   - Use the Move/Copy arrows to position it at the bottom of the CubeSat (Z = 20 mm).
-   - Click **Assemble → Joint** (or As-Built Joint) to lock it to the inner wall.
+2. **Import the Raspberry Pis:** 
+   - Right-click the uploaded Raspberry Pi in the Data Panel and select **"Insert into Current Design"**.
+   - Use the Move/Copy arrows to position the first one at Z = 20 mm.
+   - Insert the second one and stack it at Z = 50 mm.
+   - Click **Assemble → Joint** to lock them to the inner rails or walls.
 3. **Import the DHT22 Sensor:**
-   - Insert it into the design.
-   - Position it on the **right inner wall**, hovering near the LOC tray.
+   - Position it on the **left inner wall**, hovering near the LOC tray.
    - Create a Joint to lock it to the wall.
-4. **Import the LEDs (Nutrient Valves):**
-   - Insert the 5mm LED.
-   - Duplicate it (Ctrl+C, Ctrl+V).
-   - Make one Red and one Green using the Appearance menu.
-   - Mount them near the LOC tray to represent the biological valves.
-5. **Import the Radiation Sensor / Potentiometer:**
-   - Insert it and mount it on the wall opposite the Arduino.
+4. **Import the Camera & Battery:**
+   - Position the LiPo battery at the very bottom.
+   - Position the camera module below the LOC tray, pointing inwards.
+5. **Import the Radiation Sensors:**
+   - Insert two modules and mount them directly under the LOC tray.
 
-*Because these are imported `.step` files, they already contain all the tiny capacitors, pins, and textures, making your CubeSat look incredibly complex and professional!*
+*Because these are imported `.step` files, they already contain all the tiny capacitors, pins, and textures, making your 3U CubeSat look incredibly complex and professional!*
 
 ---
 
@@ -89,7 +87,7 @@ Instead of drawing rectangles that "look like" an Arduino, we are going to impor
 *To make it look like a real wired satellite, we will route a few cables.*
 
 1. Create a **3D Sketch** (check the "3D Sketch" box in the sketch palette).
-2. Use the **Spline** tool to draw a curvy path from the Arduino GPIO pins to the DHT22 sensor.
+2. Use the **Spline** tool to draw a curvy path from the Raspberry Pi GPIO pins to the DHT22 sensor and camera.
 3. Click **Finish Sketch**.
 4. Click **Create → Pipe**.
 5. Select the spline path you just drew. Set Section Size to **1.5 mm**.
@@ -112,7 +110,7 @@ Instead of drawing rectangles that "look like" an Arduino, we are going to impor
 1. Go back to Design Workspace.
 2. Click **Inspect → Section Analysis**.
 3. Select the **YZ plane** and push the arrow exactly halfway (so it cuts the CubeSat in half).
-4. This reveals how perfectly your Arduino and LOC tray fit inside.
+4. This reveals how perfectly your dual Raspberry Pis and LOC tray fit inside the tall 3U structure.
 5. Go to Render Workspace and capture the image.
 6. Export as `fig_cad_section.png`.
 7. Turn off Section Analysis in the browser tree when done.
@@ -122,7 +120,7 @@ Instead of drawing rectangles that "look like" an Arduino, we are going to impor
 2. Click **Transform Components**.
 3. Click the outer shell and drag it upwards (+Z).
 4. Click the LOC tray and drag it slightly upwards.
-5. Click the Arduino and leave it at the bottom.
+5. Click the Raspberry Pis and battery and leave them at the bottom.
 6. This creates a "blow-apart" view showing how everything stacks.
 7. Capture the image and save as `fig_cad_exploded.png`.
 
@@ -131,9 +129,9 @@ Instead of drawing rectangles that "look like" an Arduino, we are going to impor
 ## STEP 8 — Final Submission
 1. Save your Fusion file.
 2. Take those 3 exported PNGs.
-3. Open `LOC_CubeSat_Report_Final.docx`.
-4. Scroll to the very end (Section 7.4).
-5. Delete the text inside the 3 grey placeholder boxes and paste your actual screenshots inside them.
+3. Open `LOC_CubeSat_Report_v2.docx`.
+4. Scroll to the 3D Structural Model section (Section 7.4).
+5. Delete the 3 temporary reference images currently there, and paste your new actual Fusion 360 screenshots in their place.
 6. **Save as PDF and Submit!**
 
 ---
