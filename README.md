@@ -182,10 +182,10 @@ CONCLUSION: Better bioshield --> W. dermatitidis (CH-3) -- CHALLENGER WINS
 
 ---
 
-### Fig 5 — Hysteresis Controller Validation
+### Fig 8 — Hysteresis Controller Validation
 > Validates the control logic: valve switches OPEN when flux crosses 500 μGy/hr (upper line), and only closes when flux drops below 350 μGy/hr (lower line). The gap between thresholds = deadband (prevents rapid switching).
 
-![Fig 5: Hysteresis validation plot](src/figures/hysteresis_validation.png)
+![Fig 8: Hysteresis validation plot](src/figures/hysteresis_validation.png)
 
 ---
 
