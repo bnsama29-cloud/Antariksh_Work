@@ -262,17 +262,6 @@ print("Building Word document...")
 # ── COVER PAGE ────────────────────────────────────────────────────────────────
 doc.add_paragraph()
 
-# System safeguards paragraph
-add_para(doc, "Additional system-level safeguards include:")
-safeguards = [
-    "Real-time clock (DS3231) with battery backup for timestamp integrity during power dips.",
-    "Software watchdogs on both Raspberry Pis to detect and recover from hangs.",
-    "Pre-flight end-to-end functional testing of the complete valve-sensor-camera loop.",
-]
-add_list(doc, [type('obj', (), {'get_text': lambda self, s=s, **kw: s})() for s in safeguards], ordered=False)
-add_para(doc, ("These measures ensure that no single failure compromises the core scientific objectives of the "
-               "48-hour mission."))
-
 doc.add_page_break()
 add_para(doc, "TEAM ANTARIKSH — RVCE", align=WD_ALIGN_PARAGRAPH.CENTER, bold=True, size=14)
 add_para(doc, "R.V. College of Engineering, Bengaluru", align=WD_ALIGN_PARAGRAPH.CENTER, italic=True)
@@ -348,9 +337,9 @@ toc_entries = [
     ("   7.2. Fungal Growth Kinetics", "8"),
     ("   7.3. Attenuation Comparison", "8"),
     ("   7.4. 3D Model — Fusion 360", "9"),
-    ("8. Conclusions & Future Work", "9"),
-    ("   8.4. System Safeguards", "9"),
-    ("9. References", "10"),
+    ("   7.5. Reliability and Failure Modes Analysis", "9"),
+    ("8. Conclusions & Future Work", "10"),
+    ("9. References", "11"),
 ]
 for entry, pg in toc_entries:
     p = doc.add_paragraph()
@@ -553,7 +542,9 @@ add_para(doc, ("The experiment follows a linear operational sequence from ground
                "designed for fully autonomous operation with minimal ground intervention:"))
 workflow = [
     "Sterile Preparation (T-48 h to T-24 h): Sabouraud Dextrose Agar is prepared and inoculated with the respective fungal strains or left sterile (CH-1) under biosafety cabinet conditions. Chambers are sealed with gas-permeable membranes to allow passive gas exchange while preventing contamination.",
-    "Integration & Testing (T-24 h to T-6 h): The LOC chip assembly is integrated into the 1U CubeSat structure along with the dual Raspberry Pi stack, sensors, valve actuator, camera, and battery. Full functional tests (valve actuation, camera imaging, sensor readout, and hysteresis logic) are performed.",
+    ("Integration & Testing (T-24 h to T-6 h): The LOC chip assembly is integrated into the 3U "
+     "CubeSat structure along with the dual Raspberry Pi stack, sensors, valve actuator, camera, and battery. Full "
+     "functional tests (valve actuation, camera imaging, sensor readout, and hysteresis logic) are performed."),
     "Launch & Deployment (T = 0): The CubeSat is launched and deployed into the target LEO. The system remains in low-power safe mode during ascent.",
     "Autonomous Science Phase (T+0 to T+48 h): Upon reaching stable orbit, the primary Raspberry Pi boots the control software. Radiation flux is monitored continuously. The hysteresis controller actuates the nutrient valve during SAA passages. The auxiliary Pi triggers the camera for OD600 imaging once per hour. All data are timestamped by the DS3231 RTC and logged locally.",
     "Data Handling & Downlink: At the end of the 48-hour window (or upon command), summarised data (master_log.csv and selected images) are prepared for downlink. The system enters safe mode.",
