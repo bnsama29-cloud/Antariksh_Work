@@ -60,4 +60,8 @@ if master["attn_ch3_pct"].max() > master["attn_ch2_pct"].max():
 else:
     winner = "C. sphaerospermum (CH-2) -- BASELINE HOLDS"
 print(f"\n  CONCLUSION: Better bioshield --> {winner}")
+print("\n  Running Power Simulation...")
+import power_sim
+power_sim.generate_power_log()
+
 print("\n  All checks complete.")

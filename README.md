@@ -68,6 +68,9 @@ LOC_CubeSat/
 │       ├── fig2_growth_curves.png
 │       ├── fig3_attenuation.png
 │       ├── fig4_od600_proxy.png
+│       ├── fig5_power_budget.png
+│       ├── fig6_valve_timeline.png
+│       ├── fig7_od600_correlation.png
 │       ├── hysteresis_validation.png
 │       ├── fig_cad_fusion360_model.png
 │       └── electronics_sim/

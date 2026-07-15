@@ -337,7 +337,7 @@ toc_entries = [
     ("   7.2. Fungal Growth Kinetics", "8"),
     ("   7.3. Attenuation Comparison", "8"),
     ("   7.4. 3D Model — Fusion 360", "9"),
-    ("   7.5. Reliability and Failure Modes Analysis", "9"),
+    ("   7.6. Reliability and Failure Modes Analysis", "10"),
     ("8. Conclusions & Future Work", "10"),
     ("9. References", "11"),
 ]
@@ -725,7 +725,7 @@ add_figure(doc, BASE_DIR / "src/figures/fig_cad_exploded.png",
 
 doc.add_page_break()
 
-add_h2(doc, "7.5. Reliability and Failure Modes Analysis")
+add_h2(doc, "7.6. Reliability and Failure Modes Analysis")
 add_para(doc, ("The following table documents all identified failure modes across biological, fluidic, mechanical, "
                "electrical, sensing, thermal, and contamination categories — along with their likelihood, impact, "
                "and the specific mitigation or redundancy built into the design."))
