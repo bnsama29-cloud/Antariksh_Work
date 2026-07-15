@@ -726,6 +726,27 @@ add_figure(doc, BASE_DIR / "src/figures/fig_cad_exploded.png",
 
 doc.add_page_break()
 
+add_h2(doc, "7.5. Reliability and Failure Modes Analysis")
+add_para(doc, ("The following table documents all identified failure modes across biological, fluidic, mechanical, "
+               "electrical, sensing, thermal, and contamination categories — along with their likelihood, impact, "
+               "and the specific mitigation or redundancy built into the design."))
+
+table_75 = soup.find(id="s7b").find("table", class_="data-table")
+if table_75:
+    add_data_table(doc, table_75, "Table 10: Comprehensive Failure Analysis & Mitigation Register")
+
+add_para(doc, "Additional system-level safeguards include:")
+safeguards = [
+    "Real-time clock (DS3231) with battery backup for timestamp integrity during power dips.",
+    "Software watchdogs on both Raspberry Pis to detect and recover from hangs.",
+    "Pre-flight end-to-end functional testing of the complete valve-sensor-camera loop.",
+]
+add_list(doc, [type('obj', (), {'get_text': lambda self, s=s, **kw: s})() for s in safeguards], ordered=False)
+add_para(doc, ("These measures ensure that no single failure compromises the core scientific objectives of the "
+               "48-hour mission."))
+
+doc.add_page_break()
+
 # ══════════════════════════════════════════════════════════════════════════════
 # SECTION 8 — CONCLUSIONS
 # ══════════════════════════════════════════════════════════════════════════════
@@ -757,6 +778,12 @@ for c in conclusions:
     run_c = p_c.add_run(c)
     run_c.font.name = "Times New Roman"
     run_c.font.size = Pt(12)
+
+doc.add_paragraph()
+add_para(doc, ("In summary, this 3U Lab-on-a-Chip CubeSat payload presents a highly feasible, scientifically valuable, and "
+               "robust platform for studying melanin-mediated radiation shielding in Low Earth Orbit. By bridging mathematical "
+               "modeling, passive microfluidics, and redundant embedded electronics, this design fully addresses the "
+               "mission parameters and paves the way for advanced micro-biological space research."))
 
 add_h2(doc, "8.2. Limitations")
 limitations = [

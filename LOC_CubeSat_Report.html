@@ -1685,50 +1685,7 @@
   <div class="page" id="s7b">
     <div class="page-header">LOC CubeSat Payload — Team Antariksh</div>
 
-    <h1>7.5. Operational Workflow</h1>
-    <p>
-      The 48-hour autonomous mission sequence proceeds as follows, with zero manual intervention required
-      once the CubeSat is sealed and integrated onto the launch vehicle:
-    </p>
-    <ol>
-      <li><strong>Pre-launch (T−24 hr):</strong> Fungal cultures inoculated into CH-2 and CH-3 chambers at
-        N₀ = 0.01 g/L. CH-1 loaded with sterile agar. All chambers heat-sealed. Raspberry Pi booted and
-        self-test completed. Arduino flashed with hysteresis control firmware.</li>
-      <li><strong>Launch &amp; orbit insertion (T = 0):</strong> CubeSat deployed from launch vehicle.
-        Arduino begins continuous radiation monitoring at 0.5 Hz sampling rate.</li>
-      <li><strong>Growth phase (T = 0–30 hr):</strong> Both fungal strains grow exponentially then enter
-        logistic saturation. Camera captures OD600 images every 1 hour (duty-cycled to save power).
-        Hysteresis valve responds to SAA passages (~6 per day) — opens above 500 μGy/hr, closes below
-        350 μGy/hr.</li>
-      <li><strong>Saturation phase (T = 30–48 hr):</strong> Both cultures near carrying capacity K ≈ 1.0 g/L.
-        Attenuation plateaus. Continuous monitoring continues. All data logged to onboard SD card.</li>
-      <li><strong>Data transmission (T = 48 hr):</strong> Full 48-hour master_log.csv (13 columns × 49 rows)
-        downlinked via radio. Experiment complete.</li>
-    </ol>
 
-    <hr class="section-break">
-
-    <h1>7.6. Key Design Trade-offs &amp; Critical Decisions</h1>
-    <ul>
-      <li><strong>3 chambers vs 2:</strong> A two-chamber design (one fungal, one control) would miss the
-        inter-strain comparison. The third chamber costs only 20 g and ~15% additional agar volume, with
-        no extra sensors required.</li>
-      <li><strong>Hysteresis valve (creative feature) vs. passive design:</strong> Adding the valve introduces
-        ~0.5 W additional power draw and one mechanical failure point. This is justified because it enables
-        the experiment to study fungal stress response under radiation-triggered nutrient restriction — a
-        scientifically unique data point not possible in purely passive designs.</li>
-      <li><strong>Simulation-first approach:</strong> Building a full Python simulation prior to hardware
-        fabrication allows parameter sweeps, calibration against ISS data, and defect identification at
-        zero hardware cost. The Beer-Lambert model was calibrated against the known ISS result (2.17%)
-        before any physical test.</li>
-      <li><strong>Dual Raspberry Pi:</strong> Redundancy adds 45 g and ~0.6 W idle draw, but eliminates
-        single-point failure risk for data capture — the most critical mission function.</li>
-      <li><strong>OD600 optical proxy vs direct mass measurement:</strong> A mass balance cannot function
-        in microgravity. OD600 camera imaging is the only viable non-contact biomass proxy in this
-        environment, validated by the Shunk et al. (2020) methodology.</li>
-    </ul>
-
-    <hr class="section-break">
 
     <h1>7.5. Reliability and Failure Modes Analysis</h1>
     <p>
@@ -1896,6 +1853,12 @@
         function without gravity. <em>[Task: Detection method for growth described.]</em>
       </li>
     </ol>
+    <p>
+      In summary, this 3U Lab-on-a-Chip CubeSat payload presents a highly feasible, scientifically valuable, and
+      robust platform for studying melanin-mediated radiation shielding in Low Earth Orbit. By bridging mathematical
+      modeling, passive microfluidics, and redundant embedded electronics, this design fully addresses the
+      mission parameters and paves the way for advanced micro-biological space research.
+    </p>
 
     <h2>8.2. Limitations</h2>
     <ul>
