@@ -1,0 +1,58 @@
+# LOC CubeSat Experiment Configuration
+
+experiment:
+  duration_hrs: 48.0
+  time_step_hrs: 1.0
+  save_dir: "data"
+
+environment:
+  radiation:
+    gcr_baseline: 200.0       # μGy/hr — galactic cosmic ray background in LEO
+    saa_peak: 650.0           # μGy/hr — South Atlantic Anomaly peak dose rate
+    saa_duration: 0.25        # hours  — SAA passage duration (~15 min)
+    saa_interval: 4.0         # hours  — Time between SAA passes
+    noise_sigma: 15.0         # μGy/hr — Sensor noise standard deviation
+  
+  temperature:
+    nominal: 25.0             # °C
+    fluctuation: 2.0          # °C amplitude over orbit
+    optimal_growth: 25.0      # °C — optimal temperature for fungus
+    std_noise: 0.5            # °C
+  
+  humidity:
+    nominal: 60.0             # % RH
+    fluctuation: 5.0          # % RH amplitude
+    optimal_growth: 60.0      # % RH
+    std_noise: 1.0            # % RH
+
+biology:
+  ch2_strain:
+    name: "Cladosporium sphaerospermum"
+    r: 0.299                  # h⁻¹ (base growth rate)
+    mu: 0.043                 # cm^2/g (mass attenuation coeff)
+    rho: 1.40                 # g/cm^3 (melanin density)
+    alpha: 0.3645             # cm / (g/L) (layer thickness per biomass)
+    
+  ch3_strain:
+    name: "Wangiella dermatitidis"
+    r: 0.270                  # h⁻¹
+    mu: 0.043
+    rho: 1.45
+    alpha: 0.4192
+    
+  global:
+    K: 1.0                    # g/L (carrying capacity)
+    N0: 0.01                  # g/L (initial biomass)
+    initial_nutrients: 100.0  # mg (initial nutrient pool)
+    nutrient_consumption: 0.5 # mg per g/L of growth
+    k_od600: 3.0              # OD600 per g/L calibration
+    valve_restricted_mod: 0.5 # Growth penalty when nutrients restricted
+
+hardware:
+  power:
+    solar_input: 2.80         # W
+    obc_draw: -0.82           # W
+    camera_draw: -0.50        # W
+    sensor_draw: -0.28        # W
+    battery_capacity_wh: 30.0 # Watt-hours
+    battery_initial_pct: 100.0

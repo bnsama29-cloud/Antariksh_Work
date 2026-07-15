@@ -41,48 +41,40 @@ We compare **two fungal strains** against a sterile control across 48 simulated 
 
 ## 🗂️ Project Structure
 
-```
+```text
 LOC_CubeSat/
 │
 ├── README.md                          ← You are here
 ├── LOC_CubeSat_Report.html            ← Full TA-format academic report
-├── .gitignore
+├── config.yaml                        ← Master configuration parameters
+├── run_experiment.py                  ← Orchestrator script to run the full simulation
 │
 ├── src/
-│   ├── flux_generator.py              ← Step 1: Generates 48-hr LEO radiation profile
-│   ├── hysteresis.py                  ← Step 2: Valve control (open/close based on radiation)
-│   ├── growth_model.py                ← Step 3: Fungal growth simulation (logistic ODE)
-│   ├── attenuation.py                 ← Step 4: Beer-Lambert radiation shielding calculation
-│   ├── integrate.py                   ← Step 5: Merges all data → master_log.csv
-│   ├── dashboard.py                   ← Step 6: Generates all 4 report figures
-│   │
-│   ├── data/
-│   │   ├── flux_profile.csv           ← Radiation flux over time
-│   │   ├── valve_state.csv            ← Valve open/close log
-│   │   ├── growth_output.csv          ← Fungal biomass over time
-│   │   ├── attenuation_output.csv     ← Radiation attenuation data
-│   │   └── master_log.csv             ← All data merged (13 columns)
-│   │
-│   └── figures/
-│       ├── fig1_flux_valve.png
-│       ├── fig2_growth_curves.png
-│       ├── fig3_attenuation.png
-│       ├── fig4_od600_proxy.png
-│       ├── fig5_power_budget.png
-│       ├── fig6_valve_timeline.png
-│       ├── fig7_od600_correlation.png
-│       ├── hysteresis_validation.png
-│       ├── fig_cad_fusion360_model.png
-│       └── electronics_sim/
-│           ├── fig5_wokwi_valve_closed.png
-│           ├── fig6_wokwi_valve_open_trigger.png
-│           └── fig7_wokwi_valve_open_hold.png
+│   ├── biology/
+│   │   ├── growth_model.py            ← Multi-phase ODE, Monod kinetics
+│   │   └── attenuation.py             ← Beer-Lambert radiation shielding
+│   ├── controller/
+│   │   └── hysteresis.py              ← Valve control (open/close based on radiation)
+│   ├── environment/
+│   │   └── flux_generator.py          ← Generates LEO radiation, Temp, and Humidity
+│   ├── sensors/
+│   │   └── serial_bridge.py           ← HIL testing bridge
+│   ├── dashboard/
+│   │   └── dashboard.py               ← Generates report PNGs
+│   └── utils/
+│       └── metrics.py                 ← Merges data & generates summary.json
 │
-├── electronics_sim/
-│   └── cubesat_electronics.ino        ← Arduino code for Wokwi simulation
+├── tests/                             ← Pytest unit testing suite
 │
-└── CAD_notes/
-    └── fusion360_guide.md             ← Step-by-step Fusion 360 modelling guide
+├── logs/                              ← Auto-generated system logs
+│
+├── data/                              ← Generated CSV data
+│
+├── figures/                           ← Generated output plots
+│
+├── electronics_sim/                   ← Arduino Wokwi simulation
+│
+└── CAD_notes/                         ← Fusion 360 modelling guide
 ```
 
 ---
@@ -91,26 +83,21 @@ LOC_CubeSat/
 
 ### 1. Install dependencies
 ```bash
-pip install numpy scipy matplotlib pandas
+pip install numpy scipy matplotlib pandas pyyaml pytest
 ```
 
-### 2. Run all 6 scripts in order
+### 2. Run the automated pipeline
 ```bash
-cd src
-
-python flux_generator.py    # Creates: data/flux_profile.csv
-python hysteresis.py        # Creates: data/valve_state.csv
-python growth_model.py      # Creates: data/growth_output.csv
-python attenuation.py       # Creates: data/attenuation_output.csv
-python integrate.py         # Creates: data/master_log.csv  ← KEY RESULTS printed here
-python dashboard.py         # Creates: figures/fig1 through fig4 (300 DPI PNG)
+python run_experiment.py
 ```
+This automatically reads from `config.yaml`, generates all physics data, merges it, and plots the PNGs in `figures/`.
 
-### 3. Expected output from `integrate.py`
-```
-Peak CH-2 attenuation (C. sphaerospermum) : 2.169%
-Peak CH-3 attenuation (W. dermatitidis)   : 2.593%
-CONCLUSION: Better bioshield --> W. dermatitidis (CH-3) -- CHALLENGER WINS
+### 3. Review the Output
+Open the `logs/` directory to see if any faults occurred during the simulation. Read `data/summary.json` for key metrics.
+
+### 4. Run Tests
+```bash
+pytest tests/
 ```
 
 ---

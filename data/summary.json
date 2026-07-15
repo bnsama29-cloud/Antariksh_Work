@@ -1,0 +1,14 @@
+{
+    "experiment_duration_hrs": 48.0,
+    "mean_flux_uGy_hr": 298.10893877551024,
+    "restricted_hrs": 11,
+    "ch2": {
+        "final_biomass_gL": 0.9988,
+        "peak_attenuation_pct": 2.1678
+    },
+    "ch3": {
+        "final_biomass_gL": 0.996,
+        "peak_attenuation_pct": 2.5697
+    },
+    "faults": []
+}
