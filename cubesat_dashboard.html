@@ -1,741 +1,1232 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>LOC CubeSat 3U — Engineering Dashboard</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#060c18;--panel:#0b1220;--border:rgba(80,160,220,0.18);
-  --accent:#4da8da;--accent2:#a78bfa;--green:#4ade80;--yellow:#fbbf24;
-  --red:#f87171;--text:#e2e8f0;--muted:#64748b;
-}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
-  height:100vh;overflow:hidden;display:grid;
-  grid-template-columns:1fr 320px;grid-template-rows:56px 1fr 110px}
-header{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;
-  padding:0 24px;background:rgba(11,18,32,0.98);border-bottom:1px solid var(--border);z-index:10}
-.logo{display:flex;align-items:center;gap:10px}
-.logo-icon{width:32px;height:32px;background:linear-gradient(135deg,#4da8da,#a78bfa);border-radius:6px;
-  display:flex;align-items:center;justify-content:center;font-size:16px}
-.logo h1{font-size:14px;font-weight:700;letter-spacing:.3px}
-.logo span{font-size:10px;color:var(--muted);display:block}
-.pills{display:flex;gap:6px}
-.pill{padding:4px 12px;border-radius:999px;font-size:10px;font-weight:600;display:flex;align-items:center;gap:5px}
-.pill.live{background:rgba(74,222,128,.12);color:var(--green);border:1px solid rgba(74,222,128,.25)}
-.pill.info{background:rgba(77,168,218,.1);color:var(--accent);border:1px solid var(--border)}
-.dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 1.4s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LOC CubeSat 3U — Engineering Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
 
-#viewport{position:relative;background:radial-gradient(ellipse at 40% 40%,#0d1e36 0%,#050b16 100%);overflow:hidden}
-#cv{display:block;width:100%;height:100%}
+    :root {
+      --bg: #060c18;
+      --panel: #0b1220;
+      --border: rgba(80, 160, 220, 0.18);
+      --accent: #4da8da;
+      --accent2: #a78bfa;
+      --green: #4ade80;
+      --yellow: #fbbf24;
+      --red: #f87171;
+      --text: #e2e8f0;
+      --muted: #64748b;
+    }
 
-.ctrl-panel{position:absolute;top:14px;left:14px;display:flex;flex-direction:column;gap:6px}
-.vbtn{padding:7px 14px;border-radius:7px;font-size:11px;font-weight:600;
-  background:rgba(11,18,32,.9);border:1px solid var(--border);
-  color:var(--text);cursor:pointer;transition:all .2s;backdrop-filter:blur(8px);white-space:nowrap}
-.vbtn:hover,.vbtn.act{background:rgba(77,168,218,.18);border-color:var(--accent);color:var(--accent)}
-.inside-btn{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);
-  padding:10px 26px;border-radius:999px;font-size:13px;font-weight:700;
-  background:linear-gradient(135deg,#4da8da,#a78bfa);border:none;color:#fff;
-  cursor:pointer;transition:all .3s;box-shadow:0 4px 20px rgba(77,168,218,.3);letter-spacing:.2px}
-.inside-btn:hover{transform:translateX(-50%) scale(1.05);box-shadow:0 8px 28px rgba(77,168,218,.45)}
-#tip{position:absolute;pointer-events:none;background:rgba(6,12,24,.97);
-  border:1px solid var(--accent);border-radius:9px;padding:9px 13px;
-  font-size:11px;max-width:210px;display:none;backdrop-filter:blur(8px)}
-#tip h4{color:var(--accent);font-size:12px;margin-bottom:3px;font-weight:700}
-#tip p{color:var(--muted);line-height:1.5}
-.hud{position:absolute;bottom:14px;right:14px;font-size:10px;color:var(--muted);
-  font-family:'JetBrains Mono',monospace;background:rgba(11,18,32,.8);
-  border:1px solid var(--border);border-radius:7px;padding:7px 11px;backdrop-filter:blur(8px)}
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      grid-template-rows: 56px 1fr 110px
+    }
 
-.side{background:var(--panel);border-left:1px solid var(--border);overflow-y:auto;
-  display:flex;flex-direction:column}
-.side::-webkit-scrollbar{width:3px}.side::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
-.sec{padding:14px;border-bottom:1px solid var(--border)}
-.sec h3{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1.8px;text-transform:uppercase;margin-bottom:11px}
-.ci{display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:7px;cursor:pointer;
-  transition:all .2s;margin-bottom:3px;border:1px solid transparent}
-.ci:hover{background:rgba(77,168,218,.07);border-color:var(--border)}
-.ci.sel{background:rgba(77,168,218,.11);border-color:rgba(77,168,218,.35)}
-.cdot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
-.ci .info{flex:1}.ci .nm{font-size:11px;font-weight:600}.ci .sb{font-size:9px;color:var(--muted)}
-.ci .badge{font-size:8px;font-weight:700;padding:2px 5px;border-radius:3px;background:rgba(255,255,255,.05)}
-.tog{width:26px;height:14px;background:var(--accent);border-radius:999px;cursor:pointer;
-  position:relative;transition:all .2s;flex-shrink:0}
-.tog.off{background:rgba(255,255,255,.12)}
-.tog::after{content:'';position:absolute;width:10px;height:10px;border-radius:50%;background:#fff;
-  top:2px;left:14px;transition:all .2s}
-.tog.off::after{left:2px}
-.tgrid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.tc{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:7px;padding:9px}
-.tc .lbl{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px}
-.tc .val{font-size:17px;font-weight:700;font-family:'JetBrains Mono',monospace;margin:3px 0}
-.tc .un{font-size:8px;color:var(--muted)}
-.tc.g .val{color:var(--green)}.tc.b .val{color:var(--accent)}
-.tc.y .val{color:var(--yellow)}.tc.p .val{color:var(--accent2)}
-.bar-o{height:5px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;position:relative}
-.bar-i{height:100%;border-radius:3px;transition:width 1.2s ease;position:relative;overflow:hidden}
-.bar-i::after{content:'';position:absolute;top:0;left:-40%;width:40%;height:100%;
-  background:rgba(255,255,255,.2);animation:sh 2s infinite}
-@keyframes sh{0%{left:-40%}100%{left:140%}}
-.od-row{display:flex;flex-direction:column;gap:7px}
-.od-item{display:flex;flex-direction:column;gap:3px}
-.od-label{display:flex;justify-content:space-between;font-size:10px}
-.od-label span:last-child{font-family:'JetBrains Mono',monospace}
+    header {
+      grid-column: 1/-1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      background: rgba(11, 18, 32, 0.98);
+      border-bottom: 1px solid var(--border);
+      z-index: 10
+    }
 
-.bot{grid-column:1/-1;background:rgba(11,18,32,.98);border-top:1px solid var(--border);
-  display:flex;align-items:center;overflow-x:auto;padding:0 14px}
-.stab{padding:0 18px;height:100%;display:flex;align-items:center;font-size:11px;font-weight:600;
-  cursor:pointer;border-right:1px solid var(--border);color:var(--muted);transition:all .2s;white-space:nowrap}
-.stab:hover{color:var(--text)}.stab.act{color:var(--accent);background:rgba(77,168,218,.06)}
-.sc{flex:1;padding:0 20px;display:flex;align-items:center;gap:20px;overflow:hidden}
-.sm{display:flex;flex-direction:column;min-width:75px}
-.sm span:first-child{font-size:9px;color:var(--muted)}
-.sm span:last-child{font-size:13px;font-weight:700;font-family:'JetBrains Mono',monospace}
-.sb2{flex:1}.sb2 .lbl{font-size:9px;color:var(--muted);margin-bottom:3px}
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px
+    }
 
-/* Dim specs overlay */
-.dim-overlay{position:absolute;top:14px;right:14px;
-  background:rgba(11,18,32,.85);border:1px solid var(--border);border-radius:7px;
-  padding:8px 12px;font-size:9px;font-family:'JetBrains Mono',monospace;
-  color:var(--muted);line-height:1.7;backdrop-filter:blur(8px)}
-.dim-overlay b{color:var(--accent)}
-</style>
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #4da8da, #a78bfa);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px
+    }
+
+    .logo h1 {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: .3px
+    }
+
+    .logo span {
+      font-size: 10px;
+      color: var(--muted);
+      display: block
+    }
+
+    .pills {
+      display: flex;
+      gap: 6px
+    }
+
+    .pill {
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 5px
+    }
+
+    .pill.live {
+      background: rgba(74, 222, 128, .12);
+      color: var(--green);
+      border: 1px solid rgba(74, 222, 128, .25)
+    }
+
+    .pill.info {
+      background: rgba(77, 168, 218, .1);
+      color: var(--accent);
+      border: 1px solid var(--border)
+    }
+
+    .dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulse 1.4s infinite
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: .25
+      }
+    }
+
+    #viewport {
+      position: relative;
+      background: radial-gradient(ellipse at 40% 40%, #0d1e36 0%, #050b16 100%);
+      overflow: hidden
+    }
+
+    #cv {
+      display: block;
+      width: 100%;
+      height: 100%
+    }
+
+    .ctrl-panel {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px
+    }
+
+    .vbtn {
+      padding: 7px 14px;
+      border-radius: 7px;
+      font-size: 11px;
+      font-weight: 600;
+      background: rgba(11, 18, 32, .9);
+      border: 1px solid var(--border);
+      color: var(--text);
+      cursor: pointer;
+      transition: all .2s;
+      backdrop-filter: blur(8px);
+      white-space: nowrap
+    }
+
+    .vbtn:hover,
+    .vbtn.act {
+      background: rgba(77, 168, 218, .18);
+      border-color: var(--accent);
+      color: var(--accent)
+    }
+
+    .inside-btn {
+      position: absolute;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 10px 26px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #4da8da, #a78bfa);
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      transition: all .3s;
+      box-shadow: 0 4px 20px rgba(77, 168, 218, .3);
+      letter-spacing: .2px
+    }
+
+    .inside-btn:hover {
+      transform: translateX(-50%) scale(1.05);
+      box-shadow: 0 8px 28px rgba(77, 168, 218, .45)
+    }
+
+    #tip {
+      position: absolute;
+      pointer-events: none;
+      background: rgba(6, 12, 24, .97);
+      border: 1px solid var(--accent);
+      border-radius: 9px;
+      padding: 9px 13px;
+      font-size: 11px;
+      max-width: 210px;
+      display: none;
+      backdrop-filter: blur(8px)
+    }
+
+    #tip h4 {
+      color: var(--accent);
+      font-size: 12px;
+      margin-bottom: 3px;
+      font-weight: 700
+    }
+
+    #tip p {
+      color: var(--muted);
+      line-height: 1.5
+    }
+
+    .hud {
+      position: absolute;
+      bottom: 14px;
+      right: 14px;
+      font-size: 10px;
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+      background: rgba(11, 18, 32, .8);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 7px 11px;
+      backdrop-filter: blur(8px)
+    }
+
+    .side {
+      background: var(--panel);
+      border-left: 1px solid var(--border);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column
+    }
+
+    .side::-webkit-scrollbar {
+      width: 3px
+    }
+
+    .side::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 2px
+    }
+
+    .sec {
+      padding: 14px;
+      border-bottom: 1px solid var(--border)
+    }
+
+    .sec h3 {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      margin-bottom: 11px
+    }
+
+    .ci {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 9px;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: all .2s;
+      margin-bottom: 3px;
+      border: 1px solid transparent
+    }
+
+    .ci:hover {
+      background: rgba(77, 168, 218, .07);
+      border-color: var(--border)
+    }
+
+    .ci.sel {
+      background: rgba(77, 168, 218, .11);
+      border-color: rgba(77, 168, 218, .35)
+    }
+
+    .cdot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      flex-shrink: 0
+    }
+
+    .ci .info {
+      flex: 1
+    }
+
+    .ci .nm {
+      font-size: 11px;
+      font-weight: 600
+    }
+
+    .ci .sb {
+      font-size: 9px;
+      color: var(--muted)
+    }
+
+    .ci .badge {
+      font-size: 8px;
+      font-weight: 700;
+      padding: 2px 5px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, .05)
+    }
+
+    .tog {
+      width: 26px;
+      height: 14px;
+      background: var(--accent);
+      border-radius: 999px;
+      cursor: pointer;
+      position: relative;
+      transition: all .2s;
+      flex-shrink: 0
+    }
+
+    .tog.off {
+      background: rgba(255, 255, 255, .12)
+    }
+
+    .tog::after {
+      content: '';
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #fff;
+      top: 2px;
+      left: 14px;
+      transition: all .2s
+    }
+
+    .tog.off::after {
+      left: 2px
+    }
+
+    .tgrid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 7px
+    }
+
+    .tc {
+      background: rgba(255, 255, 255, .03);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 9px
+    }
+
+    .tc .lbl {
+      font-size: 8px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .8px
+    }
+
+    .tc .val {
+      font-size: 17px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      margin: 3px 0
+    }
+
+    .tc .un {
+      font-size: 8px;
+      color: var(--muted)
+    }
+
+    .tc.g .val {
+      color: var(--green)
+    }
+
+    .tc.b .val {
+      color: var(--accent)
+    }
+
+    .tc.y .val {
+      color: var(--yellow)
+    }
+
+    .tc.p .val {
+      color: var(--accent2)
+    }
+
+    .bar-o {
+      height: 5px;
+      background: rgba(255, 255, 255, .06);
+      border-radius: 3px;
+      overflow: hidden;
+      position: relative
+    }
+
+    .bar-i {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 1.2s ease;
+      position: relative;
+      overflow: hidden
+    }
+
+    .bar-i::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -40%;
+      width: 40%;
+      height: 100%;
+      background: rgba(255, 255, 255, .2);
+      animation: sh 2s infinite
+    }
+
+    @keyframes sh {
+      0% {
+        left: -40%
+      }
+
+      100% {
+        left: 140%
+      }
+    }
+
+    .od-row {
+      display: flex;
+      flex-direction: column;
+      gap: 7px
+    }
+
+    .od-item {
+      display: flex;
+      flex-direction: column;
+      gap: 3px
+    }
+
+    .od-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px
+    }
+
+    .od-label span:last-child {
+      font-family: 'JetBrains Mono', monospace
+    }
+
+    .bot {
+      grid-column: 1/-1;
+      background: rgba(11, 18, 32, .98);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      overflow-x: auto;
+      padding: 0 14px
+    }
+
+    .stab {
+      padding: 0 18px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      border-right: 1px solid var(--border);
+      color: var(--muted);
+      transition: all .2s;
+      white-space: nowrap
+    }
+
+    .stab:hover {
+      color: var(--text)
+    }
+
+    .stab.act {
+      color: var(--accent);
+      background: rgba(77, 168, 218, .06)
+    }
+
+    .sc {
+      flex: 1;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      overflow: hidden
+    }
+
+    .sm {
+      display: flex;
+      flex-direction: column;
+      min-width: 75px
+    }
+
+    .sm span:first-child {
+      font-size: 9px;
+      color: var(--muted)
+    }
+
+    .sm span:last-child {
+      font-size: 13px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace
+    }
+
+    .sb2 {
+      flex: 1
+    }
+
+    .sb2 .lbl {
+      font-size: 9px;
+      color: var(--muted);
+      margin-bottom: 3px
+    }
+
+    /* Dim specs overlay */
+    .dim-overlay {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: rgba(11, 18, 32, .85);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 8px 12px;
+      font-size: 9px;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--muted);
+      line-height: 1.7;
+      backdrop-filter: blur(8px)
+    }
+
+    .dim-overlay b {
+      color: var(--accent)
+    }
+  </style>
 </head>
+
 <body>
 
-<header>
-  <div class="logo">
-    <div class="logo-icon">🛰</div>
-    <div>
-      <h1>LOC CubeSat 3U — Engineering CAD Dashboard</h1>
-      <span>Lab-on-Chip Biology Payload · 100×100×340.5 mm · Al 6061-T6</span>
-    </div>
-  </div>
-  <div class="pills">
-    <button class="pill" id="playBtn" onclick="togglePlay()" style="cursor:pointer; background:#4da8da; color:#fff; border:none; padding:6px 14px; font-weight:700">▶ REPLAY OFF</button>
-    <div class="pill live" id="livePill"><div class="dot"></div>TELEMETRY LIVE</div>
-    <div class="pill info">🌍 LEO 400 km</div>
-    <div class="pill info" id="clk">--:--:-- UTC</div>
-  </div>
-</header>
-
-<div id="viewport">
-  <canvas id="cv"></canvas>
-  <div class="ctrl-panel">
-    <button class="vbtn act" onclick="setView('iso',this)">⬡ Isometric</button>
-    <button class="vbtn" onclick="setView('front',this)">▣ Front</button>
-    <button class="vbtn" onclick="setView('section',this)">◫ Section Cut</button>
-    <button class="vbtn" onclick="setView('top',this)">⊙ Top</button>
-    <button class="vbtn" onclick="doExplode(this)">💥 Explode</button>
-    <button class="vbtn" onclick="doRotate(this)">↻ Auto-Rotate</button>
-  </div>
-  <button class="inside-btn" id="ibtn" onclick="toggleInside()">👁 See What's Inside</button>
-  <div id="tip"><h4 id="tt-n">—</h4><p id="tt-d">—</p></div>
-  <div class="dim-overlay">
-    <div><b>Frame</b> Al 6061-T6</div>
-    <div><b>W×H×D</b> 100×340.5×100 mm</div>
-    <div><b>Rail</b> 8.5×8.5 mm (4×)</div>
-    <div><b>Wall</b> 1.5 mm thk</div>
-    <div><b>Mass</b> ≤ 4 kg budget</div>
-  </div>
-</div>
-
-<div class="side">
-  <div class="sec"><h3>Payload Components</h3><div id="clist"></div></div>
-  <div class="sec">
-    <h3>Live Telemetry</h3>
-    <div class="tgrid">
-      <div class="tc g"><div class="lbl">Temp</div><div class="val" id="tt">23.4</div><div class="un">°C · DHT22</div></div>
-      <div class="tc b"><div class="lbl">Humidity</div><div class="val" id="th">61</div><div class="un">% RH · DHT22</div></div>
-      <div class="tc y"><div class="lbl">Radiation</div><div class="val" id="tr">482</div><div class="un">μGy/hr · GM</div></div>
-      <div class="tc p"><div class="lbl">Battery</div><div class="val" id="tb">87</div><div class="un">% · 18650</div></div>
-    </div>
-  </div>
-  <div class="sec">
-    <h3>Valve State</h3>
-    <div style="display:flex;align-items:center;gap:9px;margin-bottom:6px">
-      <div id="vdot" style="width:11px;height:11px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)"></div>
-      <span id="vtxt" style="font-size:12px;font-weight:600">CLOSED — Normal</span>
-    </div>
-    <div style="font-size:10px;color:var(--muted)">Open &gt;500 μGy/hr · Close &lt;350 μGy/hr</div>
-  </div>
-  <div class="sec">
-    <h3>Biology Chambers (OD600)</h3>
-    <div class="od-row">
-      <div class="od-item">
-        <div class="od-label"><span>CH-1 Control Agar</span><span id="o1">0.42</span></div>
-        <div class="bar-o"><div class="bar-i" id="b1" style="width:42%;background:linear-gradient(90deg,#4da8da,#a78bfa)"></div></div>
-      </div>
-      <div class="od-item">
-        <div class="od-label"><span>CH-2 C.sphaerospermum</span><span id="o2">0.67</span></div>
-        <div class="bar-o"><div class="bar-i" id="b2" style="width:67%;background:linear-gradient(90deg,#4ade80,#22c55e)"></div></div>
-      </div>
-      <div class="od-item">
-        <div class="od-label"><span>CH-3 W.dermatitidis</span><span id="o3">0.55</span></div>
-        <div class="bar-o"><div class="bar-i" id="b3" style="width:55%;background:linear-gradient(90deg,#fbbf24,#f59e0b)"></div></div>
+  <header>
+    <div class="logo">
+      <div class="logo-icon">🛰</div>
+      <div>
+        <h1>LOC CubeSat 3U — Engineering CAD Dashboard</h1>
+        <span>Lab-on-Chip Biology Payload · 100×100×340.5 mm · Al 6061-T6</span>
       </div>
     </div>
+    <div class="pills">
+      <button class="pill" id="playBtn" onclick="togglePlay()"
+        style="cursor:pointer; background:#4da8da; color:#fff; border:none; padding:6px 14px; font-weight:700">▶ REPLAY
+        OFF</button>
+      <div class="pill live" id="livePill">
+        <div class="dot"></div>TELEMETRY LIVE
+      </div>
+      <div class="pill info">🌍 LEO 400 km</div>
+      <div class="pill info" id="clk">--:--:-- UTC</div>
+    </div>
+  </header>
+
+  <div id="viewport">
+    <canvas id="cv"></canvas>
+    <div class="ctrl-panel">
+      <button class="vbtn act" onclick="setView('iso',this)">⬡ Isometric</button>
+      <button class="vbtn" onclick="setView('front',this)">▣ Front</button>
+      <button class="vbtn" onclick="setView('section',this)">◫ Section Cut</button>
+      <button class="vbtn" onclick="setView('top',this)">⊙ Top</button>
+      <button class="vbtn" onclick="doExplode(this)">💥 Explode</button>
+      <button class="vbtn" onclick="doRotate(this)">↻ Auto-Rotate</button>
+    </div>
+    <button class="inside-btn" id="ibtn" onclick="toggleInside()">👁 See What's Inside</button>
+    <div id="tip">
+      <h4 id="tt-n">—</h4>
+      <p id="tt-d">—</p>
+    </div>
+    <div class="dim-overlay">
+      <div><b>Frame</b> Al 6061-T6</div>
+      <div><b>W×H×D</b> 100×340.5×100 mm</div>
+      <div><b>Rail</b> 8.5×8.5 mm (4×)</div>
+      <div><b>Wall</b> 1.5 mm thk</div>
+      <div><b>Mass</b> ≤ 4 kg budget</div>
+    </div>
   </div>
-</div>
 
-<div class="bot">
-  <div class="stab act" onclick="switchSim('orbit',this)">🌍 Orbit Sim</div>
-  <div class="stab" onclick="switchSim('power',this)">⚡ Power Budget</div>
-  <div class="stab" onclick="switchSim('flux',this)">☢ Radiation Flux</div>
-  <div class="sc" id="sc"></div>
-</div>
+  <div class="side">
+    <div class="sec">
+      <h3>Payload Components</h3>
+      <div id="clist"></div>
+    </div>
+    <div class="sec">
+      <h3>Live Telemetry</h3>
+      <div class="tgrid">
+        <div class="tc g">
+          <div class="lbl">Temp</div>
+          <div class="val" id="tt">23.4</div>
+          <div class="un">°C · DHT22</div>
+        </div>
+        <div class="tc b">
+          <div class="lbl">Humidity</div>
+          <div class="val" id="th">61</div>
+          <div class="un">% RH · DHT22</div>
+        </div>
+        <div class="tc y">
+          <div class="lbl">Radiation</div>
+          <div class="val" id="tr">482</div>
+          <div class="un">μGy/hr · GM</div>
+        </div>
+        <div class="tc p">
+          <div class="lbl">Battery</div>
+          <div class="val" id="tb">87</div>
+          <div class="un">% · 18650</div>
+        </div>
+      </div>
+    </div>
+    <div class="sec">
+      <h3>Valve State</h3>
+      <div style="display:flex;align-items:center;gap:9px;margin-bottom:6px">
+        <div id="vdot"
+          style="width:11px;height:11px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)">
+        </div>
+        <span id="vtxt" style="font-size:12px;font-weight:600">CLOSED — Normal</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted)">Open &gt;500 μGy/hr · Close &lt;350 μGy/hr</div>
+    </div>
+    <div class="sec">
+      <h3>Biology Chambers (OD600)</h3>
+      <div class="od-row">
+        <div class="od-item">
+          <div class="od-label"><span>CH-1 Control Agar</span><span id="o1">0.42</span></div>
+          <div class="bar-o">
+            <div class="bar-i" id="b1" style="width:42%;background:linear-gradient(90deg,#4da8da,#a78bfa)"></div>
+          </div>
+        </div>
+        <div class="od-item">
+          <div class="od-label"><span>CH-2 C.sphaerospermum</span><span id="o2">0.67</span></div>
+          <div class="bar-o">
+            <div class="bar-i" id="b2" style="width:67%;background:linear-gradient(90deg,#4ade80,#22c55e)"></div>
+          </div>
+        </div>
+        <div class="od-item">
+          <div class="od-label"><span>CH-3 W.dermatitidis</span><span id="o3">0.55</span></div>
+          <div class="bar-o">
+            <div class="bar-i" id="b3" style="width:55%;background:linear-gradient(90deg,#fbbf24,#f59e0b)"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<script src="data/telemetry_export.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.134.0/examples/js/controls/OrbitControls.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.134.0/examples/js/loaders/STLLoader.js"></script>
-<script>
-// ═══════════════════════════════════════════════
-// RENDERER SETUP
-// ═══════════════════════════════════════════════
-const canvas = document.getElementById('cv');
-const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
-renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.1;
+  <div class="bot">
+    <div class="stab act" onclick="switchSim('orbit',this)">🌍 Orbit Sim</div>
+    <div class="stab" onclick="switchSim('power',this)">⚡ Power Budget</div>
+    <div class="stab" onclick="switchSim('flux',this)">☢ Radiation Flux</div>
+    <div class="sc" id="sc"></div>
+  </div>
 
-const scene = new THREE.Scene();
-const cam = new THREE.PerspectiveCamera(42, 1, 0.01, 500);
-cam.position.set(3.5, 4.5, 6);
+  <script src="data/telemetry_export.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.134.0/examples/js/controls/OrbitControls.js"></script>
+  <script>
+    // ═══════════════════════════════════════════════
+    // RENDERER SETUP
+    // ═══════════════════════════════════════════════
+    const canvas = document.getElementById('cv');
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.1;
 
-const controls = new THREE.OrbitControls(cam, canvas);
-controls.enableDamping = true;
-controls.dampingFactor = 0.055;
-controls.minDistance = 1.5;
-controls.maxDistance = 18;
-controls.target.set(0, 1.7, 0);
-controls.update();
+    const scene = new THREE.Scene();
+    const cam = new THREE.PerspectiveCamera(42, 1, 0.01, 500);
+    cam.position.set(3.5, 4.5, 6);
 
-function resize(){
-  const vp = document.getElementById('viewport');
-  const w = vp.clientWidth, h = vp.clientHeight;
-  renderer.setSize(w,h,false);
-  cam.aspect = w/h; cam.updateProjectionMatrix();
-}
-resize();
-new ResizeObserver(resize).observe(document.getElementById('viewport'));
+    const controls = new THREE.OrbitControls(cam, canvas);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.055;
+    controls.minDistance = 1.5;
+    controls.maxDistance = 18;
+    controls.target.set(0, 1.7, 0);
+    controls.update();
 
-// ── Lights ──
-scene.add(new THREE.AmbientLight(0xffffff, 0.55));
-const sun = new THREE.DirectionalLight(0xfff5e0, 1.4);
-sun.position.set(6,9,5); sun.castShadow = true;
-sun.shadow.mapSize.set(2048,2048); scene.add(sun);
-const fill = new THREE.PointLight(0x4da8da, 1.2, 30);
-fill.position.set(-4,3,4); scene.add(fill);
-const rim = new THREE.PointLight(0xa78bfa, 0.7, 20);
-rim.position.set(3,7,-5); scene.add(rim);
+    function resize() {
+      const vp = document.getElementById('viewport');
+      const w = vp.clientWidth, h = vp.clientHeight;
+      renderer.setSize(w, h, false);
+      cam.aspect = w / h; cam.updateProjectionMatrix();
+    }
+    resize();
+    new ResizeObserver(resize).observe(document.getElementById('viewport'));
 
-// ── Stars ──
-(()=>{const g=new THREE.BufferGeometry();const n=1500;const p=new Float32Array(n*3);
- for(let i=0;i<n*3;i++)p[i]=(Math.random()-.5)*200;
- g.setAttribute('position',new THREE.BufferAttribute(p,3));
- scene.add(new THREE.Points(g,new THREE.PointsMaterial({color:0xffffff,size:.1,transparent:true,opacity:.55})));})();
+    // ── Lights ──
+    scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+    const sun = new THREE.DirectionalLight(0xfff5e0, 1.4);
+    sun.position.set(6, 9, 5); sun.castShadow = true;
+    sun.shadow.mapSize.set(2048, 2048); scene.add(sun);
+    const fill = new THREE.PointLight(0x4da8da, 1.2, 30);
+    fill.position.set(-4, 3, 4); scene.add(fill);
+    const rim = new THREE.PointLight(0xa78bfa, 0.7, 20);
+    rim.position.set(3, 7, -5); scene.add(rim);
 
-// ═══════════════════════════════════════════════
-// SCALE: 1 unit = 100 mm
-// CubeSat outer: 1.0 × 3.405 × 1.0 units
-// ═══════════════════════════════════════════════
+    // ── Stars ──
+    (() => {
+      const g = new THREE.BufferGeometry(); const n = 1500; const p = new Float32Array(n * 3);
+      for (let i = 0; i < n * 3; i++)p[i] = (Math.random() - .5) * 200;
+      g.setAttribute('position', new THREE.BufferAttribute(p, 3));
+      scene.add(new THREE.Points(g, new THREE.PointsMaterial({ color: 0xffffff, size: .1, transparent: true, opacity: .55 })));
+    })();
 
-// ── Materials ──
-const M = {
-  alum:    new THREE.MeshStandardMaterial({color:0xb8c4cc,metalness:.85,roughness:.2}),
-  alumDk:  new THREE.MeshStandardMaterial({color:0x8a9aa8,metalness:.8,roughness:.3}),
-  alumPlt: new THREE.MeshStandardMaterial({color:0xccd4da,metalness:.9,roughness:.15}),
-  pcb:     new THREE.MeshStandardMaterial({color:0x1e6b3a,metalness:.05,roughness:.55}),
-  pcbDk:   new THREE.MeshStandardMaterial({color:0x143d22,metalness:.05,roughness:.6}),
-  gold:    new THREE.MeshStandardMaterial({color:0xd4a820,metalness:.95,roughness:.05}),
-  chip:    new THREE.MeshStandardMaterial({color:0x121820,metalness:.6,roughness:.25}),
-  chipSil: new THREE.MeshStandardMaterial({color:0x8090a0,metalness:.7,roughness:.2}),
-  loc:     new THREE.MeshStandardMaterial({color:0xccf0e8,transparent:true,opacity:.32,roughness:.04,metalness:0}),
-  locRim:  new THREE.MeshStandardMaterial({color:0x99ddd0,transparent:true,opacity:.6,roughness:.1}),
-  locBase: new THREE.MeshStandardMaterial({color:0xeef8f5,transparent:true,opacity:.18,roughness:.05}),
-  dht:     new THREE.MeshStandardMaterial({color:0xf0f0f0,roughness:.75}),
-  dhtMesh: new THREE.MeshStandardMaterial({color:0xaaaaaa,roughness:.8}),
-  geiger:  new THREE.MeshStandardMaterial({color:0x777777,metalness:.75,roughness:.3}),
-  geigerEnd:new THREE.MeshStandardMaterial({color:0x444444,metalness:.9,roughness:.15}),
-  gmpcb:   new THREE.MeshStandardMaterial({color:0x1a3344,roughness:.55}),
-  camPCB:  new THREE.MeshStandardMaterial({color:0x0e3366,roughness:.4,metalness:.4}),
-  camLens: new THREE.MeshStandardMaterial({color:0x050a10,roughness:0,metalness:.9,envMapIntensity:2}),
-  camIR:   new THREE.MeshStandardMaterial({color:0x223344,roughness:.3,metalness:.5}),
-  bat:     new THREE.MeshStandardMaterial({color:0x111111,roughness:.85}),
-  batWrap: new THREE.MeshStandardMaterial({color:0x1a3366,roughness:.7}),
-  batTerm: new THREE.MeshStandardMaterial({color:0xcccccc,metalness:.9,roughness:.1}),
-  solenoid:new THREE.MeshStandardMaterial({color:0x556688,metalness:.6,roughness:.4}),
-  coil:    new THREE.MeshStandardMaterial({color:0xcc8800,metalness:.8,roughness:.15}),
-  led:     new THREE.MeshStandardMaterial({color:0xffffff,emissive:0xffffff,emissiveIntensity:.8,transparent:true,opacity:.85}),
-  wire:c=> new THREE.MeshStandardMaterial({color:c,roughness:.9}),
-};
+    // ═══════════════════════════════════════════════
+    // SCALE: 1 unit = 100 mm
+    // CubeSat outer: 1.0 × 3.405 × 1.0 units
+    // ═══════════════════════════════════════════════
 
-// ── Geometry helpers ──
-function bx(w,h,d){return new THREE.BoxGeometry(w,h,d)}
-function cy(r,H,seg=24){return new THREE.CylinderGeometry(r,r,H,seg)}
-function add(geo,mat,px,py,pz,rx=0,ry=0,rz=0){
-  const m=new THREE.Mesh(geo,mat); m.position.set(px,py,pz);
-  m.rotation.set(rx,ry,rz); m.castShadow=true; m.receiveShadow=true; return m;
-}
+    // ── Materials ──
+    const M = {
+      alum: new THREE.MeshStandardMaterial({ color: 0xb8c4cc, metalness: .85, roughness: .2 }),
+      alumDk: new THREE.MeshStandardMaterial({ color: 0x8a9aa8, metalness: .8, roughness: .3 }),
+      alumPlt: new THREE.MeshStandardMaterial({ color: 0xccd4da, metalness: .9, roughness: .15 }),
+      pcb: new THREE.MeshStandardMaterial({ color: 0x1e6b3a, metalness: .05, roughness: .55 }),
+      pcbDk: new THREE.MeshStandardMaterial({ color: 0x143d22, metalness: .05, roughness: .6 }),
+      gold: new THREE.MeshStandardMaterial({ color: 0xd4a820, metalness: .95, roughness: .05 }),
+      chip: new THREE.MeshStandardMaterial({ color: 0x121820, metalness: .6, roughness: .25 }),
+      chipSil: new THREE.MeshStandardMaterial({ color: 0x8090a0, metalness: .7, roughness: .2 }),
+      loc: new THREE.MeshStandardMaterial({ color: 0xccf0e8, transparent: true, opacity: .32, roughness: .04, metalness: 0 }),
+      locRim: new THREE.MeshStandardMaterial({ color: 0x99ddd0, transparent: true, opacity: .6, roughness: .1 }),
+      locBase: new THREE.MeshStandardMaterial({ color: 0xeef8f5, transparent: true, opacity: .18, roughness: .05 }),
+      dht: new THREE.MeshStandardMaterial({ color: 0xf0f0f0, roughness: .75 }),
+      dhtMesh: new THREE.MeshStandardMaterial({ color: 0xaaaaaa, roughness: .8 }),
+      geiger: new THREE.MeshStandardMaterial({ color: 0x777777, metalness: .75, roughness: .3 }),
+      geigerEnd: new THREE.MeshStandardMaterial({ color: 0x444444, metalness: .9, roughness: .15 }),
+      gmpcb: new THREE.MeshStandardMaterial({ color: 0x1a3344, roughness: .55 }),
+      camPCB: new THREE.MeshStandardMaterial({ color: 0x0e3366, roughness: .4, metalness: .4 }),
+      camLens: new THREE.MeshStandardMaterial({ color: 0x050a10, roughness: 0, metalness: .9, envMapIntensity: 2 }),
+      camIR: new THREE.MeshStandardMaterial({ color: 0x223344, roughness: .3, metalness: .5 }),
+      bat: new THREE.MeshStandardMaterial({ color: 0x111111, roughness: .85 }),
+      batWrap: new THREE.MeshStandardMaterial({ color: 0x1a3366, roughness: .7 }),
+      batTerm: new THREE.MeshStandardMaterial({ color: 0xcccccc, metalness: .9, roughness: .1 }),
+      solenoid: new THREE.MeshStandardMaterial({ color: 0x556688, metalness: .6, roughness: .4 }),
+      coil: new THREE.MeshStandardMaterial({ color: 0xcc8800, metalness: .8, roughness: .15 }),
+      led: new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xffffff, emissiveIntensity: .8, transparent: true, opacity: .85 }),
+      wire: c => new THREE.MeshStandardMaterial({ color: c, roughness: .9 }),
+    };
 
-// ═══════════════════════════════════════════════
-// ASSEMBLE CUBESAT  (all units = 100 mm)
-// ═══════════════════════════════════════════════
-const CS = new THREE.Group(); scene.add(CS);
+    // ── Geometry helpers ──
+    function bx(w, h, d) { return new THREE.BoxGeometry(w, h, d) }
+    function cy(r, H, seg = 24) { return new THREE.CylinderGeometry(r, r, H, seg) }
+    function add(geo, mat, px, py, pz, rx = 0, ry = 0, rz = 0) {
+      const m = new THREE.Mesh(geo, mat); m.position.set(px, py, pz);
+      m.rotation.set(rx, ry, rz); m.castShadow = true; m.receiveShadow = true; return m;
+    }
 
-// ─── 1. FRAME: Loaded from Fusion 360 STL ───
-const stlGrp = new THREE.Group();
-CS.add(stlGrp);
+    // ═══════════════════════════════════════════════
+    // ASSEMBLE CUBESAT  (all units = 100 mm)
+    // ═══════════════════════════════════════════════
+    const CS = new THREE.Group(); scene.add(CS);
 
-const loader = new THREE.STLLoader();
-loader.load('3D parts/Satellite.stl', function (geometry) {
-  const material = new THREE.MeshStandardMaterial({
-    color: 0xaaaaaa,
-    metalness: 0.9,
-    roughness: 0.2
-  });
-  const mesh = new THREE.Mesh(geometry, material);
-  
-  // Center and scale the mesh
-  geometry.computeBoundingBox();
-  const center = new THREE.Vector3();
-  geometry.boundingBox.getCenter(center);
-  mesh.position.sub(center); // Center it on origin
-  
-  // The original dashboard built the frame from y=0 to y=3.405 (units of 100mm)
-  // Let's assume the STL needs to be scaled and shifted to match the internal components
-  // We scale down by 0.01 (mm to 100mm units)
-  mesh.scale.set(0.01, 0.01, 0.01);
-  mesh.position.y += 1.7025; // Shift up to match internal Y coordinates
-  
-  mesh.castShadow = true;
-  mesh.receiveShadow = true;
-  
-  stlGrp.add(mesh);
-});
+    // ─── 1. FRAME: 4 corner rails (8.5×8.5mm → 0.085×0.085 units), H=3.405 ───
+    const RAIL_H = 3.405, RAIL_S = 0.085;
+    const frameGrp = new THREE.Group();
+    for (const [rx, rz] of [[.457, .457], [-.457, .457], [.457, -.457], [-.457, -.457]]) {
+      frameGrp.add(add(bx(RAIL_S, RAIL_H, RAIL_S), M.alum, rx, RAIL_H / 2, rz));
+    }
+    // Horizontal straps — built by hStraps() below
+    // corner strap helper
+    function hStraps(y) {
+      const f = frameGrp;
+      f.add(add(bx(1.0, RAIL_S, RAIL_S), M.alumDk, 0, y, .457));
+      f.add(add(bx(1.0, RAIL_S, RAIL_S), M.alumDk, 0, y, -.457));
+      f.add(add(bx(RAIL_S, RAIL_S, 1.0), M.alumDk, .457, y, 0));
+      f.add(add(bx(RAIL_S, RAIL_S, 1.0), M.alumDk, -.457, y, 0));
+    }
+    for (const y of [0.02, 1.14, 2.27, 3.385]) hStraps(y);
+    CS.add(frameGrp);
 
-// We keep empty platGrp and wallGrp so other scripts don't break,
-// but they won't render anything.
-const platGrp = new THREE.Group(); CS.add(platGrp);
-const wallGrp = new THREE.Group(); CS.add(wallGrp);
-const frameGrp = new THREE.Group(); CS.add(frameGrp);
+    // End plates 1.5mm thick → 0.015 units, 94mm span → 0.94
+    const platGrp = new THREE.Group();
+    platGrp.add(add(bx(0.94, 0.015, 0.94), M.alumPlt, 0, 3.375, 0));
+    platGrp.add(add(bx(0.94, 0.015, 0.94), M.alumPlt, 0, 0.02, 0));
+    // Mounting holes (dark circles) on end plates
+    for (const p of [[-0.32, .32], [.32, .32], [-.32, -.32], [.32, -.32]]) {
+      platGrp.add(add(cy(0.025, 0.02), M.chip, p[0], 3.385, p[1]));
+      platGrp.add(add(cy(0.025, 0.02), M.chip, p[0], 0.01, p[1]));
+    }
+    CS.add(platGrp);
 
-// ─── 2. LED LIGHTING PANEL (top, 90mm×90mm) ───
-const ledGrp=new THREE.Group();
-ledGrp.add(add(bx(0.9,0.008,0.9),M.led,0,3.36,0));
-// LED dots 4×4 array
-for(let xi=-1.5;xi<=1.5;xi++) for(let zi=-1.5;zi<=1.5;zi++){
-  ledGrp.add(add(bx(0.04,0.006,0.04),
-    new THREE.MeshStandardMaterial({color:0xffffff,emissive:0xffffff,emissiveIntensity:2.5}),
-    xi*.18,3.365,zi*.18));
-}
-CS.add(ledGrp);
+    // Side panel walls (1.5mm polished Al)
+    const wallGrp = new THREE.Group();
+    wallGrp.add(add(bx(0.015, 3.405, 0.915), M.alumPlt, .4925, 1.7025, 0));
+    wallGrp.add(add(bx(0.015, 3.405, 0.915), M.alumPlt, -.4925, 1.7025, 0));
+    wallGrp.add(add(bx(0.915, 3.405, 0.015), M.alumPlt, 0, 1.7025, .4925));
+    wallGrp.add(add(bx(0.915, 3.405, 0.015), M.alumPlt, 0, 1.7025, -.4925));
+    CS.add(wallGrp);
 
-// ─── 3. RASPBERRY PI ZERO W × 2 (65×30mm → 0.65×0.30) ───
-// PCB stackup at Y≈2.65 and 2.85
-const piGrp=new THREE.Group();
-function buildPi(cy_pos){
-  const G=new THREE.Group();
-  // PCB board
-  G.add(add(bx(0.65,0.016,0.30),M.pcb, 0,cy_pos,0));
-  // Main SoC chip (BCM2835) center
-  G.add(add(bx(0.12,0.025,0.12),M.chip, 0,cy_pos+.021,0));
-  // RAM chip (smaller, beside SoC)
-  G.add(add(bx(0.06,0.02,0.06),M.chip, .13,cy_pos+.018,0));
-  // WiFi module (small white ceramic)
-  G.add(add(bx(0.1,0.018,0.08),
-    new THREE.MeshStandardMaterial({color:0xeeeeee,roughness:.7}),-.2,cy_pos+.018,.06));
-  // 40-pin GPIO header
-  for(let pi=0;pi<20;pi++){
-    G.add(add(bx(0.007,0.03,0.007),M.gold,-.3+pi*.015,cy_pos+.023,-.12));
-    G.add(add(bx(0.007,0.03,0.007),M.gold,-.3+pi*.015,cy_pos+.023,-.13));
-  }
-  // Micro USB ×2
-  G.add(add(bx(0.055,0.025,0.04),M.chipSil,.26,cy_pos+.02,-.12));
-  G.add(add(bx(0.055,0.025,0.04),M.chipSil,.18,cy_pos+.02,-.12));
-  // Mini HDMI
-  G.add(add(bx(0.07,0.022,0.045),M.chipSil,.1,cy_pos+.02,-.12));
-  // CSI camera connector (white)
-  G.add(add(bx(0.10,0.01,0.018),
-    new THREE.MeshStandardMaterial({color:0xdddddd,roughness:.6}),0,cy_pos+.015,.13));
-  // Capacitors (gold dots scattered)
-  for(const [cx,cz] of [[-.28,.09],[-.22,.08],[-.05,.13],[.25,.09]]) {
-    G.add(add(cy(.012,.022),M.gold,cx,cy_pos+.02,cz));
-  }
-  // Green LEDs on edge
-  G.add(add(cy(.006,.01),
-    new THREE.MeshStandardMaterial({color:0x00ff44,emissive:0x00ff44,emissiveIntensity:3}),
-    -.3,cy_pos+.022,.11));
-  // Mounting holes (4 corners)
-  for(const [mx,mz] of [[-.3,.13],[.3,.13],[-.3,-.13],[.3,-.13]]){
-    G.add(add(cy(.018,.02),M.chip,mx,cy_pos+.018,mz));
-  }
-  // Standoffs below
-  for(const [mx,mz] of [[-.3,.13],[.3,.13],[-.3,-.13],[.3,-.13]]){
-    G.add(add(cy(.012,.06),M.alumDk,mx,cy_pos-.04,mz));
-  }
-  return G;
-}
-const pi1=buildPi(2.76); const pi2=buildPi(2.56);
-piGrp.add(pi1,pi2);
+    // ─── 2. LED LIGHTING PANEL (top, 90mm×90mm) ───
+    const ledGrp = new THREE.Group();
+    ledGrp.add(add(bx(0.9, 0.008, 0.9), M.led, 0, 3.36, 0));
+    // LED dots 4×4 array
+    for (let xi = -1.5; xi <= 1.5; xi++) for (let zi = -1.5; zi <= 1.5; zi++) {
+      ledGrp.add(add(bx(0.04, 0.006, 0.04),
+        new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xffffff, emissiveIntensity: 2.5 }),
+        xi * .18, 3.365, zi * .18));
+    }
+    CS.add(ledGrp);
 
-// ─── Ribbon cable between Pi and other components ───
-const ribbonColors=[0xff2200,0xff7700,0xffee00,0x00cc44,0x2266ff,0x8833ff,0xff33aa,0xffffff,0x00ccff,0xff8844];
-for(let i=0;i<ribbonColors.length;i++){
-  piGrp.add(add(bx(0.01,1.4,0.01),M.wire(ribbonColors[i]),-.28+i*.02,2.1,.23));
-}
-CS.add(piGrp);
+    // ─── 3. RASPBERRY PI ZERO W × 2 (65×30mm → 0.65×0.30) ───
+    // PCB stackup at Y≈2.65 and 2.85
+    const piGrp = new THREE.Group();
+    function buildPi(cy_pos) {
+      const G = new THREE.Group();
+      // PCB board
+      G.add(add(bx(0.65, 0.016, 0.30), M.pcb, 0, cy_pos, 0));
+      // Main SoC chip (BCM2835) center
+      G.add(add(bx(0.12, 0.025, 0.12), M.chip, 0, cy_pos + .021, 0));
+      // RAM chip (smaller, beside SoC)
+      G.add(add(bx(0.06, 0.02, 0.06), M.chip, .13, cy_pos + .018, 0));
+      // WiFi module (small white ceramic)
+      G.add(add(bx(0.1, 0.018, 0.08),
+        new THREE.MeshStandardMaterial({ color: 0xeeeeee, roughness: .7 }), -.2, cy_pos + .018, .06));
+      // 40-pin GPIO header
+      for (let pi = 0; pi < 20; pi++) {
+        G.add(add(bx(0.007, 0.03, 0.007), M.gold, -.3 + pi * .015, cy_pos + .023, -.12));
+        G.add(add(bx(0.007, 0.03, 0.007), M.gold, -.3 + pi * .015, cy_pos + .023, -.13));
+      }
+      // Micro USB ×2
+      G.add(add(bx(0.055, 0.025, 0.04), M.chipSil, .26, cy_pos + .02, -.12));
+      G.add(add(bx(0.055, 0.025, 0.04), M.chipSil, .18, cy_pos + .02, -.12));
+      // Mini HDMI
+      G.add(add(bx(0.07, 0.022, 0.045), M.chipSil, .1, cy_pos + .02, -.12));
+      // CSI camera connector (white)
+      G.add(add(bx(0.10, 0.01, 0.018),
+        new THREE.MeshStandardMaterial({ color: 0xdddddd, roughness: .6 }), 0, cy_pos + .015, .13));
+      // Capacitors (gold dots scattered)
+      for (const [cx, cz] of [[-.28, .09], [-.22, .08], [-.05, .13], [.25, .09]]) {
+        G.add(add(cy(.012, .022), M.gold, cx, cy_pos + .02, cz));
+      }
+      // Green LEDs on edge
+      G.add(add(cy(.006, .01),
+        new THREE.MeshStandardMaterial({ color: 0x00ff44, emissive: 0x00ff44, emissiveIntensity: 3 }),
+        -.3, cy_pos + .022, .11));
+      // Mounting holes (4 corners)
+      for (const [mx, mz] of [[-.3, .13], [.3, .13], [-.3, -.13], [.3, -.13]]) {
+        G.add(add(cy(.018, .02), M.chip, mx, cy_pos + .018, mz));
+      }
+      // Standoffs below
+      for (const [mx, mz] of [[-.3, .13], [.3, .13], [-.3, -.13], [.3, -.13]]) {
+        G.add(add(cy(.012, .06), M.alumDk, mx, cy_pos - .04, mz));
+      }
+      return G;
+    }
+    const pi1 = buildPi(2.76); const pi2 = buildPi(2.56);
+    piGrp.add(pi1, pi2);
 
-// Shelf plate between Pi zone and LOC zone
-CS.add(add(bx(0.88,0.012,0.88),M.alumDk,0,2.44,0));
+    // ─── Ribbon cable between Pi and other components ───
+    const ribbonColors = [0xff2200, 0xff7700, 0xffee00, 0x00cc44, 0x2266ff, 0x8833ff, 0xff33aa, 0xffffff, 0x00ccff, 0xff8844];
+    for (let i = 0; i < ribbonColors.length; i++) {
+      piGrp.add(add(bx(0.01, 1.4, 0.01), M.wire(ribbonColors[i]), -.28 + i * .02, 2.1, .23));
+    }
+    CS.add(piGrp);
 
-// ─── 4. LOC CHIP TRAY — 3 chambers, each 30mm Ø ───
-// Full tray: polycarbonate, ~95mm long × 35mm wide × 12mm thick
-const locGrp=new THREE.Group();
-// Base plate (clear polycarbonate)
-locGrp.add(add(bx(0.92,0.015,0.38),M.locBase,0,2.05,0));
-// Three circular chambers (30mm Ø = 0.30 radius .15)
-const chamberColors=[
-  new THREE.MeshStandardMaterial({color:0xd4eee4,transparent:true,opacity:.55,roughness:.05}),
-  new THREE.MeshStandardMaterial({color:0xb0f0cc,transparent:true,opacity:.55,roughness:.05}),
-  new THREE.MeshStandardMaterial({color:0xc8e8b0,transparent:true,opacity:.55,roughness:.05}),
-];
-// Chamber positions side by side along X
-for(let i=0;i<3;i++){
-  const cx=-0.29+i*0.29;
-  // Chamber outer ring
-  locGrp.add(add(cy(.155,.05,48),M.locRim,cx,2.065,0));
-  // Chamber inner (liquid)
-  locGrp.add(add(cy(.14,.04,48),chamberColors[i],cx,2.07,0));
-  // Chamber label plate
-  locGrp.add(add(bx(.05,.005,.05),
-    new THREE.MeshStandardMaterial({color:[0xcccccc,0x44bb77,0xaa7744][i]}),cx,2.082,-.16));
-}
-// Tray sidewalls
-locGrp.add(add(bx(0.92,0.04,0.01),M.locRim,0,2.065,.195));
-locGrp.add(add(bx(0.92,0.04,0.01),M.locRim,0,2.065,-.195));
-locGrp.add(add(bx(0.01,0.04,0.38),M.locRim,.465,2.065,0));
-locGrp.add(add(bx(0.01,0.04,0.38),M.locRim,-.465,2.065,0));
-CS.add(locGrp);
+    // Shelf plate between Pi zone and LOC zone
+    CS.add(add(bx(0.88, 0.012, 0.88), M.alumDk, 0, 2.44, 0));
 
-// Shelf below LOC
-CS.add(add(bx(0.88,0.012,0.88),M.alumDk,0,2.00,0));
+    // ─── 4. LOC CHIP TRAY — 3 chambers, each 30mm Ø ───
+    // Full tray: polycarbonate, ~95mm long × 35mm wide × 12mm thick
+    const locGrp = new THREE.Group();
+    // Base plate (clear polycarbonate)
+    locGrp.add(add(bx(0.92, 0.015, 0.38), M.locBase, 0, 2.05, 0));
+    // Three circular chambers (30mm Ø = 0.30 radius .15)
+    const chamberColors = [
+      new THREE.MeshStandardMaterial({ color: 0xd4eee4, transparent: true, opacity: .55, roughness: .05 }),
+      new THREE.MeshStandardMaterial({ color: 0xb0f0cc, transparent: true, opacity: .55, roughness: .05 }),
+      new THREE.MeshStandardMaterial({ color: 0xc8e8b0, transparent: true, opacity: .55, roughness: .05 }),
+    ];
+    // Chamber positions side by side along X
+    for (let i = 0; i < 3; i++) {
+      const cx = -0.29 + i * 0.29;
+      // Chamber outer ring
+      locGrp.add(add(cy(.155, .05, 48), M.locRim, cx, 2.065, 0));
+      // Chamber inner (liquid)
+      locGrp.add(add(cy(.14, .04, 48), chamberColors[i], cx, 2.07, 0));
+      // Chamber label plate
+      locGrp.add(add(bx(.05, .005, .05),
+        new THREE.MeshStandardMaterial({ color: [0xcccccc, 0x44bb77, 0xaa7744][i] }), cx, 2.082, -.16));
+    }
+    // Tray sidewalls
+    locGrp.add(add(bx(0.92, 0.04, 0.01), M.locRim, 0, 2.065, .195));
+    locGrp.add(add(bx(0.92, 0.04, 0.01), M.locRim, 0, 2.065, -.195));
+    locGrp.add(add(bx(0.01, 0.04, 0.38), M.locRim, .465, 2.065, 0));
+    locGrp.add(add(bx(0.01, 0.04, 0.38), M.locRim, -.465, 2.065, 0));
+    CS.add(locGrp);
 
-// ─── 5. DHT22 sensor (25×15×7mm → 0.25×0.15×0.07) ─── LEFT WALL
-const dhtGrp=new THREE.Group();
-// Body (white plastic housing)
-dhtGrp.add(add(bx(0.07,0.25,0.15),M.dht,-.415,2.18,0));
-// Grid mesh front face (tiny bumps)
-for(let row=-3;row<=3;row++) for(let col=-2;col<=2;col++){
-  dhtGrp.add(add(bx(0.005,0.025,0.025),M.dhtMesh,-.4,2.18+row*.032,col*.028));
-}
-// 4 pins (gold, pointing inward)
-for(let pi=0;pi<4;pi++){
-  dhtGrp.add(add(bx(0.07,0.008,0.008),M.gold,-.375,2.06+pi*.02,-.04+pi*.02));
-}
-// Mounting PCB
-dhtGrp.add(add(bx(0.08,0.28,0.17),M.pcbDk,-.44,2.18,0));
-CS.add(dhtGrp);
+    // Shelf below LOC
+    CS.add(add(bx(0.88, 0.012, 0.88), M.alumDk, 0, 2.00, 0));
 
-// ─── 6. GEIGER-MÜLLER TUBES × 2 (LND-712 style: Ø23mm × 89mm → Ø.23 ×.89) ───
-const gmGrp=new THREE.Group();
-// PCB board they sit on
-gmGrp.add(add(bx(0.55,0.012,0.28),M.gmpcb,0,1.58,0));
-// Components on PCB (caps, chips)
-for(const [gx,gz] of [[-.18,-.07],[.05,.06],[.22,-.06]]) {
-  gmGrp.add(add(cy(.015,.04),M.gold,gx,1.598,gz));
-}
-gmGrp.add(add(bx(0.09,0.02,0.07),M.chip,.18,1.598,0));
-// Two Geiger tubes (cylinders, horizontal, Ø.23 length .89 = scaled down)
-// Scale: 23mm Ø → 0.115 radius; 89mm → 0.44 length
-for(const [tx,tz] of [[-0.10,0],[.10,0]]){
-  // tube body (aluminum/stainless)
-  const tube=add(cy(.055,.44,32),M.geiger,tx,1.72,tz,0,0,Math.PI/2);
-  gmGrp.add(tube);
-  // End caps
-  gmGrp.add(add(cy(.055,.01,32),M.geigerEnd,tx+.22,1.72,tz,0,0,Math.PI/2));
-  gmGrp.add(add(cy(.055,.01,32),M.geigerEnd,tx-.22,1.72,tz,0,0,Math.PI/2));
-  // Anode wire inside (symbolic)
-  gmGrp.add(add(cy(.003,.44,8),
-    new THREE.MeshStandardMaterial({color:0xcc9900,metalness:.9}),tx,1.72,tz,0,0,Math.PI/2));
-  // Pin leads bottom
-  gmGrp.add(add(bx(.008,.06,.008),M.gold,tx-.03,1.60,tz));
-  gmGrp.add(add(bx(.008,.06,.008),M.gold,tx+.03,1.60,tz));
-}
-// Labels (white strips)
-gmGrp.add(add(bx(.18,.01,.04),
-  new THREE.MeshStandardMaterial({color:0xeeeeee}),-.1,1.78,.02));
-gmGrp.add(add(bx(.18,.01,.04),
-  new THREE.MeshStandardMaterial({color:0xeeeeee}),.1,1.78,.02));
-CS.add(gmGrp);
+    // ─── 5. DHT22 sensor (25×15×7mm → 0.25×0.15×0.07) ─── LEFT WALL
+    const dhtGrp = new THREE.Group();
+    // Body (white plastic housing)
+    dhtGrp.add(add(bx(0.07, 0.25, 0.15), M.dht, -.415, 2.18, 0));
+    // Grid mesh front face (tiny bumps)
+    for (let row = -3; row <= 3; row++) for (let col = -2; col <= 2; col++) {
+      dhtGrp.add(add(bx(0.005, 0.025, 0.025), M.dhtMesh, -.4, 2.18 + row * .032, col * .028));
+    }
+    // 4 pins (gold, pointing inward)
+    for (let pi = 0; pi < 4; pi++) {
+      dhtGrp.add(add(bx(0.07, 0.008, 0.008), M.gold, -.375, 2.06 + pi * .02, -.04 + pi * .02));
+    }
+    // Mounting PCB
+    dhtGrp.add(add(bx(0.08, 0.28, 0.17), M.pcbDk, -.44, 2.18, 0));
+    CS.add(dhtGrp);
 
-// ─── 7. OV5647 CAMERA MODULE (25×24mm PCB + lens) ───
-const camGrp=new THREE.Group();
-// PCB
-camGrp.add(add(bx(0.25,0.016,0.24),M.camPCB,0,1.30,.04));
-// Lens barrel (Ø8.5mm → .085 Ø, height .06)
-camGrp.add(add(cy(.0425,.065,24),M.camIR,0,1.345,.04));
-// Lens glass
-camGrp.add(add(cy(.035,.01,24),M.camLens,0,1.375,.04));
-// Lens flange ring
-camGrp.add(add(cy(.052,.008,24),M.chipSil,0,1.35,.04));
-// CSI ribbon connector
-camGrp.add(add(bx(.14,.008,.022),
-  new THREE.MeshStandardMaterial({color:0xddddcc,roughness:.7}),0,1.30,.14));
-// Ribbon cable up to Pi
-camGrp.add(add(bx(.008,1.30,.10),
-  new THREE.MeshStandardMaterial({color:0xddddcc,roughness:.8,transparent:true,opacity:.8}),
-  .06,1.92,.14));
-// Voltage regulator on PCB
-camGrp.add(add(bx(.04,.018,.04),M.chip,.09,1.318,.04));
-// Capacitors
-for(const [ex,ez] of [[-.09,.07],[-.09,-.07]]) {
-  camGrp.add(add(cy(.009,.018),M.gold,ex,1.318,ez));
-}
-CS.add(camGrp);
+    // ─── 6. GEIGER-MÜLLER TUBES × 2 (LND-712 style: Ø23mm × 89mm → Ø.23 ×.89) ───
+    const gmGrp = new THREE.Group();
+    // PCB board they sit on
+    gmGrp.add(add(bx(0.55, 0.012, 0.28), M.gmpcb, 0, 1.58, 0));
+    // Components on PCB (caps, chips)
+    for (const [gx, gz] of [[-.18, -.07], [.05, .06], [.22, -.06]]) {
+      gmGrp.add(add(cy(.015, .04), M.gold, gx, 1.598, gz));
+    }
+    gmGrp.add(add(bx(0.09, 0.02, 0.07), M.chip, .18, 1.598, 0));
+    // Two Geiger tubes (cylinders, horizontal, Ø.23 length .89 = scaled down)
+    // Scale: 23mm Ø → 0.115 radius; 89mm → 0.44 length
+    for (const [tx, tz] of [[-0.10, 0], [.10, 0]]) {
+      // tube body (aluminum/stainless)
+      const tube = add(cy(.055, .44, 32), M.geiger, tx, 1.72, tz, 0, 0, Math.PI / 2);
+      gmGrp.add(tube);
+      // End caps
+      gmGrp.add(add(cy(.055, .01, 32), M.geigerEnd, tx + .22, 1.72, tz, 0, 0, Math.PI / 2));
+      gmGrp.add(add(cy(.055, .01, 32), M.geigerEnd, tx - .22, 1.72, tz, 0, 0, Math.PI / 2));
+      // Anode wire inside (symbolic)
+      gmGrp.add(add(cy(.003, .44, 8),
+        new THREE.MeshStandardMaterial({ color: 0xcc9900, metalness: .9 }), tx, 1.72, tz, 0, 0, Math.PI / 2));
+      // Pin leads bottom
+      gmGrp.add(add(bx(.008, .06, .008), M.gold, tx - .03, 1.60, tz));
+      gmGrp.add(add(bx(.008, .06, .008), M.gold, tx + .03, 1.60, tz));
+    }
+    // Labels (white strips)
+    gmGrp.add(add(bx(.18, .01, .04),
+      new THREE.MeshStandardMaterial({ color: 0xeeeeee }), -.1, 1.78, .02));
+    gmGrp.add(add(bx(.18, .01, .04),
+      new THREE.MeshStandardMaterial({ color: 0xeeeeee }), .1, 1.78, .02));
+    CS.add(gmGrp);
 
-// ─── 8. SOLENOID VALVE ACTUATOR (nutrient valve) ───
-const valveGrp=new THREE.Group();
-// Solenoid body (cylindrical coil housing)
-valveGrp.add(add(cy(.055,.14,32),M.solenoid,.32,1.42,.15));
-// Copper coil wrap (thin rings)
-for(let ri=0;ri<7;ri++){
-  valveGrp.add(add(cy(.058,.01,32),M.coil,.32,1.37+ri*.015,.15));
-}
-// Valve port (small nozzle)
-valveGrp.add(add(cy(.018,.06,16),M.alumDk,.32,1.49,.15,Math.PI/2,0,0));
-// Mounting bracket
-valveGrp.add(add(bx(.15,.008,.12),M.alumDk,.32,1.35,.15));
-// Wires from solenoid
-valveGrp.add(add(bx(.006,.30,.006),M.wire(0xff0000),.33,1.20,.15));
-valveGrp.add(add(bx(.006,.30,.006),M.wire(0x222222),.31,1.20,.15));
-CS.add(valveGrp);
+    // ─── 7. OV5647 CAMERA MODULE (25×24mm PCB + lens) ───
+    const camGrp = new THREE.Group();
+    // PCB
+    camGrp.add(add(bx(0.25, 0.016, 0.24), M.camPCB, 0, 1.30, .04));
+    // Lens barrel (Ø8.5mm → .085 Ø, height .06)
+    camGrp.add(add(cy(.0425, .065, 24), M.camIR, 0, 1.345, .04));
+    // Lens glass
+    camGrp.add(add(cy(.035, .01, 24), M.camLens, 0, 1.375, .04));
+    // Lens flange ring
+    camGrp.add(add(cy(.052, .008, 24), M.chipSil, 0, 1.35, .04));
+    // CSI ribbon connector
+    camGrp.add(add(bx(.14, .008, .022),
+      new THREE.MeshStandardMaterial({ color: 0xddddcc, roughness: .7 }), 0, 1.30, .14));
+    // Ribbon cable up to Pi
+    camGrp.add(add(bx(.008, 1.30, .10),
+      new THREE.MeshStandardMaterial({ color: 0xddddcc, roughness: .8, transparent: true, opacity: .8 }),
+      .06, 1.92, .14));
+    // Voltage regulator on PCB
+    camGrp.add(add(bx(.04, .018, .04), M.chip, .09, 1.318, .04));
+    // Capacitors
+    for (const [ex, ez] of [[-.09, .07], [-.09, -.07]]) {
+      camGrp.add(add(cy(.009, .018), M.gold, ex, 1.318, ez));
+    }
+    CS.add(camGrp);
 
-// ─── 9. 18650 BATTERY CELLS × 2 in bracket ───
-// 18650: Ø18.5mm → .0925 radius; length 65mm → 0.65
-const batGrp=new THREE.Group();
-// Bracket (L-shaped Al bracket)
-batGrp.add(add(bx(.55,.015,.28),M.alumDk,0,.38,0));   // base plate
-batGrp.add(add(bx(.015,.40,.28),M.alumDk,.27,.59,0)); // right wall
-batGrp.add(add(bx(.015,.40,.28),M.alumDk,-.27,.59,0));// left wall
-// Two 18650 cells side by side
-for(const bx2 of [-.11,.11]){
-  // Cell body (blue PVC wrap)
-  batGrp.add(add(cy(.092,.62,32),M.batWrap,bx2,.69,0,0,0,Math.PI/2));
-  // Positive terminal (+)
-  batGrp.add(add(cy(.036,.01,16),M.batTerm,bx2,.69,.31));
-  batGrp.add(add(cy(.018,.02,16),
-    new THREE.MeshStandardMaterial({color:0xdddddd,metalness:.95}),bx2,.69,.315));
-  // Negative terminal flat
-  batGrp.add(add(cy(.092,.006,32),M.batTerm,bx2,.69,-.31));
-  // Capacity label (white band)
-  batGrp.add(add(cy(.094,.06,32),
-    new THREE.MeshStandardMaterial({color:0xffffff,transparent:true,opacity:.3}),bx2,.69,0,0,0,Math.PI/2));
-}
-// Nickel strip connecting cells
-batGrp.add(add(bx(.24,.005,.025),M.batTerm,0,.69,.305));
-// Power wires out
-batGrp.add(add(bx(.008,.5,.008),M.wire(0xff2200),.25,.93,0));
-batGrp.add(add(bx(.008,.5,.008),M.wire(0x111111),-.25,.93,0));
-CS.add(batGrp);
+    // ─── 8. SOLENOID VALVE ACTUATOR (nutrient valve) ───
+    const valveGrp = new THREE.Group();
+    // Solenoid body (cylindrical coil housing)
+    valveGrp.add(add(cy(.055, .14, 32), M.solenoid, .32, 1.42, .15));
+    // Copper coil wrap (thin rings)
+    for (let ri = 0; ri < 7; ri++) {
+      valveGrp.add(add(cy(.058, .01, 32), M.coil, .32, 1.37 + ri * .015, .15));
+    }
+    // Valve port (small nozzle)
+    valveGrp.add(add(cy(.018, .06, 16), M.alumDk, .32, 1.49, .15, Math.PI / 2, 0, 0));
+    // Mounting bracket
+    valveGrp.add(add(bx(.15, .008, .12), M.alumDk, .32, 1.35, .15));
+    // Wires from solenoid
+    valveGrp.add(add(bx(.006, .30, .006), M.wire(0xff0000), .33, 1.20, .15));
+    valveGrp.add(add(bx(.006, .30, .006), M.wire(0x222222), .31, 1.20, .15));
+    CS.add(valveGrp);
 
-// ─── 10. EPS / POWER BUS BOARD (small PCB on side wall) ───
-const epsGrp=new THREE.Group();
-epsGrp.add(add(bx(.08,.22,.38),M.pcbDk,.39,1.70,0));
-// Fuse holder
-epsGrp.add(add(cy(.018,.04,16),M.chipSil,.408,1.75,.1));
-// Regulator ICs
-epsGrp.add(add(bx(.04,.025,.05),M.chip,.408,1.75,-.1));
-epsGrp.add(add(bx(.04,.025,.05),M.chip,.408,1.70,0));
-// Capacitors
-for(const ez of [.15,-.15]) {
-  epsGrp.add(add(cy(.012,.03),M.gold,.408,1.75,ez));
-}
-CS.add(epsGrp);
+    // ─── 9. 18650 BATTERY CELLS × 2 in bracket ───
+    // 18650: Ø18.5mm → .0925 radius; length 65mm → 0.65
+    const batGrp = new THREE.Group();
+    // Bracket (L-shaped Al bracket)
+    batGrp.add(add(bx(.55, .015, .28), M.alumDk, 0, .38, 0));   // base plate
+    batGrp.add(add(bx(.015, .40, .28), M.alumDk, .27, .59, 0)); // right wall
+    batGrp.add(add(bx(.015, .40, .28), M.alumDk, -.27, .59, 0));// left wall
+    // Two 18650 cells side by side
+    for (const bx2 of [-.11, .11]) {
+      // Cell body (blue PVC wrap)
+      batGrp.add(add(cy(.092, .62, 32), M.batWrap, bx2, .69, 0, 0, 0, Math.PI / 2));
+      // Positive terminal (+)
+      batGrp.add(add(cy(.036, .01, 16), M.batTerm, bx2, .69, .31));
+      batGrp.add(add(cy(.018, .02, 16),
+        new THREE.MeshStandardMaterial({ color: 0xdddddd, metalness: .95 }), bx2, .69, .315));
+      // Negative terminal flat
+      batGrp.add(add(cy(.092, .006, 32), M.batTerm, bx2, .69, -.31));
+      // Capacity label (white band)
+      batGrp.add(add(cy(.094, .06, 32),
+        new THREE.MeshStandardMaterial({ color: 0xffffff, transparent: true, opacity: .3 }), bx2, .69, 0, 0, 0, Math.PI / 2));
+    }
+    // Nickel strip connecting cells
+    batGrp.add(add(bx(.24, .005, .025), M.batTerm, 0, .69, .305));
+    // Power wires out
+    batGrp.add(add(bx(.008, .5, .008), M.wire(0xff2200), .25, .93, 0));
+    batGrp.add(add(bx(.008, .5, .008), M.wire(0x111111), -.25, .93, 0));
+    CS.add(batGrp);
 
-// ─── 11. Mounting shelf between camera/valve and battery ───
-CS.add(add(bx(0.88,0.012,0.88),M.alumDk,0,1.15,0));
-CS.add(add(bx(0.88,0.012,0.88),M.alumDk,0,0.38,0));
+    // ─── 10. EPS / POWER BUS BOARD (small PCB on side wall) ───
+    const epsGrp = new THREE.Group();
+    epsGrp.add(add(bx(.08, .22, .38), M.pcbDk, .39, 1.70, 0));
+    // Fuse holder
+    epsGrp.add(add(cy(.018, .04, 16), M.chipSil, .408, 1.75, .1));
+    // Regulator ICs
+    epsGrp.add(add(bx(.04, .025, .05), M.chip, .408, 1.75, -.1));
+    epsGrp.add(add(bx(.04, .025, .05), M.chip, .408, 1.70, 0));
+    // Capacitors
+    for (const ez of [.15, -.15]) {
+      epsGrp.add(add(cy(.012, .03), M.gold, .408, 1.75, ez));
+    }
+    CS.add(epsGrp);
 
-// ═══════════════════════════════════════════════
-// COMPONENT REGISTRY
-// ═══════════════════════════════════════════════
-const COMPS = [
-  {name:'LED Panel',sub:'Top · 4×4 White LED Array',color:'#fbbf24',obj:ledGrp,badge:'ILLUM',
-   dim:'90×90mm',desc:'Uniform LED illumination for OD600 optical density measurement across all 3 biology chambers. Operates at 3.3V.'},
-  {name:'Raspberry Pi Zero W ×2',sub:'BCM2835 · 512MB · Dual Stack',color:'#4ade80',obj:piGrp,badge:'OBC',
-   dim:'65×30mm ×2',desc:'On-Board Computer. Pi-1 runs sensor polling (DHT22, Geiger) at 1Hz. Pi-2 captures camera images at 2 fps for OD600 proxy.'},
-  {name:'LOC Biology Tray',sub:'3× Ø30mm chambers · Polycarbonate',color:'#67e8f9',obj:locGrp,badge:'BIO',
-   dim:'Ø30×5mm ×3',desc:'3-chamber Lab-on-Chip microfluidic tray. CH-1: Control Agar. CH-2: C.sphaerospermum. CH-3: W.dermatitidis.'},
-  {name:'DHT22 Sensor',sub:'Temp ±0.5°C · Humidity ±2%RH',color:'#c4b5fd',obj:dhtGrp,badge:'ENV',
-   dim:'25×15×7mm',desc:'Capacitive RH sensor + thermistor. Monitors internal environment at 0.5Hz to validate biosample storage conditions.'},
-  {name:'Geiger-Müller Tubes ×2',sub:'LND-712 style · Ø23×89mm',color:'#f9a8d4',obj:gmGrp,badge:'RAD',
-   dim:'Ø23×89mm ×2',desc:'Two parallel GM tubes measure total ionising dose rate in μGy/hr. Feed the hysteresis control loop for the nutrient valve.'},
-  {name:'OV5647 Camera',sub:'5MP · CSI · 30fps @ 1080p',color:'#93c5fd',obj:camGrp,badge:'IMG',
-   dim:'25×24mm',desc:'Raspberry Pi Camera V2 (OV5647). Mounted pointing up at the LOC tray. Captures images every 30s for OD600 measurement.'},
-  {name:'Solenoid Valve',sub:'Nutrient Actuator · 3.3V TTL',color:'#fcd34d',obj:valveGrp,badge:'VALVE',
-   dim:'Ø11×28mm',desc:'Hysteresis-controlled nutrient release valve. Opens when radiation >500μGy/hr, closes below 350μGy/hr to protect biosamples.'},
-  {name:'18650 Battery ×2',sub:'3S · Li-ion · ~14.8V 4Ah',color:'#6ee7b7',obj:batGrp,badge:'PWR',
-   dim:'Ø18.5×65mm ×2',desc:'Two 18650 Li-ion cells in parallel providing ~7.4V 4Ah. Feeds the EPS board which regulates to 5V and 3.3V rails.'},
-  {name:'EPS Power Board',sub:'3.3V/5V Regulators · Fuses',color:'#a78bfa',obj:epsGrp,badge:'EPS',
-   dim:'38×22mm',desc:'Electrical Power System board. Buck converters to 5V@2A and 3.3V@1.5A. Latchup protection fuses on each rail.'},
-  {name:'Al 6061-T6 Frame',sub:'8.5mm rails · 1.5mm walls · CDS R13',color:'#94a3b8',obj:frameGrp,badge:'STR',
-   dim:'100×340.5×100mm',desc:'4× corner rails (8.5×8.5mm) + Al 6061-T6 side panels (1.5mm). Compliant with CubeSat Design Specification Rev 13.'},
-];
+    // ─── 11. Mounting shelf between camera/valve and battery ───
+    CS.add(add(bx(0.88, 0.012, 0.88), M.alumDk, 0, 1.15, 0));
+    CS.add(add(bx(0.88, 0.012, 0.88), M.alumDk, 0, 0.38, 0));
 
-// Build component list panel
-const clist=document.getElementById('clist');
-COMPS.forEach((c,i)=>{
-  const d=document.createElement('div');
-  d.className='ci'; d.id='ci_'+i;
-  d.innerHTML=`<div class="cdot" style="background:${c.color}"></div>
+    // ═══════════════════════════════════════════════
+    // COMPONENT REGISTRY
+    // ═══════════════════════════════════════════════
+    const COMPS = [
+      {
+        name: 'LED Panel', sub: 'Top · 4×4 White LED Array', color: '#fbbf24', obj: ledGrp, badge: 'ILLUM',
+        dim: '90×90mm', desc: 'Uniform LED illumination for OD600 optical density measurement across all 3 biology chambers. Operates at 3.3V.'
+      },
+      {
+        name: 'Raspberry Pi Zero W ×2', sub: 'BCM2835 · 512MB · Dual Stack', color: '#4ade80', obj: piGrp, badge: 'OBC',
+        dim: '65×30mm ×2', desc: 'On-Board Computer. Pi-1 runs sensor polling (DHT22, Geiger) at 1Hz. Pi-2 captures camera images at 2 fps for OD600 proxy.'
+      },
+      {
+        name: 'LOC Biology Tray', sub: '3× Ø30mm chambers · Polycarbonate', color: '#67e8f9', obj: locGrp, badge: 'BIO',
+        dim: 'Ø30×5mm ×3', desc: '3-chamber Lab-on-Chip microfluidic tray. CH-1: Control Agar. CH-2: C.sphaerospermum. CH-3: W.dermatitidis.'
+      },
+      {
+        name: 'DHT22 Sensor', sub: 'Temp ±0.5°C · Humidity ±2%RH', color: '#c4b5fd', obj: dhtGrp, badge: 'ENV',
+        dim: '25×15×7mm', desc: 'Capacitive RH sensor + thermistor. Monitors internal environment at 0.5Hz to validate biosample storage conditions.'
+      },
+      {
+        name: 'Geiger-Müller Tubes ×2', sub: 'LND-712 style · Ø23×89mm', color: '#f9a8d4', obj: gmGrp, badge: 'RAD',
+        dim: 'Ø23×89mm ×2', desc: 'Two parallel GM tubes measure total ionising dose rate in μGy/hr. Feed the hysteresis control loop for the nutrient valve.'
+      },
+      {
+        name: 'OV5647 Camera', sub: '5MP · CSI · 30fps @ 1080p', color: '#93c5fd', obj: camGrp, badge: 'IMG',
+        dim: '25×24mm', desc: 'Raspberry Pi Camera V2 (OV5647). Mounted pointing up at the LOC tray. Captures images every 30s for OD600 measurement.'
+      },
+      {
+        name: 'Solenoid Valve', sub: 'Nutrient Actuator · 3.3V TTL', color: '#fcd34d', obj: valveGrp, badge: 'VALVE',
+        dim: 'Ø11×28mm', desc: 'Hysteresis-controlled nutrient release valve. Opens when radiation >500μGy/hr, closes below 350μGy/hr to protect biosamples.'
+      },
+      {
+        name: '18650 Battery ×2', sub: '3S · Li-ion · ~14.8V 4Ah', color: '#6ee7b7', obj: batGrp, badge: 'PWR',
+        dim: 'Ø18.5×65mm ×2', desc: 'Two 18650 Li-ion cells in parallel providing ~7.4V 4Ah. Feeds the EPS board which regulates to 5V and 3.3V rails.'
+      },
+      {
+        name: 'EPS Power Board', sub: '3.3V/5V Regulators · Fuses', color: '#a78bfa', obj: epsGrp, badge: 'EPS',
+        dim: '38×22mm', desc: 'Electrical Power System board. Buck converters to 5V@2A and 3.3V@1.5A. Latchup protection fuses on each rail.'
+      },
+      {
+        name: 'Al 6061-T6 Frame', sub: '8.5mm rails · 1.5mm walls · CDS R13', color: '#94a3b8', obj: frameGrp, badge: 'STR',
+        dim: '100×340.5×100mm', desc: '4× corner rails (8.5×8.5mm) + Al 6061-T6 side panels (1.5mm). Compliant with CubeSat Design Specification Rev 13.'
+      },
+    ];
+
+    // Build component list panel
+    const clist = document.getElementById('clist');
+    COMPS.forEach((c, i) => {
+      const d = document.createElement('div');
+      d.className = 'ci'; d.id = 'ci_' + i;
+      d.innerHTML = `<div class="cdot" style="background:${c.color}"></div>
     <div class="info"><div class="nm">${c.name}</div><div class="sb">${c.sub} · ${c.dim}</div></div>
     <div class="badge">${c.badge}</div>
     <div class="tog" id="tog_${i}"></div>`;
-  d.querySelector('.tog').addEventListener('click',e=>{
-    e.stopPropagation();
-    const t=e.currentTarget;
-    t.classList.toggle('off');
-    c.obj.visible = !t.classList.contains('off');
-  });
-  d.addEventListener('click',()=>{
-    document.querySelectorAll('.ci').forEach(el=>el.classList.remove('sel'));
-    d.classList.add('sel');
-    focusComponent(c);
-  });
-  clist.appendChild(d);
-});
+      d.querySelector('.tog').addEventListener('click', e => {
+        e.stopPropagation();
+        const t = e.currentTarget;
+        t.classList.toggle('off');
+        c.obj.visible = !t.classList.contains('off');
+      });
+      d.addEventListener('click', () => {
+        document.querySelectorAll('.ci').forEach(el => el.classList.remove('sel'));
+        d.classList.add('sel');
+        focusComponent(c);
+      });
+      clist.appendChild(d);
+    });
 
-// ── Highlight ──
-let highlighted=null;
-function focusComponent(c){
-  // Reset
-  COMPS.forEach(cp=>cp.obj.traverse(m=>{
-    if(m.isMesh&&m.material&&m.material._ei!==undefined){
-      m.material.emissive=new THREE.Color(0);
-      m.material.emissiveIntensity=m.material._ei;
+    // ── Highlight ──
+    let highlighted = null;
+    function focusComponent(c) {
+      // Reset
+      COMPS.forEach(cp => cp.obj.traverse(m => {
+        if (m.isMesh && m.material && m.material._ei !== undefined) {
+          m.material.emissive = new THREE.Color(0);
+          m.material.emissiveIntensity = m.material._ei;
+        }
+      }));
+      // Glow chosen
+      c.obj.traverse(m => {
+        if (m.isMesh && m.material) {
+          if (m.material._ei === undefined) m.material._ei = m.material.emissiveIntensity || 0;
+          m.material.emissive = new THREE.Color(0x4da8da);
+          m.material.emissiveIntensity = .3;
+        }
+      });
+      // Move orbit target
+      const b = new THREE.Box3().setFromObject(c.obj);
+      const ctr = new THREE.Vector3(); b.getCenter(ctr);
+      controls.target.lerp(ctr, .15);
     }
-  }));
-  // Glow chosen
-  c.obj.traverse(m=>{
-    if(m.isMesh&&m.material){
-      if(m.material._ei===undefined) m.material._ei=m.material.emissiveIntensity||0;
-      m.material.emissive=new THREE.Color(0x4da8da);
-      m.material.emissiveIntensity=.3;
+
+    // ── Tooltip ──
+    const ray = new THREE.Raycaster(), ms = new THREE.Vector2();
+    const tip = document.getElementById('tip');
+    canvas.addEventListener('mousemove', e => {
+      const r = canvas.getBoundingClientRect();
+      ms.x = ((e.clientX - r.left) / r.width) * 2 - 1;
+      ms.y = -((e.clientY - r.top) / r.height) * 2 + 1;
+      ray.setFromCamera(ms, cam);
+      const meshes = [];
+      COMPS.forEach((c, i) => c.obj.traverse(m => { if (m.isMesh) { m.userData.ci = i; meshes.push(m); } }));
+      const hits = ray.intersectObjects(meshes);
+      if (hits.length) {
+        const c = COMPS[hits[0].object.userData.ci];
+        if (c) {
+          document.getElementById('tt-n').textContent = c.name;
+          document.getElementById('tt-d').textContent = c.desc;
+          tip.style.display = 'block';
+          tip.style.left = (e.clientX - canvas.getBoundingClientRect().left + 16) + 'px';
+          tip.style.top = (e.clientY - canvas.getBoundingClientRect().top + 16) + 'px';
+          return;
+        }
+      }
+      tip.style.display = 'none';
+    });
+
+    // ═══════════════════════════════════════════════
+    // VIEW CONTROLS
+    // ═══════════════════════════════════════════════
+    let autoRot = false, exploded = false, inside = false;
+
+    // Explode offsets (relative from original)
+    const EXPLODE = [
+      { obj: platGrp, oy: 0, ey: 1.9 },
+      { obj: ledGrp, oy: 0, ey: 1.6 },
+      { obj: piGrp, oy: 0, ey: 1.1 },
+      { obj: locGrp, oy: 0, ey: 0.55 },
+      { obj: dhtGrp, oy: 0, ey: 0.15 },
+      { obj: gmGrp, oy: 0, ey: -0.2 },
+      { obj: camGrp, oy: 0, ey: -0.55 },
+      { obj: valveGrp, oy: 0, ey: -0.4 },
+      { obj: batGrp, oy: 0, ey: -0.95 },
+    ];
+    EXPLODE.forEach(e => { e.oy = e.obj.position.y; });
+
+    function doExplode(btn) {
+      exploded = !exploded;
+      btn.classList.toggle('act', exploded);
     }
-  });
-  // Move orbit target
-  const b=new THREE.Box3().setFromObject(c.obj);
-  const ctr=new THREE.Vector3(); b.getCenter(ctr);
-  controls.target.lerp(ctr,.15);
-}
-
-// ── Tooltip ──
-const ray=new THREE.Raycaster(), ms=new THREE.Vector2();
-const tip=document.getElementById('tip');
-canvas.addEventListener('mousemove',e=>{
-  const r=canvas.getBoundingClientRect();
-  ms.x=((e.clientX-r.left)/r.width)*2-1;
-  ms.y=-((e.clientY-r.top)/r.height)*2+1;
-  ray.setFromCamera(ms,cam);
-  const meshes=[];
-  COMPS.forEach((c,i)=>c.obj.traverse(m=>{if(m.isMesh){m.userData.ci=i;meshes.push(m);}}));
-  const hits=ray.intersectObjects(meshes);
-  if(hits.length){
-    const c=COMPS[hits[0].object.userData.ci];
-    if(c){
-      document.getElementById('tt-n').textContent=c.name;
-      document.getElementById('tt-d').textContent=c.desc;
-      tip.style.display='block';
-      tip.style.left=(e.clientX-canvas.getBoundingClientRect().left+16)+'px';
-      tip.style.top=(e.clientY-canvas.getBoundingClientRect().top+16)+'px';
-      return;
+    function doRotate(btn) {
+      autoRot = !autoRot;
+      btn.classList.toggle('act', autoRot);
     }
-  }
-  tip.style.display='none';
-});
+    function setView(v, btn) {
+      document.querySelectorAll('.vbtn').forEach(b => b.classList.remove('act'));
+      if (btn) btn.classList.add('act');
+      const tgt = new THREE.Vector3(0, 1.7, 0);
+      let p;
+      switch (v) {
+        case 'iso': p = new THREE.Vector3(3.5, 4.5, 6); break;
+        case 'front': p = new THREE.Vector3(0, 1.7, 8); break;
+        case 'section': p = new THREE.Vector3(8, 1.7, 0.01); break;
+        case 'top': p = new THREE.Vector3(0, 12, 0.01); break;
+        default: p = new THREE.Vector3(3.5, 4.5, 6);
+      }
+      animCam(p, tgt);
+    }
+    function animCam(tp, tt) {
+      const ps = cam.position.clone(), ts = controls.target.clone();
+      let t = 0;
+      const s = () => {
+        t += .04;
+        cam.position.lerpVectors(ps, tp, Math.min(t, 1));
+        controls.target.lerpVectors(ts, tt, Math.min(t, 1));
+        if (t < 1) requestAnimationFrame(s);
+      };
+      s();
+    }
+    function toggleInside() {
+      inside = !inside;
+      document.getElementById('ibtn').textContent = inside ? '🔒 Show Exterior' : '👁 See What\'s Inside';
+      const tr = inside;
+      wallGrp.traverse(m => { if (m.isMesh) { m.material.transparent = tr; m.material.opacity = tr ? .06 : 1; } });
+      platGrp.traverse(m => { if (m.isMesh) { m.material.transparent = tr; m.material.opacity = tr ? .08 : 1; } });
+      if (inside) animCam(new THREE.Vector3(3, 3.2, 4.5), new THREE.Vector3(0, 1.7, 0));
+      else animCam(new THREE.Vector3(3.5, 4.5, 6), new THREE.Vector3(0, 1.7, 0));
+    }
 
-// ═══════════════════════════════════════════════
-// VIEW CONTROLS
-// ═══════════════════════════════════════════════
-let autoRot=false, exploded=false, inside=false;
-
-// Explode offsets (relative from original)
-const EXPLODE=[
-  {obj:platGrp, oy:0, ey:1.9},
-  {obj:ledGrp,  oy:0, ey:1.6},
-  {obj:piGrp,   oy:0, ey:1.1},
-  {obj:locGrp,  oy:0, ey:0.55},
-  {obj:dhtGrp,  oy:0, ey:0.15},
-  {obj:gmGrp,   oy:0, ey:-0.2},
-  {obj:camGrp,  oy:0, ey:-0.55},
-  {obj:valveGrp,oy:0, ey:-0.4},
-  {obj:batGrp,  oy:0, ey:-0.95},
-];
-EXPLODE.forEach(e=>{e.oy=e.obj.position.y;});
-
-function doExplode(btn){
-  exploded=!exploded;
-  btn.classList.toggle('act',exploded);
-}
-function doRotate(btn){
-  autoRot=!autoRot;
-  btn.classList.toggle('act',autoRot);
-}
-function setView(v,btn){
-  document.querySelectorAll('.vbtn').forEach(b=>b.classList.remove('act'));
-  if(btn) btn.classList.add('act');
-  const tgt=new THREE.Vector3(0,1.7,0);
-  let p;
-  switch(v){
-    case'iso':     p=new THREE.Vector3(3.5,4.5,6);   break;
-    case'front':   p=new THREE.Vector3(0,1.7,8);     break;
-    case'section': p=new THREE.Vector3(8,1.7,0.01);  break;
-    case'top':     p=new THREE.Vector3(0,12,0.01);   break;
-    default:       p=new THREE.Vector3(3.5,4.5,6);
-  }
-  animCam(p,tgt);
-}
-function animCam(tp,tt){
-  const ps=cam.position.clone(), ts=controls.target.clone();
-  let t=0;
-  const s=()=>{t+=.04;
-    cam.position.lerpVectors(ps,tp,Math.min(t,1));
-    controls.target.lerpVectors(ts,tt,Math.min(t,1));
-    if(t<1)requestAnimationFrame(s);};
-  s();
-}
-function toggleInside(){
-  inside=!inside;
-  document.getElementById('ibtn').textContent=inside?'🔒 Show Exterior':'👁 See What\'s Inside';
-  const tr=inside;
-  stlGrp.traverse(m=>{if(m.isMesh){
-    m.material.transparent=tr;
-    m.material.opacity=tr?.15:1;
-    m.material.depthWrite=!tr;
-  }});
-  wallGrp.traverse(m=>{if(m.isMesh){m.material.transparent=tr;m.material.opacity=tr?.06:1;}});
-  if(inside) animCam(new THREE.Vector3(3,3.2,4.5),new THREE.Vector3(0,1.7,0));
-  else        animCam(new THREE.Vector3(3.5,4.5,6),new THREE.Vector3(0,1.7,0));
-}
-
-// ═══════════════════════════════════════════════
-// BOTTOM SIM BAR
-// ═══════════════════════════════════════════════
-function switchSim(id,btn){
-  document.querySelectorAll('.stab').forEach(t=>t.classList.remove('act'));
-  if(btn) btn.classList.add('act');
-  const c=document.getElementById('sc');
-  if(id==='orbit'){
-    c.innerHTML=`
+    // ═══════════════════════════════════════════════
+    // BOTTOM SIM BAR
+    // ═══════════════════════════════════════════════
+    function switchSim(id, btn) {
+      document.querySelectorAll('.stab').forEach(t => t.classList.remove('act'));
+      if (btn) btn.classList.add('act');
+      const c = document.getElementById('sc');
+      if (id === 'orbit') {
+        c.innerHTML = `
       <div class="sm"><span>Altitude</span><span style="color:#4da8da">400 km</span></div>
       <div class="sm"><span>Velocity</span><span style="color:#4ade80">7.67 km/s</span></div>
       <div class="sm"><span>Period</span><span style="color:#c4b5fd">92.6 min</span></div>
@@ -743,8 +1234,8 @@ function switchSim(id,btn){
       <div class="sm"><span>SAA Passes</span><span style="color:#f87171">3/day</span></div>
       <div class="sb2"><div class="lbl">SAA Exposure Window</div>
         <div class="bar-o"><div class="bar-i" id="saabar" style="width:35%;background:linear-gradient(90deg,#f59e0b,#f87171)"></div></div></div>`;
-  } else if(id==='power'){
-    c.innerHTML=`
+      } else if (id === 'power') {
+        c.innerHTML = `
       <div class="sm"><span>Solar Input</span><span style="color:#fbbf24">+2.80 W</span></div>
       <div class="sm"><span>OBC (×2 Pi)</span><span style="color:#f87171">-0.82 W</span></div>
       <div class="sm"><span>Camera</span><span style="color:#f87171">-0.50 W</span></div>
@@ -752,137 +1243,138 @@ function switchSim(id,btn){
       <div class="sm"><span>Net</span><span style="color:#4ade80">+1.20 W</span></div>
       <div class="sb2"><div class="lbl">Battery State of Charge</div>
         <div class="bar-o"><div class="bar-i" id="batbar" style="width:87%;background:linear-gradient(90deg,#4ade80,#22c55e)"></div></div></div>`;
-  } else {
-    c.innerHTML=`
+      } else {
+        c.innerHTML = `
       <div class="sm"><span>GCR Baseline</span><span style="color:#4da8da">200 μGy/hr</span></div>
       <div class="sm"><span>SAA Peak</span><span style="color:#f87171">672 μGy/hr</span></div>
       <div class="sm"><span>Current</span><span style="color:#fbbf24" id="srf">482 μGy/hr</span></div>
       <div class="sm"><span>Valve</span><span style="color:#4ade80" id="svlv">CLOSED</span></div>
       <div class="sb2"><div class="lbl">Flux vs Threshold</div>
         <div class="bar-o"><div class="bar-i" id="radbar" style="width:65%;background:linear-gradient(90deg,#a78bfa,#e879f9)"></div></div></div>`;
-  }
-}
-switchSim('orbit',null);
-
-// ═══════════════════════════════════════════════
-// LIVE TELEMETRY & REPLAY
-// ═══════════════════════════════════════════════
-let tick=0, rad=482, radDir=1;
-let replayMode = false;
-let replayIndex = 0;
-let playInterval = null;
-
-function togglePlay() {
-  replayMode = !replayMode;
-  const btn = document.getElementById('playBtn');
-  const lp = document.getElementById('livePill');
-  
-  if (replayMode) {
-    if (typeof TELEMETRY_DATA === 'undefined') {
-      alert("Telemetry data not found. Please run 'python run_experiment.py' first.");
-      replayMode = false;
-      return;
+      }
     }
-    btn.textContent = '⏸ PAUSE REPLAY';
-    btn.style.background = '#f87171';
-    lp.innerHTML = 'REPLAY ACTIVE';
-    lp.className = 'pill info';
-    lp.style.borderColor = '#f87171';
-    lp.style.color = '#f87171';
-    clearInterval(playInterval);
-    playInterval = setInterval(updateReplayFrame, 250);
-  } else {
-    btn.textContent = '▶ START REPLAY';
-    btn.style.background = '#4da8da';
-    lp.innerHTML = '<div class="dot"></div>TELEMETRY LIVE';
-    lp.className = 'pill live';
-    lp.style.borderColor = '';
-    lp.style.color = '';
-    clearInterval(playInterval);
+    switchSim('orbit', null);
+
+    // ═══════════════════════════════════════════════
+    // LIVE TELEMETRY & REPLAY
+    // ═══════════════════════════════════════════════
+    let tick = 0, rad = 482, radDir = 1;
+    let replayMode = false;
+    let replayIndex = 0;
+    let playInterval = null;
+
+    function togglePlay() {
+      replayMode = !replayMode;
+      const btn = document.getElementById('playBtn');
+      const lp = document.getElementById('livePill');
+
+      if (replayMode) {
+        if (typeof TELEMETRY_DATA === 'undefined') {
+          alert("Telemetry data not found. Please run 'python run_experiment.py' first.");
+          replayMode = false;
+          return;
+        }
+        btn.textContent = '⏸ PAUSE REPLAY';
+        btn.style.background = '#f87171';
+        lp.innerHTML = 'REPLAY ACTIVE';
+        lp.className = 'pill info';
+        lp.style.borderColor = '#f87171';
+        lp.style.color = '#f87171';
+        clearInterval(playInterval);
+        playInterval = setInterval(updateReplayFrame, 250);
+      } else {
+        btn.textContent = '▶ START REPLAY';
+        btn.style.background = '#4da8da';
+        lp.innerHTML = '<div class="dot"></div>TELEMETRY LIVE';
+        lp.className = 'pill live';
+        lp.style.borderColor = '';
+        lp.style.color = '';
+        clearInterval(playInterval);
+        playInterval = setInterval(updateRandomTelemetry, 700);
+      }
+    }
+
+    function applyTelemetryData(d) {
+      const v = d.valve_state === 1;
+      document.getElementById('vdot').style.cssText = `width:11px;height:11px;border-radius:50%;background:${v ? 'var(--red)' : 'var(--green)'};box-shadow:0 0 8px ${v ? 'var(--red)' : 'var(--green)'}`;
+      document.getElementById('vtxt').textContent = v ? 'OPEN — SAA Pass' : 'CLOSED — Normal';
+      document.getElementById('tt').textContent = d.temperature_c.toFixed(1);
+      document.getElementById('th').textContent = d.humidity_rh.toFixed(1);
+      document.getElementById('tr').textContent = d.flux_uGy_hr.toFixed(0);
+
+      // Power budget approx (linearly drain over 48h for visual effect, ignoring charge)
+      const remaining_bat = Math.max(72, 100 - (d.time_hr * 0.5)).toFixed(0);
+      document.getElementById('tb').textContent = remaining_bat;
+
+      const od1 = Math.min(.99, 0.42 + (d.time_hr * 0.00018)).toFixed(2); // Control just drift
+      const od2 = Math.min(1.0, d.OD_ch2).toFixed(2);
+      const od3 = Math.min(1.0, d.OD_ch3).toFixed(2);
+
+      ['o1', 'o2', 'o3'].forEach((id, i) => document.getElementById(id).textContent = [od1, od2, od3][i]);
+      ['b1', 'b2', 'b3'].forEach((id, i) => document.getElementById(id).style.width = ([od1, od2, od3][i] * 100) + '%');
+
+      // Bottom bar
+      const re = document.getElementById('srf'); if (re) { re.textContent = d.flux_uGy_hr.toFixed(0) + ' μGy/hr'; re.style.color = v ? '#f87171' : '#fbbf24'; }
+      const ve = document.getElementById('svlv'); if (ve) { ve.textContent = v ? 'OPEN' : 'CLOSED'; ve.style.color = v ? '#f87171' : '#4ade80'; }
+      const rb = document.getElementById('radbar'); if (rb) rb.style.width = Math.min(100, d.flux_uGy_hr / 670 * 100).toFixed(1) + '%';
+      const sa = document.getElementById('saabar'); if (sa) { const p = Math.max(0, (d.flux_uGy_hr - 200) / 470 * 100); sa.style.width = p.toFixed(1) + '%'; }
+      const bb = document.getElementById('batbar'); if (bb) bb.style.width = remaining_bat + '%';
+
+      document.getElementById('clk').textContent = `T+${d.time_hr.toFixed(1)} HR`;
+    }
+
+    function updateReplayFrame() {
+      if (replayIndex >= TELEMETRY_DATA.length) {
+        replayIndex = 0; // Loop back
+      }
+      applyTelemetryData(TELEMETRY_DATA[replayIndex]);
+      replayIndex++;
+    }
+
+    function updateRandomTelemetry() {
+      tick++;
+      rad += radDir * (1.5 + Math.random() * 3);
+      if (rad > 680) radDir = -1; if (rad < 195) radDir = 1;
+      const v = rad > 500;
+      document.getElementById('vdot').style.cssText = `width:11px;height:11px;border-radius:50%;background:${v ? 'var(--red)' : 'var(--green)'};box-shadow:0 0 8px ${v ? 'var(--red)' : 'var(--green)'}`;
+      document.getElementById('vtxt').textContent = v ? 'OPEN — SAA Pass' : 'CLOSED — Normal';
+      document.getElementById('tt').textContent = (23.4 + Math.sin(tick / 40) * 1.8).toFixed(1);
+      document.getElementById('th').textContent = (61 + Math.sin(tick / 30) * 3.5).toFixed(1);
+      document.getElementById('tr').textContent = rad.toFixed(0);
+      document.getElementById('tb').textContent = Math.max(72, (87 - tick * .008)).toFixed(0);
+      const od1 = Math.min(.99, .42 + tick * .00018).toFixed(2);
+      const od2 = Math.min(.99, .67 + tick * .00035).toFixed(2);
+      const od3 = Math.min(.99, .55 + tick * .00026).toFixed(2);
+      ['o1', 'o2', 'o3'].forEach((id, i) => document.getElementById(id).textContent = [od1, od2, od3][i]);
+      ['b1', 'b2', 'b3'].forEach((id, i) => document.getElementById(id).style.width = ([od1, od2, od3][i] * 100) + '%');
+      // Bottom bar
+      const re = document.getElementById('srf'); if (re) { re.textContent = rad.toFixed(0) + ' μGy/hr'; re.style.color = v ? '#f87171' : '#fbbf24'; }
+      const ve = document.getElementById('svlv'); if (ve) { ve.textContent = v ? 'OPEN' : 'CLOSED'; ve.style.color = v ? '#f87171' : '#4ade80'; }
+      const rb = document.getElementById('radbar'); if (rb) rb.style.width = Math.min(100, rad / 670 * 100).toFixed(1) + '%';
+      const sa = document.getElementById('saabar'); if (sa) { const p = Math.max(0, (rad - 200) / 470 * 100); sa.style.width = p.toFixed(1) + '%'; }
+      const bb = document.getElementById('batbar'); if (bb) bb.style.width = Math.max(60, (87 - tick * .008)).toFixed(0) + '%';
+    }
     playInterval = setInterval(updateRandomTelemetry, 700);
-  }
-}
+    setInterval(() => { document.getElementById('clk').textContent = new Date().toISOString().slice(11, 19) + ' UTC'; }, 1000);
 
-function applyTelemetryData(d) {
-  const v = d.valve_state === 1;
-  document.getElementById('vdot').style.cssText=`width:11px;height:11px;border-radius:50%;background:${v?'var(--red)':'var(--green)'};box-shadow:0 0 8px ${v?'var(--red)':'var(--green)'}`;
-  document.getElementById('vtxt').textContent=v?'OPEN — SAA Pass':'CLOSED — Normal';
-  document.getElementById('tt').textContent=d.temperature_c.toFixed(1);
-  document.getElementById('th').textContent=d.humidity_rh.toFixed(1);
-  document.getElementById('tr').textContent=d.flux_uGy_hr.toFixed(0);
-  
-  // Power budget approx (linearly drain over 48h for visual effect, ignoring charge)
-  const remaining_bat = Math.max(72, 100 - (d.time_hr * 0.5)).toFixed(0);
-  document.getElementById('tb').textContent = remaining_bat;
-  
-  const od1 = Math.min(.99, 0.42 + (d.time_hr*0.00018)).toFixed(2); // Control just drift
-  const od2 = Math.min(1.0, d.OD_ch2).toFixed(2);
-  const od3 = Math.min(1.0, d.OD_ch3).toFixed(2);
-  
-  ['o1','o2','o3'].forEach((id,i)=>document.getElementById(id).textContent=[od1,od2,od3][i]);
-  ['b1','b2','b3'].forEach((id,i)=>document.getElementById(id).style.width=([od1,od2,od3][i]*100)+'%');
-  
-  // Bottom bar
-  const re=document.getElementById('srf'); if(re){re.textContent=d.flux_uGy_hr.toFixed(0)+' μGy/hr';re.style.color=v?'#f87171':'#fbbf24';}
-  const ve=document.getElementById('svlv'); if(ve){ve.textContent=v?'OPEN':'CLOSED';ve.style.color=v?'#f87171':'#4ade80';}
-  const rb=document.getElementById('radbar'); if(rb)rb.style.width=Math.min(100,d.flux_uGy_hr/670*100).toFixed(1)+'%';
-  const sa=document.getElementById('saabar'); if(sa){const p=Math.max(0,(d.flux_uGy_hr-200)/470*100);sa.style.width=p.toFixed(1)+'%';}
-  const bb=document.getElementById('batbar'); if(bb)bb.style.width=remaining_bat+'%';
-  
-  document.getElementById('clk').textContent = `T+${d.time_hr.toFixed(1)} HR`;
-}
-
-function updateReplayFrame() {
-  if (replayIndex >= TELEMETRY_DATA.length) {
-    replayIndex = 0; // Loop back
-  }
-  applyTelemetryData(TELEMETRY_DATA[replayIndex]);
-  replayIndex++;
-}
-
-function updateRandomTelemetry(){
-  tick++;
-  rad+=radDir*(1.5+Math.random()*3);
-  if(rad>680)radDir=-1; if(rad<195)radDir=1;
-  const v=rad>500;
-  document.getElementById('vdot').style.cssText=`width:11px;height:11px;border-radius:50%;background:${v?'var(--red)':'var(--green)'};box-shadow:0 0 8px ${v?'var(--red)':'var(--green)'}`;
-  document.getElementById('vtxt').textContent=v?'OPEN — SAA Pass':'CLOSED — Normal';
-  document.getElementById('tt').textContent=(23.4+Math.sin(tick/40)*1.8).toFixed(1);
-  document.getElementById('th').textContent=(61+Math.sin(tick/30)*3.5).toFixed(1);
-  document.getElementById('tr').textContent=rad.toFixed(0);
-  document.getElementById('tb').textContent=Math.max(72,(87-tick*.008)).toFixed(0);
-  const od1=Math.min(.99,.42+tick*.00018).toFixed(2);
-  const od2=Math.min(.99,.67+tick*.00035).toFixed(2);
-  const od3=Math.min(.99,.55+tick*.00026).toFixed(2);
-  ['o1','o2','o3'].forEach((id,i)=>document.getElementById(id).textContent=[od1,od2,od3][i]);
-  ['b1','b2','b3'].forEach((id,i)=>document.getElementById(id).style.width=([od1,od2,od3][i]*100)+'%');
-  // Bottom bar
-  const re=document.getElementById('srf'); if(re){re.textContent=rad.toFixed(0)+' μGy/hr';re.style.color=v?'#f87171':'#fbbf24';}
-  const ve=document.getElementById('svlv'); if(ve){ve.textContent=v?'OPEN':'CLOSED';ve.style.color=v?'#f87171':'#4ade80';}
-  const rb=document.getElementById('radbar'); if(rb)rb.style.width=Math.min(100,rad/670*100).toFixed(1)+'%';
-  const sa=document.getElementById('saabar'); if(sa){const p=Math.max(0,(rad-200)/470*100);sa.style.width=p.toFixed(1)+'%';}
-  const bb=document.getElementById('batbar'); if(bb)bb.style.width=Math.max(60,(87-tick*.008)).toFixed(0)+'%';
-}
-playInterval = setInterval(updateRandomTelemetry,700);
-setInterval(()=>{document.getElementById('clk').textContent=new Date().toISOString().slice(11,19)+' UTC';},1000);
-
-// ═══════════════════════════════════════════════
-// ANIMATION LOOP
-// ═══════════════════════════════════════════════
-const clock3=new THREE.Clock();
-function animate(){
-  requestAnimationFrame(animate);
-  const dt=clock3.getDelta();
-  if(autoRot) CS.rotation.y+=dt*0.35;
-  // Explode lerp
-  EXPLODE.forEach(e=>{
-    const ty=exploded?e.oy+e.ey:e.oy;
-    e.obj.position.y+=(ty-e.obj.position.y)*.06;
-  });
-  controls.update();
-  renderer.render(scene,cam);
-}
-animate();
-</script>
+    // ═══════════════════════════════════════════════
+    // ANIMATION LOOP
+    // ═══════════════════════════════════════════════
+    const clock3 = new THREE.Clock();
+    function animate() {
+      requestAnimationFrame(animate);
+      const dt = clock3.getDelta();
+      if (autoRot) CS.rotation.y += dt * 0.35;
+      // Explode lerp
+      EXPLODE.forEach(e => {
+        const ty = exploded ? e.oy + e.ey : e.oy;
+        e.obj.position.y += (ty - e.obj.position.y) * .06;
+      });
+      controls.update();
+      renderer.render(scene, cam);
+    }
+    animate();
+  </script>
 </body>
+
 </html>
