@@ -719,23 +719,19 @@ add_figure(doc, BASE_DIR / "src/figures/fig3_attenuation.png",
            "CH-3 (W. dermatitidis) consistently outperforms CH-2. Shaded area = differential advantage.")
 
 add_h2(doc, "7.4. 3D Structural Model — Autodesk Fusion 360")
-add_para(doc, ("The physical payload structure is modelled in Autodesk Fusion 360 to the 1U CubeSat standard "
+add_para(doc, ("The physical payload structure is modelled in Autodesk Fusion 360 to the 3U CubeSat standard "
                "(CDS Rev. 14). The model includes all primary structural and electronic components: the aluminium "
                "shell, the 3-chamber LOC chip assembly, two Raspberry Pi Zero W boards, all sensors, and the "
                "LiPo battery pack."))
-add_figure(doc, BASE_DIR / "src/figures/fig_cad_fusion360_model.png",
-           "Fig 10: Reference 3D model — LOC CubeSat internal layout showing 1U shell (100x100x113.5 mm), "
-           "3-chamber LOC chip, stacked Raspberry Pi boards, sensor placement, and LiPo battery.")
 
-# CAD placeholders
-for num, label in [("Fig CAD-1", "Isometric Exterior View"), ("Fig CAD-2", "Section View (Interior Layout)"), ("Fig CAD-3", "Exploded View")]:
-    p_ph = doc.add_paragraph()
-    p_ph.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    run_ph = p_ph.add_run(f"[PLACEHOLDER — {num}: Fusion 360 — {label}]\n"
-                          f"Export from Fusion 360 Render workspace and save to src/figures/")
-    run_ph.font.italic = True
-    run_ph.font.color.rgb = RGBColor(150, 150, 150)
-    run_ph.font.size = Pt(11)
+add_figure(doc, BASE_DIR / "src/figures/fig_cad_isometric.png",
+           "Fig 10: Isometric Exterior View — 3U CubeSat shell (100x100x340.5 mm) with aluminium chassis and rails.", max_width_inches=5.0)
+
+add_figure(doc, BASE_DIR / "src/figures/fig_cad_section.png",
+           "Fig 11: Section View (Interior Layout) — 3-chamber LOC chip, stacked Raspberry Pi boards, sensor placement, and LiPo battery.", max_width_inches=5.0)
+
+add_figure(doc, BASE_DIR / "src/figures/fig_cad_exploded.png",
+           "Fig 12: Exploded View — showing the integration of the biological tray and electronics within the 3U structure.", max_width_inches=5.0)
 
 doc.add_page_break()
 

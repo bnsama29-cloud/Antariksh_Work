@@ -1652,7 +1652,7 @@
 
     <h2>7.4. 3D Structural Model — Autodesk Fusion 360</h2>
     <p>
-      The physical payload structure is modelled in Autodesk Fusion 360 to the 1U CubeSat standard
+      The physical payload structure is modelled in Autodesk Fusion 360 to the 3U CubeSat standard
       (CDS Rev. 14). The model includes all primary structural and electronic components: the aluminium
       shell, the 3-chamber LOC chip assembly, two Raspberry Pi Zero W boards (flight computer and
       auxiliary computer), all sensors, and the LiPo battery pack. Key design decisions include the
@@ -1663,53 +1663,20 @@
 
     <table class="fig-table">
       <tr>
-        <td>
-          <img src="src/figures/fig_cad_fusion360_model.png" alt="Fig 10: Reference 3D model">
-          <div class="fig-caption">Fig 10: Reference 3D model — LOC CubeSat internal layout showing 1U shell
-            (100×100×113.5 mm), 3-chamber LOC chip, stacked Raspberry Pi boards, sensor placement, and LiPo battery.
-            Generated as design reference for Fusion 360 modelling.</div>
+        <td style="width:33.3%">
+          <img src="src/figures/fig_cad_isometric.png" alt="Fig 10: Isometric Exterior">
+          <div class="fig-caption">Fig 10: Isometric Exterior View — 3U CubeSat shell (100×100×340.5 mm) with aluminium chassis and rails.</div>
+        </td>
+        <td style="width:33.3%">
+          <img src="src/figures/fig_cad_section.png" alt="Fig 11: Section View">
+          <div class="fig-caption">Fig 11: Section View (Interior Layout) — 3-chamber LOC chip, stacked Raspberry Pi boards, sensor placement, and LiPo battery.</div>
+        </td>
+        <td style="width:33.3%">
+          <img src="src/figures/fig_cad_exploded.png" alt="Fig 12: Exploded View">
+          <div class="fig-caption">Fig 12: Exploded View — showing the integration of the biological tray and electronics within the 3U structure.</div>
         </td>
       </tr>
     </table>
-
-    <table class="fig-table">
-      <tr>
-        <td style="width:33.3%">
-          <div class="fig-placeholder">
-            <div class="ph-icon">🖥️</div>
-            <div><strong>[PLACEHOLDER]</strong><br>Fusion 360 Export:<br><em>Isometric Exterior View</em><br><br>Save
-              as:<br>fig_cad_isometric.png</div>
-          </div>
-          <div class="fig-caption">Fig CAD-1: [PLACEHOLDER] Autodesk Fusion 360 — Isometric exterior view of 1U CubeSat
-            shell with labelled rail guides and deploy slot. Export via Render workspace → high-quality PNG.</div>
-        </td>
-        <td style="width:33.3%">
-          <div class="fig-placeholder">
-            <div class="ph-icon">✂️</div>
-            <div><strong>[PLACEHOLDER]</strong><br>Fusion 360 Export:<br><em>Section View (interior)</em><br><br>Save
-              as:<br>fig_cad_section.png</div>
-          </div>
-          <div class="fig-caption">Fig CAD-2: [PLACEHOLDER] Fusion 360 — Section Analysis view (YZ plane cut) showing
-            interior layout: LOC chip tray, Pi boards, sensors, battery. Use Inspect → Section Analysis.</div>
-        </td>
-        <td style="width:33.3%">
-          <div class="fig-placeholder">
-            <div class="ph-icon">💥</div>
-            <div><strong>[PLACEHOLDER]</strong><br>Fusion 360 Export:<br><em>Exploded View</em><br><br>Save
-              as:<br>fig_cad_exploded.png</div>
-          </div>
-          <div class="fig-caption">Fig CAD-3: [PLACEHOLDER] Fusion 360 — Exploded view showing all components separated
-            along Z-axis. Use Assemble → Explode Components.</div>
-        </td>
-      </tr>
-    </table>
-
-    <p>
-      Once Fusion 360 model screenshots are exported, replace each placeholder above by saving the images to
-      <code>src/figures/</code> with the filenames shown and opening this HTML file again. The images will
-      auto-load. Components and their Z-positions within the assembly are specified in the Fusion 360 guide
-      at <code>CAD_notes/fusion360_guide.md</code>.
-    </p>
 
     <div class="page-num">7</div>
   </div>

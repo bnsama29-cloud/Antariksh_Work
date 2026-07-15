@@ -1,5 +1,5 @@
 # Fusion 360 — Complete Step-by-Step Guide
-## LOC CubeSat 1U Payload Box (with Realistic Electronics)
+## LOC CubeSat 3U Payload Box (with Realistic Electronics)
 ### Owner: Aerospace + EC | Deadline: Day 2 (before 18 July)
 
 ---
@@ -27,23 +27,23 @@ Instead of drawing rectangles that "look like" an Arduino, we are going to impor
 1. Open **Autodesk Fusion 360**
 2. Click **File → New Design**
 3. Go to **Preferences → Units → Millimeters**
-4. Save as: `LOC_CubeSat_1U.f3d`
+4. Save as: `LOC_CubeSat_3U.f3d`
 
 ---
 
-## STEP 3 — Outer Shell (1U CubeSat Box)
-*The structural frame follows the exact CubeSat Design Specification (10cm x 10cm x 11.35cm).*
+## STEP 3 — Outer Shell (3U CubeSat Box)
+*The structural frame follows the exact CubeSat Design Specification (10cm x 10cm x 34.05cm).*
 
 1. Click **Create Sketch** → select **XY Plane**.
 2. Draw a **100 mm × 100 mm rectangle** (centre at origin).
 3. Click **Finish Sketch**.
-4. Click **Extrude** → type **113.5 mm** (upward).
+4. Click **Extrude** → type **340.5 mm** (upward).
 5. Click **Modify → Shell** → select all 6 faces → set Thickness to **1.5 mm**.
    - *This hollows out the cube, leaving only the 1.5mm aerospace-grade aluminum walls.*
 6. **Rail guides at corners:**
    - Create a Sketch on the XY plane.
    - At each corner, draw an **8.5 mm × 8.5 mm square**.
-   - Extrude upward **113.5 mm**.
+   - Extrude upward **340.5 mm**.
 7. **Appearance (A):** Press `A` on your keyboard, search for "Aluminum 6061", and drag it onto the shell.
 
 ---
@@ -52,7 +52,7 @@ Instead of drawing rectangles that "look like" an Arduino, we are going to impor
 *This is the custom biological heart of our payload.*
 
 1. Click **Assemble → New Component** → Name it `LOC_Chip`.
-2. **Create Sketch** on a new offset plane at **Z = 40 mm** (from the bottom).
+2. **Create Sketch** on a new offset plane at **Z = 80 mm** (from the bottom).
 3. Draw an **ellipse** (or rectangle with rounded corners) → 80 mm wide × 60 mm tall.
 4. Draw **2 vertical lines** dividing it into 3 equal sections (left, centre, right).
 5. **Extrude** the entire shape downward by **5 mm** to create the base.
@@ -67,7 +67,7 @@ Instead of drawing rectangles that "look like" an Arduino, we are going to impor
 1. **Upload to Fusion:** Open your Fusion 360 Data Panel (grid icon, top left) → Click **Upload** → Select all the `.step` files you downloaded from GrabCAD. Wait for them to process.
 2. **Import the Arduino:** 
    - Right-click the uploaded Arduino Uno in the Data Panel and select **"Insert into Current Design"**.
-   - Use the Move/Copy arrows to position it at the bottom of the CubeSat (Z = 5 mm).
+   - Use the Move/Copy arrows to position it at the bottom of the CubeSat (Z = 20 mm).
    - Click **Assemble → Joint** (or As-Built Joint) to lock it to the inner wall.
 3. **Import the DHT22 Sensor:**
    - Insert it into the design.
