@@ -38,8 +38,8 @@ Instead of drawing rectangles that "look like" an Arduino, we are going to impor
 2. Draw a **100 mm × 100 mm rectangle** (centre at origin).
 3. Click **Finish Sketch**.
 4. Click **Extrude** → type **340.5 mm** (upward).
-5. Click **Modify → Shell** → select all 6 faces → set Thickness to **1.5 mm**.
-   - *This hollows out the cube, leaving only the 1.5mm aerospace-grade aluminum walls.*
+5. Click **Modify → Shell** → select only the **4 side faces** (leaving top and bottom unselected so they remain open as access panels) → set Thickness to **1.5 mm**.
+   - *This hollows out the cube, leaving the 1.5mm aerospace-grade aluminum walls open for internal payload insertion.*
 6. **Rail guides at corners:**
    - Create a Sketch on the XY plane.
    - At each corner, draw an **8.5 mm × 8.5 mm square**.

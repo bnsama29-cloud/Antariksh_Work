@@ -476,7 +476,7 @@ add_data_table(doc, soup.find(id="s3").find_all("table")[0], "Table 2: Fungal St
 add_h2(doc, "3.3. 3-Chamber Experimental Design")
 add_para(doc, ("The experimental design follows the split-Petri dish methodology pioneered by the Space Tango "
                "CubeLab platform (Shunk et al., 2020), extended to a three-way comparison. All three chambers "
-               "are physically identical in dimensions (30 mm diameter, 5 mm depth) and subjected to identical "
+               "are physically identical in dimensions (24 mm diameter, 5 mm depth) and subjected to identical "
                "radiation flux, temperature (22 +/- 1°C), humidity (65 +/- 5% RH), and nutrient availability. "
                "The only variable between chambers is the biological contents. This eliminates confounding "
                "variables and ensures that differences in radiation attenuation are attributable solely to the "
@@ -501,15 +501,13 @@ if len(tables_s4) >= 1:
 if len(tables_s4) >= 2:
     add_data_table(doc, tables_s4[1], "Table 9: Power Budget")
 
-add_para(doc, ("Power Budget Mitigation: The baseline LiPo battery (14.8 V, 2.6 Ah = 38.5 Wh) provides "
-               "approximately 2.8 hours of continuous operation at full load (13.8 W peak). For the full 48-hour "
-               "mission, the following strategies are implemented: (1) Camera duty-cycling — one OD600 image per "
-               "hour rather than continuous recording reduces camera power from 2.0 W continuous to ~0.05 W average. "
-               "(2) Arduino deep-sleep mode between 2-second readings reduces microcontroller draw from 0.5 W to "
-               "~0.02 W average. (3) LED lighting timed to camera capture only. (4) A supplementary solar panel "
-               "(0.5 U body-mounted, ~0.8 W average generation at LEO) closes the power gap for extended missions. "
-               "With duty-cycling, the effective average load drops to approximately 1.2 W, giving a battery-only "
-               "runtime of ~32 hours and full 48-hour coverage with solar supplement."))
+add_para(doc, ("Power Budget Mitigation: The baseline LiPo battery (3.7 V, 1800 mAh = 6.66 Wh) provides "
+               "approximately 17.2 hours of continuous operation under the duty-cycled average load (387 mW). For the full 48-hour "
+               "mission, the following strategies are implemented: (1) Camera duty-cycling - one OD600 image per "
+               "hour rather than continuous recording significantly reduces camera power. "
+               "(2) Raspberry Pi deep-sleep modes between readings. (3) LED lighting timed to camera capture only. "
+               "(4) A supplementary body-mounted solar panel (0.5 U, ~750 mW average generation) provides "
+               "positive net power during the orbit, ensuring full 48-hour coverage and beyond."))
 
 add_h2(doc, "4.2. Sensor Suite")
 if len(tables_s4) >= 3:

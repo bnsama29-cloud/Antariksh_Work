@@ -50,7 +50,7 @@ const unsigned long LOG_INTERVAL_MS = 2000;   // log every 2 sec
 // Pot at 512 → 425 μGy/hr (deadband)
 // Pot at 1023→ 700 μGy/hr (SAA peak)
 float mapRadiation(int adcVal) {
-    return map(adcVal, 0, 1023, 150, 700);
+    return (float)adcVal / 1023.0 * (700.0 - 150.0) + 150.0;
 }
 
 void setup() {
@@ -103,8 +103,8 @@ void loop() {
     lcd.setCursor(0, 0);
     lcd.print("F:");
     lcd.print((int)flux);
-    lcd.print("uGy V:");
-    lcd.print(valveOpen ? "OPEN  " : "CLOSE ");
+    lcd.print("uG V:");
+    lcd.print(valveOpen ? "OPN" : "CLS");
 
     lcd.setCursor(0, 1);
     lcd.print("T:");

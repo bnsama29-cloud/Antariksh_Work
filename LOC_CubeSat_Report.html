@@ -871,8 +871,8 @@
     <h2>3.3. 3-Chamber Experimental Design</h2>
     <p>
       The experimental design follows the split-Petri dish methodology pioneered by the Space Tango CubeLab
-      platform (Shunk et al., 2020), extended to a three-way comparison. All three chambers are physically
-      identical in dimensions (30 mm diameter, 5 mm depth) and subjected to identical radiation flux, temperature
+      platform (Shunk et al., 2020), extended to a three-way comparison. The payload comprises a custom polycarbonate Lab-on-a-Chip assembly featuring three chambers. All three chambers are
+      identical in dimensions (24 mm diameter, 5 mm depth) and subjected to identical radiation flux, temperature
       (22 ± 1°C), humidity (65 ± 5% RH), and nutrient availability. The <em>only</em> variable between chambers
       is the biological contents. This eliminates confounding variables and ensures that differences in radiation
       attenuation are attributable solely to the fungal strain's melanin characteristics.
@@ -1012,27 +1012,33 @@
     <table class="data-table">
       <tr>
         <th>Component</th>
-        <th>Current (mA)</th>
+        <th>Current (Avg mA)</th>
         <th>Voltage (V)</th>
-        <th>Power (mW)</th>
+        <th>Power (Avg mW)</th>
       </tr>
       <tr>
-        <td class="left">Raspberry Pi Zero W × 2</td>
-        <td>2 × 120</td>
+        <td class="left">Raspberry Pi Zero W × 2 (Sleep mode 98%)</td>
+        <td>2 × 25</td>
         <td>5.0</td>
-        <td>1200</td>
-      </tr>
-      <tr>
-        <td class="left">Camera module</td>
         <td>250</td>
-        <td>3.3</td>
-        <td>825</td>
       </tr>
       <tr>
-        <td class="left">LED panel</td>
-        <td>80</td>
+        <td class="left">Camera module (1 hr duty-cycle)</td>
+        <td>~2.5</td>
         <td>3.3</td>
-        <td>264</td>
+        <td>8</td>
+      </tr>
+      <tr>
+        <td class="left">LED panel (1 hr duty-cycle)</td>
+        <td>~0.8</td>
+        <td>3.3</td>
+        <td>3</td>
+      </tr>
+      <tr>
+        <td class="left">Valve Actuator (Latching)</td>
+        <td>~2.0</td>
+        <td>5.0</td>
+        <td>10</td>
       </tr>
       <tr>
         <td class="left">Sensors (total)</td>
@@ -1041,10 +1047,16 @@
         <td>116</td>
       </tr>
       <tr>
-        <td><strong>Total</strong></td>
+        <td class="left">0.5U Body-Mounted Solar Panel</td>
+        <td>-150</td>
+        <td>5.0</td>
+        <td>-750 (Gen)</td>
+      </tr>
+      <tr>
+        <td><strong>Net Average Power</strong></td>
         <td>—</td>
         <td>—</td>
-        <td><strong>2,405 mW</strong></td>
+        <td><strong>-363 mW (Charging)</strong></td>
       </tr>
       <tr>
         <td class="left">Battery capacity</td>
