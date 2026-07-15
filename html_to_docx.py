@@ -261,7 +261,19 @@ print("Building Word document...")
 
 # ── COVER PAGE ────────────────────────────────────────────────────────────────
 doc.add_paragraph()
-doc.add_paragraph()
+
+# System safeguards paragraph
+add_para(doc, "Additional system-level safeguards include:")
+safeguards = [
+    "Real-time clock (DS3231) with battery backup for timestamp integrity during power dips.",
+    "Software watchdogs on both Raspberry Pis to detect and recover from hangs.",
+    "Pre-flight end-to-end functional testing of the complete valve-sensor-camera loop.",
+]
+add_list(doc, [type('obj', (), {'get_text': lambda self, s=s, **kw: s})() for s in safeguards], ordered=False)
+add_para(doc, ("These measures ensure that no single failure compromises the core scientific objectives of the "
+               "48-hour mission."))
+
+doc.add_page_break()
 add_para(doc, "TEAM ANTARIKSH — RVCE", align=WD_ALIGN_PARAGRAPH.CENTER, bold=True, size=14)
 add_para(doc, "R.V. College of Engineering, Bengaluru", align=WD_ALIGN_PARAGRAPH.CENTER, italic=True)
 add_hr(doc)
@@ -321,6 +333,8 @@ toc_entries = [
     ("   4.1. CubeSat Form Factor & Payload Budget", "3"),
     ("   4.2. Sensor Suite", "4"),
     ("   4.3. Electronics Simulation (Wokwi)", "4"),
+    ("   4.4. Operational Workflow", "4"),
+    ("   4.5. Key Design Trade-offs", "4"),
     ("5. Mathematical & Computational Models", "5"),
     ("   5.1. Logistic Growth Model", "5"),
     ("   5.2. Melanin Thickness Proxy", "5"),
@@ -335,6 +349,7 @@ toc_entries = [
     ("   7.3. Attenuation Comparison", "8"),
     ("   7.4. 3D Model — Fusion 360", "9"),
     ("8. Conclusions & Future Work", "9"),
+    ("   8.4. System Safeguards", "9"),
     ("9. References", "10"),
 ]
 for entry, pg in toc_entries:
@@ -446,11 +461,14 @@ doc.add_page_break()
 # ══════════════════════════════════════════════════════════════════════════════
 add_h1(doc, "3. Biological Rationale & Strain Selection")
 add_h2(doc, "3.1. Radiotrophic Fungi & Melanin-Mediated Radiotropism")
-add_para(doc, ("Radiotrophic fungi are a class of melanin-rich micro-organisms that display positive chemotaxis "
-               "toward ionising radiation — a phenomenon termed radiotropism. First reported by Dadachova et al. "
-               "(2007) in Nature, this behaviour is thought to be driven by the ability of melanin pigments to "
-               "transduce ionising radiation energy into biochemically useful reducing power, potentially analogous "
-               "to the role of chlorophyll in photosynthesis."))
+add_para(doc, ("While the original task specified the study of bacterial growth in microgravity-like conditions, "
+               "radiotrophic fungi were selected as the biological system for this payload. C. sphaerospermum and "
+               "W. dermatitidis have well-documented flight heritage aboard the ISS and provide a validated model "
+               "for microbial response to space radiation. The core design principles — a sealed 3-chamber LOC, passive "
+               "microgravity-compatible fluidics, simple optical biomass detection, and a biologically responsive "
+               "control valve — are directly transferable to bacterial systems. This creative choice increases "
+               "scientific relevance and impact without adding hardware complexity or cost, while still fulfilling "
+               "the requirement to study microbial growth and adaptation under realistic LEO conditions."))
 add_para(doc, "Melanin is a family of complex polymeric pigments synthesised via two principal pathways in fungi:")
 add_list(doc, soup.find(id="s3").find_all("li")[:2], ordered=False)
 
@@ -526,6 +544,40 @@ wokwi_figs = [
 ]
 for img_path, caption in wokwi_figs:
     add_figure(doc, img_path, caption, max_width_inches=5.0)
+
+# ==============================================================================
+# SECTION 4.4 + 4.5 — OPERATIONAL WORKFLOW + DESIGN TRADE-OFFS
+# ==============================================================================
+add_h2(doc, "4.4. Operational Workflow")
+add_para(doc, ("The experiment follows a linear operational sequence from ground preparation to mission completion, "
+               "designed for fully autonomous operation with minimal ground intervention:"))
+workflow = [
+    "Sterile Preparation (T-48 h to T-24 h): Sabouraud Dextrose Agar is prepared and inoculated with the respective fungal strains or left sterile (CH-1) under biosafety cabinet conditions. Chambers are sealed with gas-permeable membranes to allow passive gas exchange while preventing contamination.",
+    "Integration & Testing (T-24 h to T-6 h): The LOC chip assembly is integrated into the 1U CubeSat structure along with the dual Raspberry Pi stack, sensors, valve actuator, camera, and battery. Full functional tests (valve actuation, camera imaging, sensor readout, and hysteresis logic) are performed.",
+    "Launch & Deployment (T = 0): The CubeSat is launched and deployed into the target LEO. The system remains in low-power safe mode during ascent.",
+    "Autonomous Science Phase (T+0 to T+48 h): Upon reaching stable orbit, the primary Raspberry Pi boots the control software. Radiation flux is monitored continuously. The hysteresis controller actuates the nutrient valve during SAA passages. The auxiliary Pi triggers the camera for OD600 imaging once per hour. All data are timestamped by the DS3231 RTC and logged locally.",
+    "Data Handling & Downlink: At the end of the 48-hour window (or upon command), summarised data (master_log.csv and selected images) are prepared for downlink. The system enters safe mode.",
+    "Experiment Completion: Post-mission, the CubeSat is deorbited or retrieved. Ground analysis compares simulated attenuation and growth curves against the logged flight data.",
+]
+add_list(doc, [type('obj', (), {'get_text': lambda self, s=s, **kw: s})() for s in workflow], ordered=True)
+add_para(doc, ("This workflow ensures fully autonomous operation with minimal ground intervention, satisfying the "
+               "constraints of a simple, low-complexity payload."))
+
+add_hr(doc)
+add_h2(doc, "4.5. Key Design Trade-offs and Critical Decisions")
+add_para(doc, ("Several deliberate trade-offs were made to balance scientific value, simplicity, and feasibility "
+               "within the given constraints:"))
+trade_offs = [
+    "Three chambers versus two: The addition of a second fungal strain (CH-3) enables direct comparison of melanin density effects and strengthens statistical validity, at the cost of only marginal increases in mass, volume, and data processing.",
+    "Hysteresis valve control: The biologically responsive nutrient valve adds a novel creative feature that couples environmental radiation to biological state. This increases scientific insight but introduces a small additional power consumer and single point of mechanical failure (mitigated by deadband logic and sealed design).",
+    "Passive fluidics + valve modulation: Purely passive capillary and surface-tension-driven nutrient distribution was prioritised for microgravity compatibility. The valve only modulates delivery rather than actively pumping fluid, preserving simplicity and eliminating pump-related failure modes.",
+    "Camera-based OD600 proxy versus dedicated spectrophotometer: A simple OV5647 camera module provides non-contact biomass estimation at very low mass, power, and complexity. This trades some measurement precision for flight heritage and ease of integration.",
+    "Simulation-first development: Extensive Python modelling and Wokwi electronics simulation were completed before physical prototyping. This accelerated iteration and risk reduction but defers full hardware-in-the-loop validation to future work.",
+]
+add_list(doc, [type('obj', (), {'get_text': lambda self, s=s, **kw: s})() for s in trade_offs], ordered=False)
+add_para(doc, ("These decisions were driven by the requirements for maximum 2-3 chambers, no complex instruments, "
+               "and a single simple creative feature that enhances functionality without increasing cost or "
+               "complexity."))
 
 doc.add_page_break()
 
