@@ -35,6 +35,8 @@ We compare **two fungal strains** against a sterile control across 48 simulated 
 
 > The only variable between chambers is the biology. Temperature, humidity, nutrients, and radiation exposure are identical across all three.
 
+> **Why fungi instead of bacteria?** Radiotrophic fungi were chosen because they have real, peer-reviewed ISS flight data on radiation response (Shunk et al., 2020). The 3-chamber closed LOC architecture, passive fluidics, optical detection, and hysteresis valve all transfer directly to bacterial systems — fungi simply maximise scientific novelty without adding hardware complexity.
+
 ---
 
 ## 🗂️ Project Structure
@@ -252,6 +254,12 @@ Where:
 ### The ISS Experiment
 In 2020, NASA/MIT researchers (Shunk et al.) sent *C. sphaerospermum* to the ISS and measured a **2.17% reduction** in radiation dose behind a thin fungal layer. Our simulation reproduces this exactly — then extends it to compare a second strain with higher melanin density.
 
+### Fluid Movement Without Pumps
+In microgravity, pumps are unreliable. This design uses **passive capillary diffusion and surface tension** inside sealed agar chambers for nutrient transport — no moving parts. The hysteresis valve only controls entry of fresh nutrients at the reservoir level. This exploits micro-g instead of fighting it.
+
+### Microgravity Effects on Growth
+Without gravity, there is no settling — fungi grow as a **uniform monolayer**, maximising the melanin surface area facing the radiation sensor. Additionally, *C. sphaerospermum* grows **23% faster** in microgravity (r = 0.299 h⁻¹ vs 0.243 h⁻¹ on Earth), a measured ISS effect directly incorporated into our ODE model.
+
 ---
 
 ## 👥 Team & Responsibilities
@@ -277,6 +285,65 @@ The full TA-format report is in [`LOC_CubeSat_Report.html`](LOC_CubeSat_Report.h
 - 3 Fusion 360 CAD placeholders (auto-load when images are added)
 
 
+
+---
+
+## 🔄 Mission Operational Workflow
+
+The 48-hour experiment runs fully autonomously once sealed and launched:
+
+1. **Pre-launch (T−24 hr):** Cultures inoculated (N₀ = 0.01 g/L). CH-1 sterile agar loaded. Chambers heat-sealed. Arduino firmware flashed.
+2. **Launch & orbit insertion (T = 0):** CubeSat deployed. Arduino begins radiation monitoring at 0.5 Hz.
+3. **Growth phase (T = 0–30 hr):** Logistic growth from near-zero to saturation. Camera captures OD600 image every hour (duty-cycled). Hysteresis valve reacts to SAA passages.
+4. **Saturation phase (T = 30–48 hr):** Both cultures near K ≈ 1.0 g/L. Attenuation plateaus. Continuous logging continues.
+5. **Data downlink (T = 48 hr):** Full `master_log.csv` (13 columns × 49 rows) transmitted to ground station.
+
+---
+
+## ⚖️ Key Design Trade-offs
+
+| Decision | Trade-off | Justification |
+|----------|-----------|---------------|
+| 3 chambers vs 2 | +20 g, +15% agar | Enables inter-strain comparison — the core scientific value |
+| Hysteresis valve (creative feature) | +0.5 W, 1 mechanical part | Enables stress-response data impossible in passive designs |
+| Dual Raspberry Pi | +45 g, +0.6 W | Eliminates single-point failure for data capture |
+| OD600 camera proxy | No direct mass measurement | Only viable non-contact biomass method in microgravity |
+| Simulation-first | No physical hardware yet | Calibrated against ISS data before any fabrication cost |
+
+---
+
+## 🛡️ Failure Analysis & Mitigations
+
+| Category | Failure Mode | Likelihood | Mitigation |
+|----------|-------------|------------|------------|
+| **Biological** | Culture dies before saturation | Low | 10× excess nutrients; ISS radiation is below fungal lethal dose |
+| **Biological** | Cross-contamination between chambers | Very Low | 1 mm PDMS dividers; CH-1 sentinel flags any contamination |
+| **Fluidic** | Valve stuck OPEN | Low | Software watchdog resets to CLOSED after 10 min; deadband prevents chatter |
+| **Fluidic** | Valve stuck CLOSED | Low | Pre-loaded agar reserve sufficient for 72 hr with zero OPEN events |
+| **Mechanical** | Chamber seal breach | Very Low | Heat-sealed PDMS lid + secondary O-ring gasket |
+| **Electrical** | Primary Raspberry Pi failure | Low | Dual Pi — Aux auto-assumes flight computer role via watchdog failover |
+| **Electrical** | Battery depletion | Medium | Camera duty-cycled; Arduino deep-sleep; solar panel supplement planned |
+| **Sensing** | GM tube saturation at SAA peak | Low | Dual GM tubes averaged; >700 μGy/hr clamped and flagged |
+| **Sensing** | DHT22 false reading | Low | Two DHT22s cross-validated; >5°C discrepancy triggers flag |
+| **Thermal** | Temperature >35°C (fungal death) | Low | Passive Al shell; LED duty-cycled; thermal model predicts 22–28°C |
+| **Silent** | Camera lens fogged | Medium | Silica gel desiccant; LED warmth; anomaly detection on OD600 drops |
+| **Contamination** | CH-1 contaminated pre-launch | Low | Autoclaved 121°C/15 psi; sealed in Class 10,000 clean room |
+
+---
+
+## ✅ Task Requirements Compliance
+
+| Task Requirement | How We Met It |
+|-----------------|---------------|
+| Biological experiment described | 3-chamber comparative study of two radiotrophic fungal strains vs sterile control |
+| Closed environment | Sealed PDMS/agar chambers — no atmosphere exchange |
+| Fluid movement without pumps | Passive capillary diffusion inside agar matrix; no active pumping inside chambers |
+| Detection method for growth | OD600 optical density proxy via Raspberry Pi camera |
+| Creative design feature | Hysteresis-controlled nutrient valve responding to real-time radiation levels |
+| Failures, redundancies, mitigations | 12 failure modes documented (Table 10 in report) with explicit mitigations |
+| Mathematical model | Logistic ODE + Beer-Lambert Law, calibrated to ISS 2.17% result |
+| Electronics design | Arduino hysteresis controller validated in Wokwi virtual circuit |
+| 3D structural design | 1U CubeSat Fusion 360 model (in progress) following CDS Rev. 14 |
 
 ---
 
