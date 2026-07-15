@@ -1369,19 +1369,16 @@
         <td style="background:#fff; border:none; padding:12px">
           <div
             style="font-family:'Courier New',monospace; font-size:10pt; background:#1e1e2e; color:#cdd6f4; padding:18px; border-radius:6px; line-height:1.8; text-align:left;">
-            <span style="color:#89b4fa">SPENVIS / flux_generator.py</span><br>
-            &nbsp;&nbsp;&nbsp;&nbsp;↓ flux_profile.csv (time_hr, flux_uGy_hr)<br>
-            <span style="color:#f38ba8">hysteresis.py</span><br>
-            &nbsp;&nbsp;&nbsp;&nbsp;↓ valve_state.csv (time_hr, valve_state)<br>
-            <span style="color:#a6e3a1">growth_model.py</span> ← valve_state.csv + literature r, K<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;↓ growth_output.csv (N_ch2, N_ch3, OD_ch2, OD_ch3)<br>
-            <span style="color:#fab387">attenuation.py</span> ← growth_output.csv + literature μ, ρ, α<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;↓ attenuation_output.csv (delta_ch2/3, I_ch2/3, attn_ch2/3_pct)<br>
-            <span style="color:#cba6f7">integrate.py</span><br>
-            &nbsp;&nbsp;&nbsp;&nbsp;↓ master_log.csv (all 13 columns merged on time_hr)<br>
-            <span style="color:#f9e2af">dashboard.py</span> → Fig 1, Fig 3, Fig 5, Fig 6 (300 DPI PNG)
+            <span style="color:#cba6f7">run_experiment.py (Orchestrator)</span><br>
+            <span style="color:#f38ba8">├── config.yaml</span> (Constants & Settings)<br>
+            <span style="color:#89b4fa">├── environment/flux_generator.py</span> → environment.csv<br>
+            <span style="color:#a6e3a1">├── controller/hysteresis.py</span> → valve_state.csv<br>
+            <span style="color:#fab387">├── biology/growth_model.py</span> → growth_output.csv<br>
+            <span style="color:#f9e2af">├── biology/attenuation.py</span> → attenuation_output.csv<br>
+            <span style="color:#f38ba8">├── utils/metrics.py</span> → master_log.csv & summary.json<br>
+            <span style="color:#a6e3a1">└── dashboard/dashboard.py</span> → Figures (PNGs)
           </div>
-          <div class="fig-caption">Fig 12: Software Pipeline Architecture — module dependency chain and data flow</div>
+          <div class="fig-caption">Fig 12: Software Pipeline Architecture — modular orchestration</div>
         </td>
       </tr>
     </table>
