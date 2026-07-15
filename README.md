@@ -161,6 +161,27 @@ CONCLUSION: Better bioshield --> W. dermatitidis (CH-3) -- CHALLENGER WINS
 
 ---
 
+### Fig 5 - Power Budget Feasibility
+> A critical engineering requirement. This simulation models the continuous duty-cycled average draw (387 mW) against the 0.5U solar panel generation (~750 mW during sunlit phases). The net positive generation keeps the 6.66 Wh battery at maximum capacity for the full 48-hour mission.
+
+![Fig 5: Power Budget](src/figures/fig5_power_budget.png)
+
+---
+
+### Fig 6 - Valve State Timeline
+> A discrete step-plot showing the precise timing and duration of the 11 hysteresis valve actuations during South Atlantic Anomaly passes.
+
+![Fig 6: Valve Timeline](src/figures/fig6_valve_timeline.png)
+
+---
+
+### Fig 7 - OD600 Correlation
+> Demonstrates the linear calibration relationship (K_OD600 = 3.0) between the simulated fungal biomass and the optical density proxy measurement.
+
+![Fig 7: OD600 Correlation](src/figures/fig7_od600_correlation.png)
+
+---
+
 ### Fig 5 — Hysteresis Controller Validation
 > Validates the control logic: valve switches OPEN when flux crosses 500 μGy/hr (upper line), and only closes when flux drops below 350 μGy/hr (lower line). The gap between thresholds = deadband (prevents rapid switching).
 
