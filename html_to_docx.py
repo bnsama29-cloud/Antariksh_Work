@@ -686,11 +686,11 @@ add_figure(doc, BASE_DIR / "src/figures/fig2_growth_curves.png",
            "Fig 2: Fungal Biomass Growth — Logistic ODE. Both strains approach K = 1.0 g/L. "
            "Valve OPEN events produce slight growth suppression visible as slope changes.")
 add_figure(doc, BASE_DIR / "src/figures/fig4_od600_proxy.png",
-           "Fig 4: OD600 Optical Density Proxy — simulating auxiliary computer camera output. "
+           "Fig 5: OD600 Optical Density Proxy — simulating auxiliary computer camera output. "
            "OD = k.N where k = 3.0 OD.L/g.")
 
 add_h2(doc, "7.3. Attenuation Comparison & Primary Result")
-add_para(doc, ("The primary scientific result is presented in Fig 3. Both fungal chambers show monotonically "
+add_para(doc, ("The primary scientific result is presented in Fig 6. Both fungal chambers show monotonically "
                "increasing radiation attenuation as melanin biomass accumulates, levelling off as the cultures "
                "reach carrying capacity. The simulation result for CH-2 (2.169%) is in excellent agreement with "
                "the ISS-measured value of 2.17% (Shunk et al., 2020), validating the Beer-Lambert model "
@@ -705,7 +705,7 @@ if tables_s7:
     add_data_table(doc, tables_s7[0], "Table 8: Key Simulation Results Summary")
 
 add_figure(doc, BASE_DIR / "src/figures/fig3_attenuation.png",
-           "Fig 3: Radiation Attenuation (%) vs Time — CH-2 vs CH-3 with ISS reference line (2.17%). "
+           "Fig 6: Radiation Attenuation (%) vs Time — CH-2 vs CH-3 with ISS reference line (2.17%). "
            "CH-3 (W. dermatitidis) consistently outperforms CH-2. Shaded area = differential advantage.")
 
 add_h2(doc, "7.4. 3D Structural Model — Autodesk Fusion 360")
@@ -715,13 +715,13 @@ add_para(doc, ("The physical payload structure is modelled in Autodesk Fusion 36
                "LiPo battery pack."))
 
 add_figure(doc, BASE_DIR / "src/figures/fig_cad_isometric.png",
-           "Fig 10: Isometric Exterior View — 3U CubeSat shell (100x100x340.5 mm) with aluminium chassis and rails.", max_width_inches=5.0)
+           "Fig 13: Isometric Exterior View — 3U CubeSat shell (100x100x340.5 mm) with aluminium chassis and rails.", max_width_inches=5.0)
 
 add_figure(doc, BASE_DIR / "src/figures/fig_cad_section.png",
-           "Fig 11: Section View (Interior Layout) — 3-chamber LOC chip, stacked Raspberry Pi boards, sensor placement, and LiPo battery.", max_width_inches=5.0)
+           "Fig 14: Section View (Interior Layout) — 3-chamber LOC chip, stacked Raspberry Pi boards, sensor placement, and LiPo battery.", max_width_inches=5.0)
 
 add_figure(doc, BASE_DIR / "src/figures/fig_cad_exploded.png",
-           "Fig 12: Exploded View — showing the integration of the biological tray and electronics within the 3U structure.", max_width_inches=5.0)
+           "Fig 15: Exploded View — showing the integration of the biological tray and electronics within the 3U structure.", max_width_inches=5.0)
 
 doc.add_page_break()
 
