@@ -505,7 +505,7 @@ add_para(doc, ("Power Budget Mitigation: The baseline LiPo battery (3.7 V, 1800 
                "approximately 17.2 hours of continuous operation under the duty-cycled average load (387 mW). For the full 48-hour "
                "mission, the following strategies are implemented: (1) Camera duty-cycling - one OD600 image per "
                "hour rather than continuous recording significantly reduces camera power. "
-               "(2) Raspberry Pi deep-sleep modes between readings. (3) LED lighting timed to camera capture only. "
+               "(2) Raspberry Pi low-power modes between readings. (3) LED lighting timed to camera capture only. "
                "(4) A supplementary body-mounted solar panel (0.5 U, ~750 mW average generation) provides "
                "positive net power during the orbit, ensuring full 48-hour coverage and beyond."))
 
@@ -767,7 +767,7 @@ conclusions = [
      "[Task: Failures, redundancies, and mitigations addressed comprehensively.]"),
     ("The OD600 camera proxy provides non-contact biomass detection compatible with microgravity. "
      "[Task: Detection method for biological growth described.]"),
-    ("Power budget is managed via camera duty-cycling, Arduino deep-sleep, and planned solar panel supplement "
+    ("Power budget is managed via camera duty-cycling, Raspberry Pi low-power modes, and planned solar panel supplement "
      "to support the full 48-hour autonomous mission. [Task: Engineering feasibility for LEO demonstrated.]"),
 ]
 for c in conclusions:
