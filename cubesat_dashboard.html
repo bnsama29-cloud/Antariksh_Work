@@ -117,7 +117,8 @@ header{grid-column:1/-1;display:flex;align-items:center;justify-content:space-be
     </div>
   </div>
   <div class="pills">
-    <div class="pill live"><div class="dot"></div>TELEMETRY LIVE</div>
+    <button class="pill" id="playBtn" onclick="togglePlay()" style="cursor:pointer; background:#4da8da; color:#fff; border:none; padding:6px 14px; font-weight:700">▶ REPLAY OFF</button>
+    <div class="pill live" id="livePill"><div class="dot"></div>TELEMETRY LIVE</div>
     <div class="pill info">🌍 LEO 400 km</div>
     <div class="pill info" id="clk">--:--:-- UTC</div>
   </div>
@@ -189,6 +190,7 @@ header{grid-column:1/-1;display:flex;align-items:center;justify-content:space-be
   <div class="sc" id="sc"></div>
 </div>
 
+<script src="data/telemetry_export.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.134.0/examples/js/controls/OrbitControls.js"></script>
 <script>
@@ -758,10 +760,82 @@ function switchSim(id,btn){
 switchSim('orbit',null);
 
 // ═══════════════════════════════════════════════
-// LIVE TELEMETRY
+// LIVE TELEMETRY & REPLAY
 // ═══════════════════════════════════════════════
 let tick=0, rad=482, radDir=1;
-function updateTelemetry(){
+let replayMode = false;
+let replayIndex = 0;
+let playInterval = null;
+
+function togglePlay() {
+  replayMode = !replayMode;
+  const btn = document.getElementById('playBtn');
+  const lp = document.getElementById('livePill');
+  
+  if (replayMode) {
+    if (typeof TELEMETRY_DATA === 'undefined') {
+      alert("Telemetry data not found. Please run 'python run_experiment.py' first.");
+      replayMode = false;
+      return;
+    }
+    btn.textContent = '⏸ PAUSE REPLAY';
+    btn.style.background = '#f87171';
+    lp.innerHTML = 'REPLAY ACTIVE';
+    lp.className = 'pill info';
+    lp.style.borderColor = '#f87171';
+    lp.style.color = '#f87171';
+    clearInterval(playInterval);
+    playInterval = setInterval(updateReplayFrame, 250);
+  } else {
+    btn.textContent = '▶ START REPLAY';
+    btn.style.background = '#4da8da';
+    lp.innerHTML = '<div class="dot"></div>TELEMETRY LIVE';
+    lp.className = 'pill live';
+    lp.style.borderColor = '';
+    lp.style.color = '';
+    clearInterval(playInterval);
+    playInterval = setInterval(updateRandomTelemetry, 700);
+  }
+}
+
+function applyTelemetryData(d) {
+  const v = d.valve_state === 1;
+  document.getElementById('vdot').style.cssText=`width:11px;height:11px;border-radius:50%;background:${v?'var(--red)':'var(--green)'};box-shadow:0 0 8px ${v?'var(--red)':'var(--green)'}`;
+  document.getElementById('vtxt').textContent=v?'OPEN — SAA Pass':'CLOSED — Normal';
+  document.getElementById('tt').textContent=d.temperature_c.toFixed(1);
+  document.getElementById('th').textContent=d.humidity_rh.toFixed(1);
+  document.getElementById('tr').textContent=d.flux_uGy_hr.toFixed(0);
+  
+  // Power budget approx (linearly drain over 48h for visual effect, ignoring charge)
+  const remaining_bat = Math.max(72, 100 - (d.time_hr * 0.5)).toFixed(0);
+  document.getElementById('tb').textContent = remaining_bat;
+  
+  const od1 = Math.min(.99, 0.42 + (d.time_hr*0.00018)).toFixed(2); // Control just drift
+  const od2 = Math.min(1.0, d.OD_ch2).toFixed(2);
+  const od3 = Math.min(1.0, d.OD_ch3).toFixed(2);
+  
+  ['o1','o2','o3'].forEach((id,i)=>document.getElementById(id).textContent=[od1,od2,od3][i]);
+  ['b1','b2','b3'].forEach((id,i)=>document.getElementById(id).style.width=([od1,od2,od3][i]*100)+'%');
+  
+  // Bottom bar
+  const re=document.getElementById('srf'); if(re){re.textContent=d.flux_uGy_hr.toFixed(0)+' μGy/hr';re.style.color=v?'#f87171':'#fbbf24';}
+  const ve=document.getElementById('svlv'); if(ve){ve.textContent=v?'OPEN':'CLOSED';ve.style.color=v?'#f87171':'#4ade80';}
+  const rb=document.getElementById('radbar'); if(rb)rb.style.width=Math.min(100,d.flux_uGy_hr/670*100).toFixed(1)+'%';
+  const sa=document.getElementById('saabar'); if(sa){const p=Math.max(0,(d.flux_uGy_hr-200)/470*100);sa.style.width=p.toFixed(1)+'%';}
+  const bb=document.getElementById('batbar'); if(bb)bb.style.width=remaining_bat+'%';
+  
+  document.getElementById('clk').textContent = `T+${d.time_hr.toFixed(1)} HR`;
+}
+
+function updateReplayFrame() {
+  if (replayIndex >= TELEMETRY_DATA.length) {
+    replayIndex = 0; // Loop back
+  }
+  applyTelemetryData(TELEMETRY_DATA[replayIndex]);
+  replayIndex++;
+}
+
+function updateRandomTelemetry(){
   tick++;
   rad+=radDir*(1.5+Math.random()*3);
   if(rad>680)radDir=-1; if(rad<195)radDir=1;
@@ -784,7 +858,7 @@ function updateTelemetry(){
   const sa=document.getElementById('saabar'); if(sa){const p=Math.max(0,(rad-200)/470*100);sa.style.width=p.toFixed(1)+'%';}
   const bb=document.getElementById('batbar'); if(bb)bb.style.width=Math.max(60,(87-tick*.008)).toFixed(0)+'%';
 }
-setInterval(updateTelemetry,700);
+playInterval = setInterval(updateRandomTelemetry,700);
 setInterval(()=>{document.getElementById('clk').textContent=new Date().toISOString().slice(11,19)+' UTC';},1000);
 
 // ═══════════════════════════════════════════════

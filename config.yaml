@@ -56,3 +56,7 @@ hardware:
     sensor_draw: -0.28        # W
     battery_capacity_wh: 30.0 # Watt-hours
     battery_initial_pct: 100.0
+
+fault_injection:
+  sensor_failure: false       # If true, radiation sensor drops out mid-experiment
+  sensor_failure_start_hr: 24.0 # Time (hr) when the sensor fails

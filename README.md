@@ -39,6 +39,51 @@ We compare **two fungal strains** against a sterile control across 48 simulated 
 
 ---
 
+## 🏗️ Software Architecture
+
+### System Data Flow (Sequence)
+```mermaid
+sequenceDiagram
+    participant Config as config.yaml
+    participant Orchestrator as run_experiment.py
+    participant Env as flux_generator
+    participant Ctrl as hysteresis
+    participant Bio as growth_model
+    participant Met as metrics
+    participant Dash as dashboard/camera
+    
+    Orchestrator->>Config: Load Parameters
+    Orchestrator->>Env: generate_environment()
+    Env-->>Orchestrator: environment.csv
+    
+    Orchestrator->>Ctrl: run_controller()
+    Ctrl-->>Orchestrator: valve_state.csv
+    
+    Orchestrator->>Bio: run_biology()
+    Bio-->>Orchestrator: growth_output.csv & attenuation.csv
+    
+    Orchestrator->>Met: run_metrics()
+    Met-->>Orchestrator: master_log.csv & telemetry_export.js
+    
+    Orchestrator->>Dash: run_dashboard() & run_camera_sim()
+    Dash-->>Orchestrator: Figures & Synthetic Images
+```
+
+### System State Machine
+```mermaid
+stateDiagram-v2
+    [*] --> Idle
+    Idle --> Initialize : Load config.yaml
+    Initialize --> Simulate_Environment : Generate Flux & Temp
+    Simulate_Environment --> Simulate_Hardware : Hysteresis Control
+    Simulate_Hardware --> Simulate_Biology : Monod Kinetics ODE
+    Simulate_Biology --> Integration : Merge & Check Faults
+    Integration --> Visualization : Render Dashboard & Images
+    Visualization --> [*] : Experiment Complete
+```
+
+---
+
 ## 🗂️ Project Structure
 
 ```text

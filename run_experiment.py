@@ -23,6 +23,7 @@ from biology.growth_model import run_biology
 from biology.attenuation import run_attenuation
 from utils.metrics import run_metrics
 from dashboard.dashboard import run_dashboard
+from dashboard.camera_sim import run_camera_sim
 
 def setup_logging():
     os.makedirs("logs", exist_ok=True)
@@ -71,6 +72,7 @@ def run_all():
         run_attenuation()
         run_metrics()
         run_dashboard()
+        run_camera_sim()
         
         logger.info("Experiment Pipeline Completed Successfully.")
         
