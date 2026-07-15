@@ -524,11 +524,11 @@ add_para(doc, ("The control electronics were simulated using the Wokwi online ci
 # Wokwi figures (3 side by side — put as 3 separate figures)
 wokwi_figs = [
     (BASE_DIR / "src/figures/electronics_sim/fig5_wokwi_valve_closed.png",
-     "Fig 6: Valve CLOSED — F:150 uGy/hr (GCR background, green LED on)"),
+     "Fig 9: Valve CLOSED — F:150 uGy/hr (GCR background, green LED on)"),
     (BASE_DIR / "src/figures/electronics_sim/fig6_wokwi_valve_open_trigger.png",
-     "Fig 7: Valve OPEN triggered — F:522 uGy/hr (exceeded 500 uGy/hr threshold, red LED on)"),
+     "Fig 10: Valve OPEN triggered — F:522 uGy/hr (exceeded 500 uGy/hr threshold, red LED on)"),
     (BASE_DIR / "src/figures/electronics_sim/fig7_wokwi_valve_open_hold.png",
-     "Fig 8: Valve OPEN holding — F:516 uGy/hr (deadband, valve holds OPEN until <350)"),
+     "Fig 11: Valve OPEN holding — F:516 uGy/hr (deadband, valve holds OPEN until <350)"),
 ]
 for img_path, caption in wokwi_figs:
     add_figure(doc, img_path, caption, max_width_inches=5.0)
@@ -628,7 +628,7 @@ add_equation(doc, ("valve_state = OPEN   if flux > 500 uGy/hr\n"
                    "valve_state = CLOSED if flux < 350 uGy/hr\n"
                    "valve_state = HOLD   otherwise (deadband)      [Equation 6]"))
 add_figure(doc, BASE_DIR / "src/figures/hysteresis_validation.png",
-           "Fig 5: Hysteresis Controller Validation — radiation flux (top) and valve state (bottom) over 48 hours. "
+           "Fig 8: Hysteresis Controller Validation — radiation flux (top) and valve state (bottom) over 48 hours. "
            "SAA spikes trigger OPEN events. Deadband prevents chatter in 350-500 uGy/hr range.")
 
 doc.add_page_break()
@@ -673,7 +673,15 @@ add_para(doc, ("The hysteresis controller correctly identifies 11 OPEN events ov
                "(350-500 uGy/hr) prevents valve chatter during the decay phase of each SAA spike."))
 add_figure(doc, BASE_DIR / "src/figures/fig1_flux_valve.png",
            "Fig 1: LEO Radiation Flux Profile over 48 hours with Hysteresis Valve State Overlay. "
-           "GCR baseline = 200 uGy/hr; SAA peaks reach ~672 uGy/hr. 11 valve OPEN events shown.")
+           "GCR baseline = 200 uGy/hr; SAA peaks reach ~672 uGy/hr. Red shaded regions indicate valve "
+           "OPEN events. Upper threshold (500 uGy/hr) and lower threshold (350 uGy/hr) shown as dashed lines.")
+
+add_figure(doc, BASE_DIR / "src/figures/fig6_valve_timeline.png",
+           "Fig 2: Hysteresis Valve State Timeline. A discrete step-plot showing the precise timing and duration of valve actuations.")
+
+add_figure(doc, BASE_DIR / "src/figures/fig6_valve_timeline.png",
+           "Fig 2: Hysteresis Valve State Timeline. A discrete step-plot showing the precise timing and duration of valve actuations.")
+
 
 add_h2(doc, "7.2. Fungal Growth Kinetics")
 add_para(doc, ("Both fungal strains follow the expected sigmoid (logistic) growth trajectory, reaching "
@@ -683,7 +691,7 @@ add_para(doc, ("Both fungal strains follow the expected sigmoid (logistic) growt
                "inflection in the growth curve during SAA passage events, corresponding to the 50% "
                "nutrient-restriction penalty applied during OPEN states."))
 add_figure(doc, BASE_DIR / "src/figures/fig2_growth_curves.png",
-           "Fig 2: Fungal Biomass Growth — Logistic ODE. Both strains approach K = 1.0 g/L. "
+           "Fig 3: Fungal Biomass Growth — Logistic ODE. Both strains approach K = 1.0 g/L. "
            "Valve OPEN events produce slight growth suppression visible as slope changes.")
 add_figure(doc, BASE_DIR / "src/figures/fig4_od600_proxy.png",
            "Fig 5: OD600 Optical Density Proxy — simulating auxiliary computer camera output. "
