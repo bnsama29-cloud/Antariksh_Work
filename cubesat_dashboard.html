@@ -294,12 +294,7 @@ const frameGrp = new THREE.Group();
 for(const [rx,rz] of [[.457,.457],[-.457,.457],[.457,-.457],[-.457,-.457]]){
   frameGrp.add(add(bx(RAIL_S,RAIL_H,RAIL_S), M.alum, rx, RAIL_H/2, rz));
 }
-// Horizontal straps at top/mid/bottom
-for(const y of [0.02, 1.14, 2.27, 3.385]){
-  for(const [a,b,c] of [[1,RAIL_S,RAIL_S,0,.457],[1,RAIL_S,RAIL_S,0,-.457],[RAIL_S,RAIL_S,1,.457,0],[RAIL_S,RAIL_S,1,-.457,0]]){
-    frameGrp.add(add(bx(a,RAIL_S,c), M.alumDk, b, y, d));
-  }
-}
+// Horizontal straps — built by hStraps() below
 // corner strap helper
 function hStraps(y){
   const f=frameGrp;
