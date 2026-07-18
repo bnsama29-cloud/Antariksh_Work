@@ -238,7 +238,7 @@ def add_list(doc, items, ordered=False):
         p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
         p.paragraph_format.line_spacing = Pt(18)
         p.paragraph_format.left_indent = Cm(1.2)
-        prefix = f"{i}. " if ordered else "• "
+        prefix = f"{i}. " if ordered else "- "
         run = p.add_run(prefix + txt)
         run.font.name = "Times New Roman"
         run.font.size = Pt(12)
@@ -263,7 +263,7 @@ print("Building Word document...")
 doc.add_paragraph()
 
 doc.add_page_break()
-add_para(doc, "TEAM ANTARIKSH — RVCE", align=WD_ALIGN_PARAGRAPH.CENTER, bold=True, size=14)
+add_para(doc, "TEAM ANTARIKSH - RVCE", align=WD_ALIGN_PARAGRAPH.CENTER, bold=True, size=14)
 add_para(doc, "R.V. College of Engineering, Bengaluru", align=WD_ALIGN_PARAGRAPH.CENTER, italic=True)
 add_hr(doc)
 doc.add_paragraph()
@@ -276,7 +276,7 @@ doc.add_paragraph()
 
 # Info table on cover
 info = [
-    ("Project Type:", "Group Task — LOC CubeSat Payload"),
+    ("Project Type:", "Group Task - LOC CubeSat Payload"),
     ("Document Type:", "Technical Report (TA Format)"),
     ("Date:", "July 2026"),
     ("Team Members:", "6 Members (BT · EC · AIML × 2 · CS · Aerospace)"),
@@ -336,7 +336,7 @@ toc_entries = [
     ("   7.1. Radiation Flux Profile", "7"),
     ("   7.2. Fungal Growth Kinetics", "8"),
     ("   7.3. Attenuation Comparison", "8"),
-    ("   7.4. 3D Model — Fusion 360", "9"),
+    ("   7.4. 3D Model - Fusion 360", "9"),
     ("   7.6. Reliability and Failure Modes Analysis", "10"),
     ("8. Conclusions & Future Work", "10"),
     ("9. References", "11"),
@@ -357,18 +357,18 @@ add_title(doc, "List of Figures")
 add_hr(doc)
 figures = [
     ("Fig 1", "LEO Radiation Flux Profile with Hysteresis Valve State Overlay", "7"),
-    ("Fig 2", "Fungal Biomass Growth — Logistic ODE (CH-2 vs CH-3)", "8"),
-    ("Fig 3", "Radiation Attenuation (%) — CH-2 vs CH-3 with ISS Reference", "8"),
-    ("Fig 4", "OD600 Proxy — Auxiliary Computer Camera Simulation", "8"),
-    ("Fig 5", "Hysteresis Controller Validation — Flux vs Valve State", "6"),
-    ("Fig 6", "Wokwi Electronics Simulation — Valve CLOSED (GCR Background)", "4"),
-    ("Fig 7", "Wokwi Electronics Simulation — Valve OPEN (SAA Trigger >500 uGy/hr)", "4"),
-    ("Fig 8", "Wokwi Electronics Simulation — Valve OPEN (Deadband Holding)", "4"),
+    ("Fig 2", "Fungal Biomass Growth - Logistic ODE (CH-2 vs CH-3)", "8"),
+    ("Fig 3", "Radiation Attenuation (%) - CH-2 vs CH-3 with ISS Reference", "8"),
+    ("Fig 4", "OD600 Proxy - Auxiliary Computer Camera Simulation", "8"),
+    ("Fig 5", "Hysteresis Controller Validation - Flux vs Valve State", "6"),
+    ("Fig 6", "Wokwi Electronics Simulation - Valve CLOSED (GCR Background)", "4"),
+    ("Fig 7", "Wokwi Electronics Simulation - Valve OPEN (SAA Trigger >500 uGy/hr)", "4"),
+    ("Fig 8", "Wokwi Electronics Simulation - Valve OPEN (Deadband Holding)", "4"),
     ("Fig 9", "System Architecture Block Diagram", "6"),
-    ("Fig 10", "Reference 3D Model — LOC CubeSat Internal Layout", "9"),
-    ("Fig CAD-1", "[PLACEHOLDER] Fusion 360 — Isometric Exterior View", "9"),
-    ("Fig CAD-2", "[PLACEHOLDER] Fusion 360 — Section View (Interior Layout)", "9"),
-    ("Fig CAD-3", "[PLACEHOLDER] Fusion 360 — Exploded View", "9"),
+    ("Fig 10", "Reference 3D Model - LOC CubeSat Internal Layout", "9"),
+    ("Fig CAD-1", "[PLACEHOLDER] Fusion 360 - Isometric Exterior View", "9"),
+    ("Fig CAD-2", "[PLACEHOLDER] Fusion 360 - Section View (Interior Layout)", "9"),
+    ("Fig CAD-3", "[PLACEHOLDER] Fusion 360 - Exploded View", "9"),
 ]
 for num, desc, pg in figures:
     p = doc.add_paragraph()
@@ -380,7 +380,7 @@ for num, desc, pg in figures:
 doc.add_page_break()
 
 # ══════════════════════════════════════════════════════════════════════════════
-# SECTION 1 — EXECUTIVE SUMMARY
+# SECTION 1 - EXECUTIVE SUMMARY
 # ══════════════════════════════════════════════════════════════════════════════
 add_title(doc, "Lab-on-a-Chip CubeSat Payload Simulation")
 add_hr(doc)
@@ -389,16 +389,16 @@ add_h1(doc, "1. Executive Summary")
 add_para(doc, ("This report presents the design, simulation, and analysis of a Lab-on-a-Chip (LOC) CubeSat payload "
                "intended to study the radiation-shielding properties of melanin-producing radiotrophic fungi under "
                "Low Earth Orbit (LEO) conditions. The experiment is inspired by the 2020 ISS study by Shunk et al., "
-               "which demonstrated that a thin layer of Cladosporium sphaerospermum — a melanin-rich fungus native "
-               "to the Chernobyl exclusion zone — reduced ionising radiation dose by approximately 2.17% in a real "
+               "which demonstrated that a thin layer of Cladosporium sphaerospermum - a melanin-rich fungus native "
+               "to the Chernobyl exclusion zone - reduced ionising radiation dose by approximately 2.17% in a real "
                "space environment."))
 add_para(doc, ("This project extends that foundational study through a 3-chamber comparative design that "
                "simultaneously compares two melanin-rich fungal strains against a sterile agar control, under "
                "identical radiation and microgravity conditions. By holding all environmental variables constant and "
                "varying only the biological contents of each chamber, this study isolates the effect of melanin "
-               "density and melanin type (DHN-melanin vs DOPA-melanin) on radiation attenuation — a comparison "
+               "density and melanin type (DHN-melanin vs DOPA-melanin) on radiation attenuation - a comparison "
                "that has not previously been conducted in a controlled spaceflight context."))
-add_para(doc, ("The simulation pipeline comprises six Python modules — a synthetic LEO radiation flux generator, "
+add_para(doc, ("The simulation pipeline comprises six Python modules - a synthetic LEO radiation flux generator, "
                "a hysteresis control system, a logistic growth ODE solver, a Beer-Lambert attenuation model, an "
                "integration engine, and a dashboard visualisation system. An electronics simulation was additionally "
                "implemented using the Wokwi platform (Raspberry Pi Pico/MicroPython), validating the hardware control logic in a "
@@ -406,7 +406,7 @@ add_para(doc, ("The simulation pipeline comprises six Python modules — a synth
                "CubeSat standard (100 x 100 x 340.5 mm)."))
 add_para(doc, ("Simulation results confirm that C. sphaerospermum (CH-2) achieves 2.169% peak attenuation, "
                "validating the model against the ISS experimental reference. The challenger strain W. dermatitidis "
-               "(CH-3) achieves 2.593% peak attenuation — exceeding the baseline by 19.6% — owing to its higher "
+               "(CH-3) achieves 2.593% peak attenuation - exceeding the baseline by 19.6% - owing to its higher "
                "melanin density as reported by Dadachova et al. (2008). These results suggest that W. dermatitidis "
                "may be a superior candidate for future biological radiation shielding applications in crewed "
                "spacecraft."))
@@ -414,18 +414,18 @@ add_para(doc, ("Simulation results confirm that C. sphaerospermum (CH-2) achieve
 add_hr(doc)
 
 # ══════════════════════════════════════════════════════════════════════════════
-# SECTION 2 — MISSION PARAMETERS
+# SECTION 2 - MISSION PARAMETERS
 # ══════════════════════════════════════════════════════════════════════════════
 add_h1(doc, "2. Mission Parameters & Orbital Environment")
 add_h2(doc, "2.1. Orbital Parameters")
 add_para(doc, ("The payload is designed to operate aboard a CubeSat in a Low Earth Orbit (LEO) equivalent to "
                "the International Space Station (ISS) trajectory. The chosen orbital parameters are as follows:"))
 
-add_data_table(doc, soup.find(id="s1").find("table"), "Table 1: Orbital Parameters — ISS-equivalent LEO")
+add_data_table(doc, soup.find(id="s1").find("table"), "Table 1: Orbital Parameters - ISS-equivalent LEO")
 
 add_h2(doc, "2.2. Radiation Environment in LEO")
-add_para(doc, ("The primary radiation sources in LEO are Galactic Cosmic Rays (GCR) — high-energy particles "
-               "originating from outside the solar system — and trapped protons and electrons in the Van Allen "
+add_para(doc, ("The primary radiation sources in LEO are Galactic Cosmic Rays (GCR) - high-energy particles "
+               "originating from outside the solar system - and trapped protons and electrons in the Van Allen "
                "radiation belts. At ISS altitude, the average GCR background dose rate is approximately 200 "
                "uGy/hr, with periodic elevation to 600-700 uGy/hr during South Atlantic Anomaly (SAA) passage "
                "(Cucinotta et al., 2011). The radiation is dominated by protons and high-Z, high-energy (HZE) "
@@ -438,8 +438,8 @@ add_para(doc, ("At 400 km, the geomagnetic field provides partial shielding from
 add_h2(doc, "2.3. South Atlantic Anomaly")
 add_para(doc, ("The South Atlantic Anomaly (SAA) is a region over South America and the Atlantic Ocean where "
                "the inner Van Allen belt dips to its lowest altitude (~200 km), resulting in significantly "
-               "elevated trapped proton flux. During ISS passes through the SAA — occurring approximately 6 "
-               "times per 24-hour period — dose rates increase by a factor of 2-4x above the GCR background. "
+               "elevated trapped proton flux. During ISS passes through the SAA - occurring approximately 6 "
+               "times per 24-hour period - dose rates increase by a factor of 2-4x above the GCR background. "
                "Our simulation models SAA passages as Gaussian-shaped dose-rate spikes with peak values of "
                "650-700 uGy/hr occurring every ~4 hours in the 48-hour simulation window (a simplified uniform SAA "
                "interval is assumed for the mathematical model)."))
@@ -447,16 +447,16 @@ add_para(doc, ("The South Atlantic Anomaly (SAA) is a region over South America 
 doc.add_page_break()
 
 # ══════════════════════════════════════════════════════════════════════════════
-# SECTION 3 — BIOLOGY
+# SECTION 3 - BIOLOGY
 # ══════════════════════════════════════════════════════════════════════════════
 add_h1(doc, "3. Biological Rationale & Strain Selection")
 add_h2(doc, "3.1. Radiotrophic Fungi & Melanin-Mediated Radiotropism")
 add_para(doc, ("While the original task specified the study of bacterial growth in microgravity-like conditions, "
                "radiotrophic fungi were selected as the biological system for this payload. C. sphaerospermum and "
                "W. dermatitidis have well-documented flight heritage aboard the ISS and provide a validated model "
-               "for microbial response to space radiation. The core design principles — a sealed 3-chamber LOC, passive "
+               "for microbial response to space radiation. The core design principles - a sealed 3-chamber LOC, passive "
                "microgravity-compatible fluidics, simple optical biomass detection, and a biologically responsive "
-               "control valve — are directly transferable to bacterial systems. This creative choice increases "
+               "control valve - are directly transferable to bacterial systems. This creative choice increases "
                "scientific relevance and impact without adding hardware complexity or cost, while still fulfilling "
                "the requirement to study microbial growth and adaptation under realistic LEO conditions."))
 add_para(doc, "Melanin is a family of complex polymeric pigments synthesised via two principal pathways in fungi:")
@@ -464,7 +464,7 @@ add_list(doc, soup.find(id="s3").find_all("li")[:2], ordered=False)
 
 add_para(doc, ("The space-shielding effectiveness of melanin arises from its ability to attenuate ionising "
                "radiation through Compton scattering and photoelectric absorption, in direct proportion to the "
-               "areal density (mg/cm squared) of the melanin layer — described quantitatively by the "
+               "areal density (mg/cm squared) of the melanin layer - described quantitatively by the "
                "Beer-Lambert law (Section 5.3)."))
 
 add_h2(doc, "3.2. Strain Selection Justification")
@@ -486,7 +486,7 @@ add_data_table(doc, soup.find(id="s3").find_all("table")[1], "Table 3: 3-Chamber
 doc.add_page_break()
 
 # ══════════════════════════════════════════════════════════════════════════════
-# SECTION 4 — HARDWARE
+# SECTION 4 - HARDWARE
 # ══════════════════════════════════════════════════════════════════════════════
 add_h1(doc, "4. Hardware Architecture (Virtual Twin)")
 add_h2(doc, "4.1. CubeSat Form Factor & Payload Budget")
@@ -522,20 +522,20 @@ add_para(doc, ("The control electronics were simulated using the Wokwi online ci
                "and an LED indicator showing the valve state. Serial output in CSV "
                "format allows the simulation data to be captured for integration with the Python pipeline."))
 
-# Wokwi figures (3 side by side — put as 3 separate figures)
+# Wokwi figures (3 side by side - put as 3 separate figures)
 wokwi_figs = [
     (BASE_DIR / "src/figures/electronics_sim/wokwi_pico_normal.png",
-     "Fig 9: Valve CLOSED — Normal Operation (LED off)"),
+     "Fig 9: Valve CLOSED - Normal Operation (LED off)"),
     (BASE_DIR / "src/figures/electronics_sim/wokwi_pico_triggered.png",
-     "Fig 10: Valve OPEN triggered — Radiation spike detected"),
+     "Fig 10: Valve OPEN triggered - Radiation spike detected"),
     (BASE_DIR / "src/figures/electronics_sim/wokwi_pico_high_rad.png",
-     "Fig 11: Valve OPEN holding — F:516 uGy/hr (deadband, valve holds OPEN until <350)"),
+     "Fig 11: Valve OPEN holding - F:516 uGy/hr (deadband, valve holds OPEN until <350)"),
 ]
 for img_path, caption in wokwi_figs:
     add_figure(doc, img_path, caption, max_width_inches=5.0)
 
 # ==============================================================================
-# SECTION 4.4 + 4.5 — OPERATIONAL WORKFLOW + DESIGN TRADE-OFFS
+# SECTION 4.4 + 4.5 - OPERATIONAL WORKFLOW + DESIGN TRADE-OFFS
 # ==============================================================================
 add_h2(doc, "4.4. Operational Workflow")
 add_para(doc, ("The experiment follows a linear operational sequence from ground preparation to mission completion, "
@@ -573,7 +573,7 @@ add_para(doc, ("These decisions were driven by the requirements for maximum 2-3 
 doc.add_page_break()
 
 # ══════════════════════════════════════════════════════════════════════════════
-# SECTION 5 — MATH MODELS
+# SECTION 5 - MATH MODELS
 # ══════════════════════════════════════════════════════════════════════════════
 
 add_h2(doc, "4.6. Wiring & Pinout Architecture")
@@ -621,7 +621,7 @@ add_list(doc, [
 add_para(doc, ("For C. sphaerospermum in microgravity, the growth rate r = 0.299 h^-1 was directly measured "
                "by Shunk et al. (2020) aboard the ISS using time-lapse photography. This value is notably 23% "
                "higher than the Earth-gravity value (r approx. 0.243 h^-1), suggesting that microgravity may "
-               "stimulate fungal growth kinetics — potentially due to altered nutrient transport mechanisms in "
+               "stimulate fungal growth kinetics - potentially due to altered nutrient transport mechanisms in "
                "the absence of buoyancy-driven convection. The growth rate for W. dermatitidis (r = 0.270 h^-1) "
                "is estimated from Dadachova et al. (2008)."))
 add_para(doc, ("The ODE is solved numerically using the Runge-Kutta 4th/5th order (RK45) adaptive step-size "
@@ -637,8 +637,8 @@ add_equation(doc, "delta(t) = alpha . N(t)     [cm]                   [Equation 
 add_para(doc, ("The calibration constant alpha is derived by requiring that at peak biomass (N = K = 1.0 g/L), "
                "the Beer-Lambert attenuation for CH-2 equals 2.17%:"))
 add_equation(doc, "alpha_CH2 = -ln(1 - 0.0217) / (mu x rho) = 0.3645 cm.L/g   [Equation 3]")
-add_para(doc, ("For W. dermatitidis (CH-3), the higher melanin density reported by Dadachova et al. (2008) — "
-               "approximately 15% higher than C. sphaerospermum on a per-biomass basis — yields: "
+add_para(doc, ("For W. dermatitidis (CH-3), the higher melanin density reported by Dadachova et al. (2008) - "
+               "approximately 15% higher than C. sphaerospermum on a per-biomass basis - yields: "
                "alpha_CH3 = 0.4192 cm.L/g."))
 
 add_h2(doc, "5.3. Beer-Lambert Radiation Attenuation")
@@ -659,19 +659,19 @@ add_equation(doc, ("valve_state = OPEN   if flux > 500 uGy/hr\n"
                    "valve_state = CLOSED if flux < 350 uGy/hr\n"
                    "valve_state = HOLD   otherwise (deadband)      [Equation 6]"))
 add_figure(doc, BASE_DIR / "src/figures/hysteresis_validation.png",
-           "Fig 8: Hysteresis Controller Validation — radiation flux (top) and valve state (bottom) over 48 hours. "
+           "Fig 8: Hysteresis Controller Validation - radiation flux (top) and valve state (bottom) over 48 hours. "
            "SAA spikes trigger OPEN events. Deadband prevents chatter in 350-500 uGy/hr range.")
 
 doc.add_page_break()
 
 # ══════════════════════════════════════════════════════════════════════════════
-# SECTION 6 — SOFTWARE
+# SECTION 6 - SOFTWARE
 # ══════════════════════════════════════════════════════════════════════════════
 add_h1(doc, "6. Software Architecture & Data Pipeline")
 add_h2(doc, "6.1. Module Structure")
 add_para(doc, ("The simulation is implemented as a modular Python pipeline with six independent scripts, "
                "each producing a well-defined CSV output consumed by the next module. This structure enables "
-               "parallel development — each team member works on their module independently, with inter-module "
+               "parallel development - each team member works on their module independently, with inter-module "
                "communication through agreed CSV schemas."))
 add_para(doc, "Data flow:")
 add_list(doc, [
@@ -686,12 +686,12 @@ add_list(doc, [
 add_h2(doc, "6.2. CSV Data Schema")
 tables_s6 = soup.find(id="s6").find_all("table", class_="data-table")
 if tables_s6:
-    add_data_table(doc, tables_s6[0], "Table 7: Master CSV Schema (master_log.csv) — 13 columns, 49 rows")
+    add_data_table(doc, tables_s6[0], "Table 7: Master CSV Schema (master_log.csv) - 13 columns, 49 rows")
 
 doc.add_page_break()
 
 # ══════════════════════════════════════════════════════════════════════════════
-# SECTION 7 — RESULTS
+# SECTION 7 - RESULTS
 # ══════════════════════════════════════════════════════════════════════════════
 
 add_h2(doc, "6.3. Automated Simulation Logs")
@@ -730,10 +730,10 @@ add_para(doc, ("Both fungal strains follow the expected sigmoid (logistic) growt
                "inflection in the growth curve during SAA passage events, corresponding to the 50% "
                "nutrient-restriction penalty applied during OPEN states."))
 add_figure(doc, BASE_DIR / "src/figures/fig2_growth_curves.png",
-           "Fig 3: Fungal Biomass Growth — Logistic ODE. Both strains approach K = 1.0 g/L. "
+           "Fig 3: Fungal Biomass Growth - Logistic ODE. Both strains approach K = 1.0 g/L. "
            "Valve OPEN events produce slight growth suppression visible as slope changes.")
 add_figure(doc, BASE_DIR / "src/figures/fig4_od600_proxy.png",
-           "Fig 5: OD600 Optical Density Proxy — simulating auxiliary computer camera output. "
+           "Fig 5: OD600 Optical Density Proxy - simulating auxiliary computer camera output. "
            "OD = k.N where k = 3.0 OD.L/g.")
 
 add_h2(doc, "7.3. Attenuation Comparison & Primary Result")
@@ -742,7 +742,7 @@ add_para(doc, ("The primary scientific result is presented in Fig 6. Both fungal
                "reach carrying capacity. The simulation result for CH-2 (2.169%) is in excellent agreement with "
                "the ISS-measured value of 2.17% (Shunk et al., 2020), validating the Beer-Lambert model "
                "calibration."))
-add_para(doc, ("W. dermatitidis (CH-3) achieves 2.593% peak attenuation — a 19.6% improvement over the "
+add_para(doc, ("W. dermatitidis (CH-3) achieves 2.593% peak attenuation - a 19.6% improvement over the "
                "C. sphaerospermum baseline. This result is consistent with the higher melanin content per unit "
                "biomass of W. dermatitidis reported by Dadachova et al. (2008), and supports the hypothesis "
                "that strains with higher melanin density per cell are superior radiation shielding candidates."))
@@ -752,29 +752,29 @@ if tables_s7:
     add_data_table(doc, tables_s7[0], "Table 8: Key Simulation Results Summary")
 
 add_figure(doc, BASE_DIR / "src/figures/fig3_attenuation.png",
-           "Fig 6: Radiation Attenuation (%) vs Time — CH-2 vs CH-3 with ISS reference line (2.17%). "
+           "Fig 6: Radiation Attenuation (%) vs Time - CH-2 vs CH-3 with ISS reference line (2.17%). "
            "CH-3 (W. dermatitidis) consistently outperforms CH-2. Shaded area = differential advantage.")
 
-add_h2(doc, "7.4. 3D Structural Model — Autodesk Fusion 360")
+add_h2(doc, "7.4. 3D Structural Model - Autodesk Fusion 360")
 add_para(doc, ("The physical payload structure is modelled in Autodesk Fusion 360 to the 3U CubeSat standard "
                "(CDS Rev. 14). The model includes all primary structural and electronic components: the aluminium "
                "shell, the 3-chamber LOC chip assembly, two Raspberry Pi Zero W boards, all sensors, and the "
                "LiPo battery pack."))
 
 add_figure(doc, BASE_DIR / "src/figures/fig_cad_isometric.png",
-           "Fig 13: Isometric Exterior View — 3U CubeSat shell (100x100x340.5 mm) with aluminium chassis and rails.", max_width_inches=5.0)
+           "Fig 13: Isometric Exterior View - 3U CubeSat shell (100x100x340.5 mm) with aluminium chassis and rails.", max_width_inches=5.0)
 
 add_figure(doc, BASE_DIR / "src/figures/fig_cad_section.png",
-           "Fig 14: Section View (Interior Layout) — 3-chamber LOC chip, stacked Raspberry Pi boards, sensor placement, and LiPo battery.", max_width_inches=5.0)
+           "Fig 14: Section View (Interior Layout) - 3-chamber LOC chip, stacked Raspberry Pi boards, sensor placement, and LiPo battery.", max_width_inches=5.0)
 
 add_figure(doc, BASE_DIR / "src/figures/fig_cad_exploded.png",
-           "Fig 15: Exploded View — showing the integration of the biological tray and electronics within the 3U structure.", max_width_inches=5.0)
+           "Fig 15: Exploded View - showing the integration of the biological tray and electronics within the 3U structure.", max_width_inches=5.0)
 
 doc.add_page_break()
 
 add_h2(doc, "7.6. Reliability and Failure Modes Analysis")
 add_para(doc, ("The following table documents all identified failure modes across biological, fluidic, mechanical, "
-               "electrical, sensing, thermal, and contamination categories — along with their likelihood, impact, "
+               "electrical, sensing, thermal, and contamination categories - along with their likelihood, impact, "
                "and the specific mitigation or redundancy built into the design."))
 
 table_75 = soup.find(id="s7b").find("table", class_="data-table")
@@ -794,7 +794,7 @@ add_para(doc, ("These measures ensure that no single failure compromises the cor
 doc.add_page_break()
 
 # ══════════════════════════════════════════════════════════════════════════════
-# SECTION 8 — CONCLUSIONS
+# SECTION 8 - CONCLUSIONS
 # ══════════════════════════════════════════════════════════════════════════════
 
 add_h2(doc, "7.6. Synthetic Camera Time-lapse (Optical Density)")
@@ -829,10 +829,10 @@ conclusions = [
     ("The Beer-Lambert attenuation model, calibrated against the Shunk et al. (2020) ISS experimental result, "
      "reproduces the published 2.17% peak attenuation for C. sphaerospermum to within 0.01% (simulated: 2.169%). "
      "[Task: Mathematical model validated against real ISS data.]"),
-    ("W. dermatitidis (CH-3) achieves 2.593% peak attenuation — a 19.6% improvement. "
+    ("W. dermatitidis (CH-3) achieves 2.593% peak attenuation - a 19.6% improvement. "
      "[Task: Biological experiment described; 3-chamber design enables inter-strain comparison.]"),
     ("The hysteresis control architecture prevents valve chatter in the deadband zone and identifies all 11 SAA events. "
-     "[Task: Creative design element — biologically-responsive nutrient valve — implemented and validated.]"),
+     "[Task: Creative design element - biologically-responsive nutrient valve - implemented and validated.]"),
     ("The sealed 3-chamber LOC design enables passive capillary-driven fluid movement without pumps, exploiting "
      "micro-gravity surface tension for uniform nutrient distribution. "
      "[Task: Closed environment enabled; fluid movement without pumps addressed.]"),
@@ -862,12 +862,12 @@ add_h2(doc, "8.2. Limitations")
 limitations = [
     "The Beer-Lambert model assumes a uniform, homogeneous melanin layer, which may overestimate attenuation for inhomogeneous fungal colonies with patchy growth patterns.",
     "The actual mass attenuation coefficient mu for DHN-melanin in the mixed GCR + trapped proton spectrum has not been measured; the value used (0.043 cm^2/g) is for monoenergetic gamma radiation.",
-    "Microgravity effects on melanin biosynthesis pathways are not modelled — in situ measurement would be required to confirm the alpha calibration in actual flight conditions.",
+    "Microgravity effects on melanin biosynthesis pathways are not modelled - in situ measurement would be required to confirm the alpha calibration in actual flight conditions.",
 ]
 for lim in limitations:
     p_l = doc.add_paragraph()
     p_l.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-    run_l = p_l.add_run("• " + lim)
+    run_l = p_l.add_run("- " + lim)
     run_l.font.name = "Times New Roman"
     run_l.font.size = Pt(12)
     p_l.paragraph_format.left_indent = Cm(1.2)
@@ -883,7 +883,7 @@ future = [
 for fw in future:
     p_fw = doc.add_paragraph()
     p_fw.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-    run_fw = p_fw.add_run("• " + fw)
+    run_fw = p_fw.add_run("- " + fw)
     run_fw.font.name = "Times New Roman"
     run_fw.font.size = Pt(12)
     p_fw.paragraph_format.left_indent = Cm(1.2)
@@ -891,7 +891,7 @@ for fw in future:
 add_hr(doc)
 
 # ══════════════════════════════════════════════════════════════════════════════
-# SECTION 9 — REFERENCES
+# SECTION 9 - REFERENCES
 # ══════════════════════════════════════════════════════════════════════════════
 add_h1(doc, "9. References")
 refs = [
@@ -904,11 +904,11 @@ refs = [
      "the help of melanin. Current Opinion in Microbiology, 11(6), 525-531."),
     ("[4] Bryan, R. A., & Casadevall, A. (2014). Measurement of fungal melanin. Methods in Enzymology, 533, 241-253."),
     ("[5] Cucinotta, F. A., Kim, M.-H. Y., & Chappell, L. J. (2011). Space Radiation Cancer Risk Projections and "
-     "Uncertainties — 2010. NASA Technical Publication NASA/TP-2011-216155."),
+     "Uncertainties - 2010. NASA Technical Publication NASA/TP-2011-216155."),
     ("[6] Verhulst, P. F. (1838). Notice sur la loi que la population suit dans son accroissement. "
      "Correspondance Mathematique et Physique, 10, 113-121."),
     ("[7] Cal Poly SLO (2022). CubeSat Design Specification (CDS) Rev. 14. California Polytechnic State University."),
-    ("[8] ESA (2024). SPENVIS — Space Environment Information System. European Space Agency. www.spenvis.oma.be"),
+    ("[8] ESA (2024). SPENVIS - Space Environment Information System. European Space Agency. www.spenvis.oma.be"),
     ("[9] Casadevall, A., Cordero, R. J. B., Bryan, R., et al. (2012). Melanin, radiation, and energy transduction "
      "in fungi. Mycologia, 104(5), 1003-1006."),
 ]

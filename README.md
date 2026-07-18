@@ -6,7 +6,7 @@
 **Fungal Radiation Shielding in Low Earth Orbit**  
 *3-Chamber Comparative Study | Full Python Simulation Pipeline | Electronics Virtual Twin | Fusion 360 CAD*
 
-![3U CubeSat Payload Stack — Cutaway](src/figures/fig_cad_master.png)
+![3U CubeSat Payload Stack - Cutaway](src/figures/fig_cad_master.png)
 
 ---
 
@@ -14,13 +14,13 @@
 
 | Chamber | Contents | Purpose |
 |---------|----------|---------|
-| **CH-1** | Plain agar (no fungus) | Baseline — measures radiation with *zero* shielding |
-| **CH-2** | *Cladosporium sphaerospermum* | The strain used on the ISS — our reference |
-| **CH-3** | *Wangiella dermatitidis* | Higher melanin density — our challenger |
+| **CH-1** | Plain agar (no fungus) | Baseline - measures radiation with *zero* shielding |
+| **CH-2** | *Cladosporium sphaerospermum* | The strain used on the ISS - our reference |
+| **CH-3** | *Wangiella dermatitidis* | Higher melanin density - our challenger |
 
 > The only variable between chambers is the biology. Temperature, humidity, nutrients, and radiation exposure are identical across all three.
 
-> **Why fungi instead of bacteria?** While the original task specified bacterial growth, *Cladosporium sphaerospermum* and *Wangiella dermatitidis* were chosen because they have well-documented ISS flight heritage and provide a validated model for microbial radiation response. The core design — sealed 3-chamber LOC, passive fluidics, OD600 detection, hysteresis valve — transfers directly to bacterial systems. This choice increases scientific relevance without adding hardware complexity, while fully satisfying the requirement to study microbial growth under realistic LEO conditions.
+> **Why fungi instead of bacteria?** While the original task specified bacterial growth, *Cladosporium sphaerospermum* and *Wangiella dermatitidis* were chosen because they have well-documented ISS flight heritage and provide a validated model for microbial radiation response. The core design - sealed 3-chamber LOC, passive fluidics, OD600 detection, hysteresis valve - transfers directly to bacterial systems. This choice increases scientific relevance without adding hardware complexity, while fully satisfying the requirement to study microbial growth under realistic LEO conditions.
 
 ---
 
@@ -139,7 +139,7 @@ pytest tests/
 | Metric | Result |
 |--------|--------|
 | CH-2 Peak Attenuation (*C. sphaerospermum*) | **2.169%** ✅ matches ISS published value of 2.17% |
-| CH-3 Peak Attenuation (*W. dermatitidis*) | **2.593%** — 19.6% better than baseline |
+| CH-3 Peak Attenuation (*W. dermatitidis*) | **2.593%** - 19.6% better than baseline |
 | GCR Background Radiation | 200 μGy/hr |
 | SAA Spike Peak | ~672 μGy/hr |
 | Valve OPEN events (SAA passages) | 11 out of 49 hours |
@@ -151,7 +151,7 @@ pytest tests/
 
 ## 📈 Simulation Figures
 
-### Fig 1 — LEO Radiation Flux Profile & Hysteresis Valve State
+### Fig 1 - LEO Radiation Flux Profile & Hysteresis Valve State
 > Shows the 48-hour radiation environment: flat GCR baseline (~200 μGy/hr) with spikes during South Atlantic Anomaly (SAA) passages. Red shaded areas = valve OPEN events.
 
 ![Fig 1: Radiation flux with SAA spikes and valve state](src/figures/fig1_flux_valve.png)
@@ -186,7 +186,7 @@ pytest tests/
 
 ---
 
-### Fig 6 - Radiation Attenuation Comparison — The Main Result
+### Fig 6 - Radiation Attenuation Comparison - The Main Result
 > CH-3 (*W. dermatitidis*) consistently attenuates more radiation than CH-2. The ISS reference line (2.17%) confirms our model is correctly calibrated. The shaded area shows CH-3's advantage.
 
 ![Fig 6: Attenuation comparison with ISS reference line](src/figures/fig3_attenuation.png)
@@ -250,9 +250,9 @@ graph TD
     CAM[Pi Camera Module] ===|CSI-2 Ribbon| RPI
 ```
 
-## 🔌 Electronics Simulation (Wokwi — Raspberry Pi Pico)
+## 🔌 Electronics Simulation (Wokwi - Raspberry Pi Pico)
 
-The hardware control logic was validated using Wokwi — a free online circuit simulator, using the Raspberry Pi Pico to emulate the flight computer's Python logic.
+The hardware control logic was validated using Wokwi - a free online circuit simulator, using the Raspberry Pi Pico to emulate the flight computer's Python logic.
 
 🔗 **[View and run the live simulation here](https://wokwi.com/projects/469874140452587521)**
 
@@ -277,26 +277,26 @@ The virtual circuit includes:
 **State 1: Normal Operation (GCR Background)**
 > System boot sequence complete. Valve is CLOSED (LED off).
 
-![Fig 9: Wokwi valve CLOSED — normal operation](src/figures/electronics_sim/wokwi_pico_normal.png)
+![Fig 9: Wokwi valve CLOSED - normal operation](src/figures/electronics_sim/wokwi_pico_normal.png)
 
 ---
 
-**State 2: SAA Event Detected — Valve Triggered OPEN**
+**State 2: SAA Event Detected - Valve Triggered OPEN**
 > Pushbutton clicked. Radiation spike detected. Valve automatically opens (LED turns on) to vent/exchange media.
 
-![Fig 10: Wokwi valve OPEN triggered — radiation spike detected](src/figures/electronics_sim/wokwi_pico_triggered.png)
+![Fig 10: Wokwi valve OPEN triggered - radiation spike detected](src/figures/electronics_sim/wokwi_pico_triggered.png)
 
 ---
 
 **State 3: Sustained High Radiation**
 > Radiation count increases. Valve remains OPEN (LED stays on) to ensure maximum fungal growth and shielding.
 
-![Fig 11: Wokwi valve OPEN hold — sustained radiation](src/figures/electronics_sim/wokwi_pico_high_rad.png)
+![Fig 11: Wokwi valve OPEN hold - sustained radiation](src/figures/electronics_sim/wokwi_pico_high_rad.png)
 
 ---
 
 ## 📐 3D CAD Model Specifications
-The 3D model follows the **3U CubeSat Design Specification (CDS Rev. 14)** — 100 × 100 × 340.5 mm:
+The 3D model follows the **3U CubeSat Design Specification (CDS Rev. 14)** - 100 × 100 × 340.5 mm:
 
 > **Note:** A 1U CubeSat is 10×10×11.35 cm. A 3U (three stacked units) is 10×10×34 cm. Given the payload complexity (dual Raspberry Pi, LOC chip, sensors, battery, camera), a 3U is the appropriate form factor for this experiment.
 
@@ -318,10 +318,10 @@ See [`CAD_notes/fusion360_guide.md`](CAD_notes/fusion360_guide.md) for the compl
 ## 🔬 Science Background (Quick Explainer)
 
 ### Why Fungi?
-In 1999, scientists discovered fungi growing on the walls of the Chernobyl nuclear reactor — one of the most radioactive places on Earth. Rather than dying, these fungi were *growing toward* the radiation. Later research (Dadachova et al., 2007) showed their melanin pigment was actually converting radiation energy into biochemical energy — similar to how plants use sunlight.
+In 1999, scientists discovered fungi growing on the walls of the Chernobyl nuclear reactor - one of the most radioactive places on Earth. Rather than dying, these fungi were *growing toward* the radiation. Later research (Dadachova et al., 2007) showed their melanin pigment was actually converting radiation energy into biochemical energy - similar to how plants use sunlight.
 
 ### Why Does Melanin Shield Radiation?
-Melanin is a complex polymer with many free electrons. When gamma rays or high-energy protons pass through melanin, they interact with these electrons (Compton scattering and photoelectric absorption), losing energy in the process. The more melanin, the more attenuation — described mathematically by the **Beer-Lambert Law**:
+Melanin is a complex polymer with many free electrons. When gamma rays or high-energy protons pass through melanin, they interact with these electrons (Compton scattering and photoelectric absorption), losing energy in the process. The more melanin, the more attenuation - described mathematically by the **Beer-Lambert Law**:
 
 ```
 I_transmitted = I₀ × e^(-μ × ρ × thickness)
@@ -333,13 +333,13 @@ Where:
 ```
 
 ### The ISS Experiment
-In 2020, NASA/MIT researchers (Shunk et al.) sent *C. sphaerospermum* to the ISS and measured a **2.17% reduction** in radiation dose behind a thin fungal layer. Our simulation reproduces this exactly — then extends it to compare a second strain with higher melanin density.
+In 2020, NASA/MIT researchers (Shunk et al.) sent *C. sphaerospermum* to the ISS and measured a **2.17% reduction** in radiation dose behind a thin fungal layer. Our simulation reproduces this exactly - then extends it to compare a second strain with higher melanin density.
 
 ### Fluid Movement Without Pumps
-In microgravity, pumps are unreliable. This design uses **passive capillary diffusion and surface tension** inside sealed agar chambers for nutrient transport — no moving parts. The hysteresis valve only controls entry of fresh nutrients at the reservoir level. This exploits micro-g instead of fighting it.
+In microgravity, pumps are unreliable. This design uses **passive capillary diffusion and surface tension** inside sealed agar chambers for nutrient transport - no moving parts. The hysteresis valve only controls entry of fresh nutrients at the reservoir level. This exploits micro-g instead of fighting it.
 
 ### Microgravity Effects on Growth
-Without gravity, there is no settling — fungi grow as a **uniform monolayer**, maximising the melanin surface area facing the radiation sensor. Additionally, *C. sphaerospermum* grows **23% faster** in microgravity (r = 0.299 h⁻¹ vs 0.243 h⁻¹ on Earth), a measured ISS effect directly incorporated into our ODE model.
+Without gravity, there is no settling - fungi grow as a **uniform monolayer**, maximising the melanin surface area facing the radiation sensor. Additionally, *C. sphaerospermum* grows **23% faster** in microgravity (r = 0.299 h⁻¹ vs 0.243 h⁻¹ on Earth), a measured ISS effect directly incorporated into our ODE model.
 
 ---
 
@@ -380,7 +380,7 @@ This workflow ensures fully autonomous operation with minimal ground interventio
 
 | Decision | Trade-off | Justification |
 |----------|-----------|---------------|
-| **3 chambers vs 2** | +20 g, +15% agar | Enables inter-strain comparison — the core scientific value |
+| **3 chambers vs 2** | +20 g, +15% agar | Enables inter-strain comparison - the core scientific value |
 | **Hysteresis valve** | +0.5 W, 1 mechanical part | Couples radiation environment to biology; enables stress-response data impossible in passive designs |
 | **Passive fluidics** | No pump control | Microgravity-compatible; valve modulates delivery only; eliminates pump failure modes |
 | **Dual Raspberry Pi** | +45 g, +0.6 W | Eliminates single-point failure for data capture |
@@ -398,7 +398,7 @@ This workflow ensures fully autonomous operation with minimal ground interventio
 | **Fluidic** | Valve stuck OPEN | Low | Hysteresis deadband prevents chatter; software watchdog resets after 10 min |
 | **Fluidic** | Valve stuck CLOSED | Low | 10× nutrient reserve; agar sufficient for 72 hr with zero OPEN events |
 | **Mechanical** | Chamber seal breach | Very Low | Polycarbonate ultrasonic weld + O-ring; 3-chamber redundancy |
-| **Electrical** | Primary Raspberry Pi failure | Low | Dual Pi — Aux auto-assumes flight role via watchdog failover |
+| **Electrical** | Primary Raspberry Pi failure | Low | Dual Pi - Aux auto-assumes flight role via watchdog failover |
 | **Electrical** | Battery depletion | Medium | Camera duty-cycled; Raspberry Pi low-power modes; 0.5U solar panel supplement |
 | **Sensing** | Camera calibration drift | Low | Pre-flight calibration; consistent LED panel illumination |
 | **Sensing** | GM tube drift/failure | Low | Dual LND 712 sensors with cross-validation |
@@ -409,7 +409,7 @@ This workflow ensures fully autonomous operation with minimal ground interventio
 **Additional system-level safeguards:**
 - Real-time clock (DS3231) with battery backup for timestamp integrity during power dips
 - Software watchdogs on both Raspberry Pis to detect and recover from hangs
-- Pre-flight end-to-end functional testing of the complete valve–sensor–camera loop
+- Pre-flight end-to-end functional testing of the complete valve-sensor-camera loop
 
 These measures ensure that no single failure compromises the core scientific objectives of the 48-hour mission.
 
@@ -420,8 +420,8 @@ These measures ensure that no single failure compromises the core scientific obj
 | Task Requirement | How We Met It |
 |-----------------|---------------|
 | Biological experiment described | 3-chamber comparative study of two radiotrophic fungal strains vs sterile control |
-| Closed environment | Sealed PDMS/agar chambers with gas-permeable membranes — no contamination exchange |
-| Fluid movement without pumps | Passive capillary diffusion inside agar matrix; valve modulates delivery only — no active pumping |
+| Closed environment | Sealed PDMS/agar chambers with gas-permeable membranes - no contamination exchange |
+| Fluid movement without pumps | Passive capillary diffusion inside agar matrix; valve modulates delivery only - no active pumping |
 | Detection method for growth | OD600 optical density proxy via OV5647 Raspberry Pi camera |
 | Creative design feature | Hysteresis-controlled nutrient valve responding to real-time radiation levels |
 | Failures, redundancies, mitigations | 12 failure modes documented with explicit mitigations + system-level safeguards |
@@ -433,10 +433,10 @@ These measures ensure that no single failure compromises the core scientific obj
 
 ## 📚 Key References
 
-1. Shunk et al. (2020) — ISS fungal radiation experiment, *bioRxiv*
-2. Dadachova & Casadevall (2008) — Melanin radiation properties, *Curr. Opin. Microbiology*
-3. Dadachova et al. (2007) — Radiotrophic fungi discovery, *PLOS ONE*
-4. Cucinotta et al. (2011) — ISS radiation environment, *NASA Technical Publication*
+1. Shunk et al. (2020) - ISS fungal radiation experiment, *bioRxiv*
+2. Dadachova & Casadevall (2008) - Melanin radiation properties, *Curr. Opin. Microbiology*
+3. Dadachova et al. (2007) - Radiotrophic fungi discovery, *PLOS ONE*
+4. Cucinotta et al. (2011) - ISS radiation environment, *NASA Technical Publication*
 5. CubeSat Design Specification Rev. 14, Cal Poly SLO (2022)
 
 ---
