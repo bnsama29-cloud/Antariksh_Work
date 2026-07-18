@@ -240,6 +240,41 @@ pytest tests/
 | <img src="figures/camera/img_00h.png" width="200"> | <img src="figures/camera/img_24h.png" width="200"> | <img src="figures/camera/img_48h.png" width="200"> |
 
 ---
+
+## 🔌 Wiring & Pinout Architecture
+
+The payload utilizes a Raspberry Pi Zero W as the central flight computer, interfacing with environmental sensors, the optical camera, and the fluidic control valves. 
+
+### Component Connection Table
+
+| Component | Interface / Pin | Power Routing | Description |
+| :--- | :--- | :--- | :--- |
+| **DHT22 Sensor** | GPIO 15 (Data) | 3.3V / GND | Temperature & Humidity inside the payload chamber. |
+| **Geiger Counter** | GPIO 16 (Signal) | 5.0V / GND | Radiation pulse counting (triggers on falling edge). |
+| **Solenoid Valve** | GPIO 14 (Gate) | 5.0V (via MOSFET) | Controls gas/fluid exchange for the LOC. |
+| **Pi Camera** | CSI-2 Port | Internal | Captures optical density (OD600) imagery of fungal growth. |
+| **DS3231 RTC** | GPIO 2 (SDA), GPIO 3 (SCL) | 3.3V / GND | High-precision I2C real-time clock for data logging. |
+| **Power System** | 5V / GND Pins | 18650 Battery -> Boost | A 3.7V Li-ion battery boosted to 5V powers the main Pi rail. |
+
+### System Architecture Flowchart
+
+```mermaid
+graph TD
+    BATT[18650 Battery 3.7V] -->|Boost Converter| V5[5V Power Rail]
+    V5 -->|Powers| RPI[Raspberry Pi Zero W]
+    V5 -->|Powers| GEIGER[Geiger Counter]
+    V5 -->|Powers| VALVE[Solenoid Valve via MOSFET]
+    
+    RPI -->|3.3V Power| DHT[DHT22 Temp/Hum]
+    RPI -->|3.3V Power| RTC[DS3231 RTC]
+    
+    DHT -.->|GPIO 15 Data| RPI
+    GEIGER -.->|GPIO 16 Interrupt| RPI
+    RPI -.->|GPIO 14 PWM/Gate| VALVE
+    
+    CAM[Pi Camera Module] ===|CSI-2 Ribbon| RPI
+```
+
 ## 🔌 Electronics Simulation (Wokwi — Raspberry Pi Pico)
 
 The hardware control logic was validated using Wokwi — a free online circuit simulator, using the Raspberry Pi Pico to emulate the flight computer's Python logic.

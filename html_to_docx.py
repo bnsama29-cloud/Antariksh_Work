@@ -575,7 +575,37 @@ doc.add_page_break()
 # ══════════════════════════════════════════════════════════════════════════════
 # SECTION 5 — MATH MODELS
 # ══════════════════════════════════════════════════════════════════════════════
+
+add_h2(doc, "4.6. Wiring & Pinout Architecture")
+add_para(doc, "The payload utilizes a Raspberry Pi Zero W as the central flight computer, interfacing with environmental sensors, the optical camera, and the fluidic control valves. The table below maps the physical hardware connections.")
+
+# Wiring Table
+wt = doc.add_table(rows=7, cols=4)
+wt.style = 'Table Grid'
+hdr = wt.rows[0].cells
+hdr[0].text = "Component"
+hdr[1].text = "Interface / Pin"
+hdr[2].text = "Power Routing"
+hdr[3].text = "Description"
+
+data = [
+    ("DHT22 Sensor", "GPIO 15 (Data)", "3.3V / GND", "Temperature & Humidity inside the payload chamber."),
+    ("Geiger Counter", "GPIO 16 (Signal)", "5.0V / GND", "Radiation pulse counting (triggers on falling edge)."),
+    ("Solenoid Valve", "GPIO 14 (Gate)", "5.0V (via MOSFET)", "Controls gas/fluid exchange for the LOC."),
+    ("Pi Camera", "CSI-2 Port", "Internal", "Captures optical density (OD600) imagery of fungal growth."),
+    ("DS3231 RTC", "GPIO 2/3 (I2C)", "3.3V / GND", "High-precision I2C real-time clock for data logging."),
+    ("Power System", "5V / GND Pins", "18650 -> Boost", "3.7V Li-ion battery boosted to 5V powers the main Pi rail.")
+]
+
+for i, row_data in enumerate(data):
+    cells = wt.rows[i+1].cells
+    for j, val in enumerate(row_data):
+        cells[j].text = val
+
+add_para(doc, "")
+
 add_h1(doc, "5. Mathematical & Computational Models")
+
 add_h2(doc, "5.1. Logistic Growth Model")
 add_para(doc, ("Fungal biomass growth in a nutrient-limited closed system follows a logistic (Verhulst) growth "
                "curve, characterised by an initial exponential phase followed by deceleration as the population "
