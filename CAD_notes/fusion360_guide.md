@@ -99,12 +99,19 @@ You already have all the required files in the `3D parts/` folder of your projec
 
 ## STEP 6 — Final Integration
 1. Save your Fusion file (`Ctrl + S`).
-2. Move those 3 exported PNGs into your project folder at: `f:\Downloads\Antariksh_Task\LOC_CubeSat\src\figures\`.
-3. Open a terminal in that folder and run:
+2. Move those 3 exported PNGs into your project folder at: `f:\Downloads\Antariksh_Task\LOC_CubeSat\src\figures\`, replacing the existing images there.
+3. Open a terminal in that folder and run the document builder:
    ```bash
    python html_to_docx.py
    ```
-4. This script will automatically grab your 3 new CAD renders, inject them into Sections 7.4 and 7.5 of your `LOC_CubeSat_Report_v2.docx`, and format the captions. You are completely done!
+4. Since the HTML and Word document scripts are already programmed to look for these exact filenames (`fig_cad_isometric.png`, `fig_cad_section.png`, `fig_cad_exploded.png`), your new custom renders will automatically be injected into **Section 3.4** of the HTML and Word reports, as well as the top of your `README.md`. 
+5. Commit your changes to git:
+   ```bash
+   git add src/figures/fig_cad_*.png LOC_CubeSat_Report_v2.docx
+   git commit -m "Update CAD renders with custom Fusion 360 models"
+   git push
+   ```
+6. You are completely done!
 
 ---
 
