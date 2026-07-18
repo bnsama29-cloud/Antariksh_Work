@@ -233,6 +233,8 @@ pytest tests/
 
 The hardware control logic was validated using Wokwi — a free online circuit simulator, using the Raspberry Pi Pico to emulate the flight computer's Python logic.
 
+🔗 **[View and run the live simulation here](https://wokwi.com/projects/469874140452587521)**
+
 The virtual circuit includes:
 
 | Component | Pin | Role |
@@ -252,23 +254,23 @@ The virtual circuit includes:
 ### Simulation in Action
 
 **State 1: Normal Operation (GCR Background)**
-> Flux = 150 μGy/hr → below both thresholds → valve CLOSED → green LED on
+> System boot sequence complete. Valve is CLOSED (LED off).
 
-![Fig 9: Wokwi valve CLOSED — normal GCR background operation](src/figures/electronics_sim/fig5_wokwi_valve_closed.png)
+![Fig 9: Wokwi valve CLOSED — normal operation](src/figures/electronics_sim/wokwi_pico_normal.png)
 
 ---
 
 **State 2: SAA Event Detected — Valve Triggered OPEN**
-> Flux spikes to 522 μGy/hr → crosses 500 μGy/hr upper threshold → valve flips OPEN → red LED turns on
+> Pushbutton clicked. Radiation spike detected. Valve automatically opens (LED turns on) to vent/exchange media.
 
-![Fig 10: Wokwi valve OPEN triggered — flux exceeded 500 uGy/hr threshold](src/figures/electronics_sim/fig6_wokwi_valve_open_trigger.png)
+![Fig 10: Wokwi valve OPEN triggered — radiation spike detected](src/figures/electronics_sim/wokwi_pico_triggered.png)
 
 ---
 
-**State 3: Deadband Hold — Valve Stays OPEN**
-> Flux drops to 516 μGy/hr — but since it's still ABOVE the LOWER threshold (350), valve holds OPEN. This prevents rapid chatter.
+**State 3: Sustained High Radiation**
+> Radiation count increases. Valve remains OPEN (LED stays on) to ensure maximum fungal growth and shielding.
 
-![Fig 11: Wokwi valve OPEN holding in deadband zone](src/figures/electronics_sim/fig7_wokwi_valve_open_hold.png)
+![Fig 11: Wokwi valve OPEN hold — sustained radiation](src/figures/electronics_sim/wokwi_pico_high_rad.png)
 
 ---
 

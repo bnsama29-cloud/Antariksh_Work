@@ -514,6 +514,7 @@ if len(tables_s4) >= 3:
     add_data_table(doc, tables_s4[2], "Table 5: Sensor Suite Specifications")
 
 add_h2(doc, "4.3. Electronics Simulation (Wokwi)")
+add_para(doc, "Live Simulation: https://wokwi.com/projects/469874140452587521")
 add_para(doc, ("The control electronics were simulated using the Wokwi online circuit simulator (wokwi.com) "
                "running a Raspberry Pi MicroPython script. The simulation implements the hysteresis control "
                "loop in real time, with a pushbutton substituting for the Geiger-Muller tube output "
