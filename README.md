@@ -6,32 +6,7 @@
 **Fungal Radiation Shielding in Low Earth Orbit**  
 *3-Chamber Comparative Study | Full Python Simulation Pipeline | Electronics Virtual Twin | Fusion 360 CAD*
 
-![Python](https://img.shields.io/badge/Python-3.10+-blue?style=for-the-badge&logo=python)
-![Arduino](https://img.shields.io/badge/Arduino-Wokwi-teal?style=for-the-badge&logo=arduino)
-![License](https://img.shields.io/badge/License-Academic-orange?style=for-the-badge)
-![Status](https://img.shields.io/badge/Status-Complete-green?style=for-the-badge)
-
-</div>
-
----
-
-## 📌 What Is This Project?
-
-This project simulates a **Lab-on-a-Chip (LOC) CubeSat payload** — a miniaturised biology experiment that fits inside a **3U CubeSat (10 cm × 10 cm × 34 cm)** — designed to test whether melanin-producing fungi can shield astronauts from harmful space radiation.
-
-**The key idea:** Certain fungi found growing on the walls of the Chernobyl nuclear reactor actually *thrive* in radiation. They contain a pigment called **melanin** that absorbs radiation energy. Our experiment asks: *Can a thin layer of this fungus meaningfully reduce radiation dose inside a spacecraft?*
-
-We compare **two fungal strains** against a sterile control across 48 simulated hours in Low Earth Orbit.
-
----
-
-## 🛰️ 3D Hardware Design (3U CubeSat)
-
-![3U CubeSat Isometric View](src/figures/fig_cad_isometric.png)
-
-![3U CubeSat Sectional View](src/figures/fig_cad_section.png)
-
-![3U CubeSat Exploded View](src/figures/fig_cad_exploded.png)
+![3U CubeSat Payload Stack — Cutaway](src/figures/fig_cad_master.png)
 
 ---
 
