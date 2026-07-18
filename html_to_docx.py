@@ -658,7 +658,6 @@ add_para(doc, ("A two-threshold hysteresis controller governs the nutrient valve
 add_equation(doc, ("valve_state = OPEN   if flux > 500 uGy/hr\n"
                    "valve_state = CLOSED if flux < 350 uGy/hr\n"
                    "valve_state = HOLD   otherwise (deadband)      [Equation 6]"))
-add_figure(doc, BASE_DIR / "src/figures/hysteresis_validation.png",
            "Fig 8: Hysteresis Controller Validation — radiation flux (top) and valve state (bottom) over 48 hours. "
            "SAA spikes trigger OPEN events. Deadband prevents chatter in 350-500 uGy/hr range.")
 
@@ -710,15 +709,12 @@ add_para(doc, ("The simulated 48-hour LEO radiation flux profile successfully re
 add_para(doc, ("The hysteresis controller correctly identifies 11 OPEN events over the 48-hour period, "
                "corresponding to SAA passages where flux exceeds the 500 uGy/hr upper threshold. The deadband "
                "(350-500 uGy/hr) prevents valve chatter during the decay phase of each SAA spike."))
-add_figure(doc, BASE_DIR / "src/figures/fig1_flux_valve.png",
            "Fig 1: LEO Radiation Flux Profile over 48 hours with Hysteresis Valve State Overlay. "
            "GCR baseline = 200 uGy/hr; SAA peaks reach ~672 uGy/hr. Red shaded regions indicate valve "
            "OPEN events. Upper threshold (500 uGy/hr) and lower threshold (350 uGy/hr) shown as dashed lines.")
 
-add_figure(doc, BASE_DIR / "src/figures/fig6_valve_timeline.png",
            "Fig 2: Hysteresis Valve State Timeline. A discrete step-plot showing the precise timing and duration of valve actuations.")
 
-add_figure(doc, BASE_DIR / "src/figures/fig6_valve_timeline.png",
            "Fig 2: Hysteresis Valve State Timeline. A discrete step-plot showing the precise timing and duration of valve actuations.")
 
 
@@ -729,10 +725,8 @@ add_para(doc, ("Both fungal strains follow the expected sigmoid (logistic) growt
                "approximately 2 hours earlier. The valve-state modulation produces a modest but visible "
                "inflection in the growth curve during SAA passage events, corresponding to the 50% "
                "nutrient-restriction penalty applied during OPEN states."))
-add_figure(doc, BASE_DIR / "src/figures/fig2_growth_curves.png",
            "Fig 3: Fungal Biomass Growth — Logistic ODE. Both strains approach K = 1.0 g/L. "
            "Valve OPEN events produce slight growth suppression visible as slope changes.")
-add_figure(doc, BASE_DIR / "src/figures/fig4_od600_proxy.png",
            "Fig 5: OD600 Optical Density Proxy — simulating auxiliary computer camera output. "
            "OD = k.N where k = 3.0 OD.L/g.")
 
@@ -751,7 +745,6 @@ tables_s7 = soup.find(id="s7").find_all("table", class_="data-table")
 if tables_s7:
     add_data_table(doc, tables_s7[0], "Table 8: Key Simulation Results Summary")
 
-add_figure(doc, BASE_DIR / "src/figures/fig3_attenuation.png",
            "Fig 6: Radiation Attenuation (%) vs Time — CH-2 vs CH-3 with ISS reference line (2.17%). "
            "CH-3 (W. dermatitidis) consistently outperforms CH-2. Shaded area = differential advantage.")
 
@@ -761,13 +754,10 @@ add_para(doc, ("The physical payload structure is modelled in Autodesk Fusion 36
                "shell, the 3-chamber LOC chip assembly, two Raspberry Pi Zero W boards, all sensors, and the "
                "LiPo battery pack."))
 
-add_figure(doc, BASE_DIR / "src/figures/fig_cad_isometric.png",
            "Fig 13: Isometric Exterior View — 3U CubeSat shell (100x100x340.5 mm) with aluminium chassis and rails.", max_width_inches=5.0)
 
-add_figure(doc, BASE_DIR / "src/figures/fig_cad_section.png",
            "Fig 14: Section View (Interior Layout) — 3-chamber LOC chip, stacked Raspberry Pi boards, sensor placement, and LiPo battery.", max_width_inches=5.0)
 
-add_figure(doc, BASE_DIR / "src/figures/fig_cad_exploded.png",
            "Fig 15: Exploded View — showing the integration of the biological tray and electronics within the 3U structure.", max_width_inches=5.0)
 
 doc.add_page_break()
