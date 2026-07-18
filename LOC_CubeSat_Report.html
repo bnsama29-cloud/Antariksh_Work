@@ -1527,15 +1527,193 @@
 <h1>7. Results &amp; Discussion</h1>
 
     <h2>7.1. Environment & Control Logic</h2>
-<img src="figures/fig1_environment.png" style="width:100%; max-width:800px; display:block; margin: 20px auto;">
+    <p>The integrated simulation validates the control logic against environmental fluctuations. The hysteresis valve operates flawlessly across the orbit.</p>
+    <img src="figures/fig1_environment.png" style="width:100%; max-width:800px; display:block; margin: 20px auto;">
 
-<h2>7.2. Biological Growth Kinetics</h2>
-<img src="figures/fig2_biology.png" style="width:100%; max-width:800px; display:block; margin: 20px auto;">
+    <h2>7.2. Biological Growth Kinetics</h2>
+    <p>The system successfully simulates the differential growth rates of the fungi.</p>
+    <img src="figures/fig2_biology.png" style="width:100%; max-width:800px; display:block; margin: 20px auto;">
 
-<h2>7.3. Radiation Attenuation</h2>
-<img src="figures/fig3_attenuation.png" style="width:100%; max-width:800px; display:block; margin: 20px auto;">
+    <h2>7.3. Radiation Attenuation</h2>
+    <p>Attenuation metrics indicate significant shielding provided by the biological payload.</p>
+    <img src="figures/fig3_attenuation.png" style="width:100%; max-width:800px; display:block; margin: 20px auto;">
 
-<h2>7.6. Synthetic Camera Time-lapse (Optical Density)</h2>
+    <div class="page-num">5</div>
+  </div>
+  
+  <div class="page" id="s7b">
+    <div class="page-header">LOC CubeSat Payload — Team Antariksh</div>
+    <h2>7.4. 3D Structural Model — Autodesk Fusion 360</h2>
+    <p>
+      The physical payload structure is modelled in Autodesk Fusion 360 to the 3U CubeSat standard
+      (CDS Rev. 14). The model includes all primary structural and electronic components: the aluminium
+      shell, the 3-chamber LOC chip assembly, two Raspberry Pi Zero W boards (flight computer and
+      auxiliary computer), all sensors, and the LiPo battery pack. Key design decisions include the
+      centred camera-below / LED-above LOC chip arrangement to ensure uniform optical density measurement
+      across all three chambers, and the symmetrical placement of radiation sensors directly beneath
+      CH-2 and CH-3.
+    </p>
+
+    <table class="fig-table">
+      <tr>
+        <td style="width:33.3%">
+          <img src="src/figures/fig_cad_master.png" style="width:100%; max-width:800px; display:block; margin: 20px auto;" alt="3U CubeSat Payload Stack Cutaway">
+          <div class="fig-caption">Fig 15: Exploded View — showing the integration of the biological tray and
+            electronics within the 3U structure.</div>
+        </td>
+      </tr>
+    </table>
+
+    <div class="page-num">7</div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════
+     SECTION 7b — FAILURE ANALYSIS + DESIGN TRADE-OFFS
+══════════════════════════════════════════════════════ -->
+  <div class="page" id="s7b">
+    <div class="page-header">LOC CubeSat Payload — Team Antariksh</div>
+
+
+
+    <h1>7.5. Reliability and Failure Modes Analysis</h1>
+    <p>
+      The following table documents all identified failure modes across biological, fluidic, mechanical,
+      electrical, sensing, thermal, and contamination categories — along with their likelihood, impact,
+      and the specific mitigation or redundancy built into the design.
+    </p>
+
+    <p class="table-caption"><strong>Table 10: Comprehensive Failure Analysis &amp; Mitigation Register</strong></p>
+    <table class="data-table">
+      <tr>
+        <th>Category</th>
+        <th>Failure Mode</th>
+        <th>Likelihood</th>
+        <th>Impact</th>
+        <th>Mitigation / Redundancy</th>
+      </tr>
+      <tr>
+        <td class="left"><strong>Biological</strong></td>
+        <td class="left">Fungal culture dies before saturation (nutrient depletion, radiation kill)</td>
+        <td>Low</td>
+        <td>Mission failure for affected chamber</td>
+        <td>CH-1 sterile control still valid; 10× excess nutrients pre-loaded; radiation levels at ISS altitude are
+          below fungal lethal dose</td>
+      </tr>
+      <tr>
+        <td class="left"><strong>Biological</strong></td>
+        <td class="left">Contamination between chambers (cross-growth)</td>
+        <td>Very Low</td>
+        <td>Invalidates comparative results</td>
+        <td>1 mm PDMS divider walls; chambers independently sealed; CH-1 acts as contamination sentinel — any
+          attenuation in CH-1 flags cross-contamination</td>
+      </tr>
+      <tr>
+        <td class="left"><strong>Fluidic</strong></td>
+        <td class="left">Nutrient valve stuck OPEN (over-dilution)</td>
+        <td>Low</td>
+        <td>Altered growth kinetics</td>
+        <td>Hysteresis deadband prevents chatter; software watchdog resets valve to CLOSED after 10 min continuous OPEN;
+          logged in valve_state.csv for post-hoc correction</td>
+      </tr>
+      <tr>
+        <td class="left"><strong>Fluidic</strong></td>
+        <td class="left">Nutrient valve stuck CLOSED (starvation)</td>
+        <td>Low</td>
+        <td>Reduced biomass, lower attenuation</td>
+        <td>Pre-loaded nutrient reserve (10× excess agar) is sufficient for 72 hr even with zero valve OPEN events;
+          experiment still scientifically valid</td>
+      </tr>
+      <tr>
+        <td class="left"><strong>Mechanical</strong></td>
+        <td class="left">Chamber seal breach (contamination leak)</td>
+        <td>Very Low</td>
+        <td>Biological contamination of satellite interior</td>
+        <td>Heat-sealed PDMS lid; secondary O-ring gasket on LOC tray; BSL-1 organisms pose no risk to spacecraft
+          electronics</td>
+      </tr>
+      <tr>
+        <td class="left"><strong>Electrical</strong></td>
+        <td class="left">Primary Raspberry Pi (Flight Computer) failure</td>
+        <td>Low</td>
+        <td>Loss of primary data logging</td>
+        <td>Dual Raspberry Pi architecture — RPi Auxiliary automatically assumes flight computer role via watchdog
+          failover; data simultaneously written to both SD cards</td>
+      </tr>
+      <tr>
+        <td class="left"><strong>Electrical</strong></td>
+        <td class="left">Battery depletion mid-mission</td>
+        <td>Medium</td>
+        <td>Premature mission end</td>
+        <td>Camera duty-cycled (1 image/hr, not continuous); Arduino in deep sleep between readings; total estimated
+          power draw 1.95 W for 48 hr = 93.6 Wh — within LiPo capacity of 14.8 V × 2.6 Ah = 38.5 Wh (solar panel
+          supplement required for full mission)</td>
+      </tr>
+      <tr>
+        <td class="left"><strong>Sensing</strong></td>
+        <td class="left">Geiger-Muller tube saturation during SAA peak</td>
+        <td>Low</td>
+        <td>Incorrect valve trigger timing</td>
+        <td>Dual GM tubes provide redundant readings; software averages both; saturation events (>700 μGy/hr) are
+          clamped and flagged in the log</td>
+      </tr>
+      <tr>
+        <td class="left"><strong>Sensing</strong></td>
+        <td class="left">DHT22 sensor failure (false T/H readings)</td>
+        <td>Low</td>
+        <td>Incorrect environmental logging</td>
+        <td>Two DHT22 sensors mounted at different locations; readings cross-validated in firmware; outlier rejection
+          algorithm flags discrepancy >5°C or >10% RH</td>
+      </tr>
+      <tr>
+        <td class="left"><strong>Thermal</strong></td>
+        <td class="left">Temperature exceeds 35°C (fungal death)</td>
+        <td>Low</td>
+        <td>Biological experiment failure</td>
+        <td>CubeSat thermal model predicts 22–28°C interior at 400 km; passive aluminium shell conducts excess heat; LED
+          lighting duty-cycled to reduce heat generation</td>
+      </tr>
+      <tr>
+        <td class="left"><strong>Silent Failure</strong></td>
+        <td class="left">Camera lens fogged by condensation</td>
+        <td>Medium</td>
+        <td>OD600 readings invalid</td>
+        <td>Silica gel desiccant pack inside enclosure; LED illumination warms the lens slightly; OD600 anomaly
+          detection flags sudden optical density drops</td>
+      </tr>
+      <tr>
+        <td class="left"><strong>Contamination</strong></td>
+        <td class="left">Pre-launch microbial contamination of CH-1</td>
+        <td>Low</td>
+        <td>Corrupts control baseline</td>
+        <td>CH-1 autoclaved at 121°C / 15 psi for 20 min; sealed under clean-room (Class 10,000) conditions; any growth
+          in CH-1 detected optically and flags experiment as contaminated</td>
+      </tr>
+    </table>
+    <p>
+      Additional system-level safeguards include:
+    </p>
+    <ul>
+      <li>Real-time clock (DS3231) with battery backup for timestamp integrity during power dips.</li>
+      <li>Software watchdogs on both Raspberry Pis to detect and recover from hangs.</li>
+      <li>Pre-flight end-to-end functional testing of the complete valve–sensor–camera loop.</li>
+    </ul>
+    <p>
+      These measures ensure that no single failure compromises the core scientific objectives of the 48-hour mission.
+    </p>
+
+    <div class="page-num">8</div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════
+     SECTION 8 — CONCLUSIONS
+══════════════════════════════════════════════════════ -->
+  <div class="page" id="s8">
+    <div class="page-header">LOC CubeSat Payload — Team Antariksh</div>
+
+    
+    <h2>7.6. Synthetic Camera Time-lapse (Optical Density)</h2>
     <p>Synthetic images generated by the pipeline simulating the Raspberry Pi camera payload. As the fungi grow, the optical density (OD600) of the fluid increases, visibly darkening the chambers over the 48-hour mission.</p>
     
     <table style="width:100%; text-align:center; border-collapse: collapse; margin-bottom: 20px;">
