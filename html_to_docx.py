@@ -385,13 +385,9 @@ add_hr(doc)
 
 add_h1(doc, "1. Executive Summary")
 add_para(doc, ("This report presents the design, simulation, and analysis of a Lab-on-a-Chip (LOC) CubeSat payload "
-               "space environment."))
 add_para(doc, ("This project extends that foundational study through a 3-chamber comparative design that "
-               "that has not previously been conducted in a controlled spaceflight context."))
 add_para(doc, ("The simulation pipeline comprises six Python modules — a synthetic LEO radiation flux generator, "
-               "CubeSat standard (100 x 100 x 340.5 mm)."))
 add_para(doc, ("Simulation results confirm that C. sphaerospermum (CH-2) achieves 2.169% peak attenuation, "
-               "spacecraft."))
 
 add_hr(doc)
 
@@ -401,19 +397,15 @@ add_hr(doc)
 add_h1(doc, "2. Mission Parameters & Orbital Environment")
 add_h2(doc, "2.1. Orbital Parameters")
 add_para(doc, ("The payload is designed to operate aboard a CubeSat in a Low Earth Orbit (LEO) equivalent to "
-               "the International Space Station (ISS) trajectory. The chosen orbital parameters are as follows:"))
 
 add_data_table(doc, soup.find(id="s1").find("table"), "Table 1: Orbital Parameters — ISS-equivalent LEO")
 
 add_h2(doc, "2.2. Radiation Environment in LEO")
 add_para(doc, ("The primary radiation sources in LEO are Galactic Cosmic Rays (GCR) — high-energy particles "
-               "particles, which are biologically highly damaging due to their large ionisation cross-sections."))
 add_para(doc, ("At 400 km, the geomagnetic field provides partial shielding from lower-energy GCR particles, "
-               "additional ~0.4 g/cm squared areal density of passive shielding."))
 
 add_h2(doc, "2.3. South Atlantic Anomaly")
 add_para(doc, ("The South Atlantic Anomaly (SAA) is a region over South America and the Atlantic Ocean where "
-               "interval is assumed for the mathematical model)."))
 
 doc.add_page_break()
 
@@ -423,21 +415,17 @@ doc.add_page_break()
 add_h1(doc, "3. Biological Rationale & Strain Selection")
 add_h2(doc, "3.1. Radiotrophic Fungi & Melanin-Mediated Radiotropism")
 add_para(doc, ("While the original task specified the study of bacterial growth in microgravity-like conditions, "
-               "the requirement to study microbial growth and adaptation under realistic LEO conditions."))
 add_para(doc, "Melanin is a family of complex polymeric pigments synthesised via two principal pathways in fungi:")
 add_list(doc, soup.find(id="s3").find_all("li")[:2], ordered=False)
 
 add_para(doc, ("The space-shielding effectiveness of melanin arises from its ability to attenuate ionising "
-               "Beer-Lambert law (Section 5.3)."))
 
 add_h2(doc, "3.2. Strain Selection Justification")
 add_para(doc, ("Two fungal strains were selected for comparison based on (a) their established presence in "
-               "scientific novelty of their direct comparison under controlled conditions."))
 add_data_table(doc, soup.find(id="s3").find_all("table")[0], "Table 2: Fungal Strain Properties and Literature References")
 
 add_h2(doc, "3.3. 3-Chamber Experimental Design")
 add_para(doc, ("The experimental design follows the split-Petri dish methodology pioneered by the Space Tango "
-               "fungal strain's melanin characteristics."))
 add_data_table(doc, soup.find(id="s3").find_all("table")[1], "Table 3: 3-Chamber Experimental Design Summary")
 
 doc.add_page_break()
@@ -448,7 +436,6 @@ doc.add_page_break()
 add_h1(doc, "4. Hardware Architecture (Virtual Twin)")
 add_h2(doc, "4.1. CubeSat Form Factor & Payload Budget")
 add_para(doc, ("The payload is designed to the 3U CubeSat standard (CDS Rev. 14, Cal Poly SLO) with external "
-               "radiation shielding from the shell wall."))
 
 tables_s4 = soup.find(id="s4").find_all("table", class_="data-table")
 if len(tables_s4) >= 1:
@@ -457,7 +444,6 @@ if len(tables_s4) >= 2:
     add_data_table(doc, tables_s4[1], "Table 9: Power Budget")
 
 add_para(doc, ("Power Budget Mitigation: The baseline LiPo battery (3.7 V, 1800 mAh = 6.66 Wh) provides "
-               "positive net power during the orbit, ensuring full 48-hour coverage and beyond."))
 
 add_h2(doc, "4.2. Sensor Suite")
 if len(tables_s4) >= 3:
@@ -466,7 +452,6 @@ if len(tables_s4) >= 3:
 add_h2(doc, "4.3. Electronics Simulation (Wokwi)")
 add_para(doc, "Live Simulation: https://wokwi.com/projects/469874140452587521")
 add_para(doc, ("The control electronics were simulated using the Wokwi online circuit simulator (wokwi.com) "
-               "format allows the simulation data to be captured for integration with the Python pipeline."))
 
 # Wokwi figures (3 side by side — put as 3 separate figures)
 wokwi_figs = [
@@ -485,7 +470,6 @@ for img_path, caption in wokwi_figs:
 # ==============================================================================
 add_h2(doc, "4.4. Operational Workflow")
 add_para(doc, ("The experiment follows a linear operational sequence from ground preparation to mission completion, "
-               "designed for fully autonomous operation with minimal ground intervention:"))
 workflow = [
     "Sterile Preparation (T-48 h to T-24 h): Sabouraud Dextrose Agar is prepared and inoculated with the respective fungal strains or left sterile (CH-1) under biosafety cabinet conditions. Chambers are sealed with gas-permeable membranes to allow passive gas exchange while preventing contamination.",
     ("Integration & Testing (T-24 h to T-6 h): The LOC chip assembly is integrated into the 3U "
@@ -497,12 +481,10 @@ workflow = [
 ]
 add_list(doc, [type('obj', (), {'get_text': lambda self, s=s, **kw: s})() for s in workflow], ordered=True)
 add_para(doc, ("This workflow ensures fully autonomous operation with minimal ground intervention, satisfying the "
-               "constraints of a simple, low-complexity payload."))
 
 add_hr(doc)
 add_h2(doc, "4.5. Key Design Trade-offs and Critical Decisions")
 add_para(doc, ("Several deliberate trade-offs were made to balance scientific value, simplicity, and feasibility "
-               "within the given constraints:"))
 trade_offs = [
     "Three chambers versus two: The addition of a second fungal strain (CH-3) enables direct comparison of melanin density effects and strengthens statistical validity, at the cost of only marginal increases in mass, volume, and data processing.",
     "Hysteresis valve control: The biologically responsive nutrient valve adds a novel creative feature that couples environmental radiation to biological state. This increases scientific insight but introduces a small additional power consumer and single point of mechanical failure (mitigated by deadband logic and sealed design).",
@@ -512,7 +494,6 @@ trade_offs = [
 ]
 add_list(doc, [type('obj', (), {'get_text': lambda self, s=s, **kw: s})() for s in trade_offs], ordered=False)
 add_para(doc, ("These decisions were driven by the requirements for maximum 2-3 chambers, no complex instruments, "
-               "complexity."))
 
 doc.add_page_break()
 
@@ -552,7 +533,6 @@ add_h1(doc, "5. Mathematical & Computational Models")
 
 add_h2(doc, "5.1. Logistic Growth Model")
 add_para(doc, ("Fungal biomass growth in a nutrient-limited closed system follows a logistic (Verhulst) growth "
-               "approaches the carrying capacity K. The governing Ordinary Differential Equation (ODE) is:"))
 add_equation(doc, "dN/dt = r . N . (1 - N/K)                          [Equation 1]")
 add_para(doc, "Where:")
 add_list(doc, [
@@ -562,23 +542,17 @@ add_list(doc, [
     type('obj', (), {'get_text': lambda self, **kw: "N0 = initial inoculation density = 0.01 g/L"})(),
 ], ordered=False)
 add_para(doc, ("For C. sphaerospermum in microgravity, the growth rate r = 0.299 h^-1 was directly measured "
-               "is estimated from Dadachova et al. (2008)."))
 add_para(doc, ("The ODE is solved numerically using the Runge-Kutta 4th/5th order (RK45) adaptive step-size "
-               "nutrient delivery is partially restricted, reducing r by 50% (r_eff = 0.5r)."))
 
 add_h2(doc, "5.2. Melanin Thickness Proxy")
 add_para(doc, ("The effective melanin shielding layer thickness delta(t) is linearly proportional to the fungal "
-               "thickness per unit biomass:"))
 add_equation(doc, "delta(t) = alpha . N(t)     [cm]                   [Equation 2]")
 add_para(doc, ("The calibration constant alpha is derived by requiring that at peak biomass (N = K = 1.0 g/L), "
-               "the Beer-Lambert attenuation for CH-2 equals 2.17%:"))
 add_equation(doc, "alpha_CH2 = -ln(1 - 0.0217) / (mu x rho) = 0.3645 cm.L/g   [Equation 3]")
 add_para(doc, ("For W. dermatitidis (CH-3), the higher melanin density reported by Dadachova et al. (2008) — "
-               "alpha_CH3 = 0.4192 cm.L/g."))
 
 add_h2(doc, "5.3. Beer-Lambert Radiation Attenuation")
 add_para(doc, ("The radiation flux transmitted through a melanin layer of thickness delta(t) follows the "
-               "Beer-Lambert Law for ionising radiation attenuation in a homogeneous absorbing medium:"))
 add_equation(doc, "I(t) = I0(t) . exp(-mu . rho . delta(t))          [Equation 4]")
 add_equation(doc, "Attn%(t) = [I0(t) - I(t)] / I0(t) x 100          [Equation 5]")
 
@@ -588,9 +562,7 @@ if tables_s5:
 
 add_h2(doc, "5.4. Hysteresis Control Logic")
 add_para(doc, ("A two-threshold hysteresis controller governs the nutrient valve state based on the "
-               "state oscillation (valve chatter) in the deadband zone (350-500 uGy/hr):"))
 add_equation(doc, ("valve_state = OPEN   if flux > 500 uGy/hr\n"
-                   "valve_state = HOLD   otherwise (deadband)      [Equation 6]"))
 
 doc.add_page_break()
 
@@ -600,7 +572,6 @@ doc.add_page_break()
 add_h1(doc, "6. Software Architecture & Data Pipeline")
 add_h2(doc, "6.1. Module Structure")
 add_para(doc, ("The simulation is implemented as a modular Python pipeline with six independent scripts, "
-               "communication through agreed CSV schemas."))
 add_para(doc, "Data flow:")
 add_list(doc, [
     type('obj', (), {'get_text': lambda self, **kw: "flux_generator.py  ->  data/flux_profile.csv"})(),
@@ -625,55 +596,38 @@ doc.add_page_break()
 add_h2(doc, "6.3. Automated Simulation Logs")
 add_para(doc, "The Python pipeline runs fully autonomously. Below is an excerpt from the execution log confirming the successful generation of environmental data, control states, and biological growth outputs.")
 add_para(doc, "2026-07-15 23:22:52 - [run_experiment] - INFO - Starting LOC CubeSat Experiment Pipeline\n"
-              "2026-07-15 23:23:04 - [run_experiment] - INFO - Experiment Pipeline Completed Successfully.")
 
 add_h1(doc, "7. Results & Discussion")
 
 add_h2(doc, "7.1. Radiation Flux Profile")
 add_para(doc, ("The simulated 48-hour LEO radiation flux profile successfully reproduces the characteristic "
-               "measurements reported by Cucinotta et al. (2011) using personal dosimeters aboard the ISS."))
 add_para(doc, ("The hysteresis controller correctly identifies 11 OPEN events over the 48-hour period, "
-               "(350-500 uGy/hr) prevents valve chatter during the decay phase of each SAA spike."))
-           "OPEN events. Upper threshold (500 uGy/hr) and lower threshold (350 uGy/hr) shown as dashed lines.")
 
-           "Fig 2: Hysteresis Valve State Timeline. A discrete step-plot showing the precise timing and duration of valve actuations.")
 
-           "Fig 2: Hysteresis Valve State Timeline. A discrete step-plot showing the precise timing and duration of valve actuations.")
 
 
 add_h2(doc, "7.2. Fungal Growth Kinetics")
 add_para(doc, ("Both fungal strains follow the expected sigmoid (logistic) growth trajectory, reaching "
-               "nutrient-restriction penalty applied during OPEN states."))
-           "Valve OPEN events produce slight growth suppression visible as slope changes.")
-           "OD = k.N where k = 3.0 OD.L/g.")
 
 add_h2(doc, "7.3. Attenuation Comparison & Primary Result")
 add_para(doc, ("The primary scientific result is presented in Fig 6. Both fungal chambers show monotonically "
-               "calibration."))
 add_para(doc, ("W. dermatitidis (CH-3) achieves 2.593% peak attenuation — a 19.6% improvement over the "
-               "that strains with higher melanin density per cell are superior radiation shielding candidates."))
 
 tables_s7 = soup.find(id="s7").find_all("table", class_="data-table")
 if tables_s7:
     add_data_table(doc, tables_s7[0], "Table 8: Key Simulation Results Summary")
 
-           "CH-3 (W. dermatitidis) consistently outperforms CH-2. Shaded area = differential advantage.")
 
 add_h2(doc, "7.4. 3D Structural Model — Autodesk Fusion 360")
 add_para(doc, ("The physical payload structure is modelled in Autodesk Fusion 360 to the 3U CubeSat standard "
-               "LiPo battery pack."))
 
-           "Fig 13: Isometric Exterior View — 3U CubeSat shell (100x100x340.5 mm) with aluminium chassis and rails.", max_width_inches=5.0)
 
-           "Fig 14: Section View (Interior Layout) — 3-chamber LOC chip, stacked Raspberry Pi boards, sensor placement, and LiPo battery.", max_width_inches=5.0)
 
-           "Fig 15: Exploded View — showing the integration of the biological tray and electronics within the 3U structure.", max_width_inches=5.0)
 
 doc.add_page_break()
 
 add_h2(doc, "7.6. Reliability and Failure Modes Analysis")
 add_para(doc, ("The following table documents all identified failure modes across biological, fluidic, mechanical, "
-               "and the specific mitigation or redundancy built into the design."))
 
 table_75 = soup.find(id="s7b").find("table", class_="data-table")
 if table_75:
@@ -687,7 +641,6 @@ safeguards = [
 ]
 add_list(doc, [type('obj', (), {'get_text': lambda self, s=s, **kw: s})() for s in safeguards], ordered=False)
 add_para(doc, ("These measures ensure that no single failure compromises the core scientific objectives of the "
-               "48-hour mission."))
 
 doc.add_page_break()
 
@@ -749,7 +702,6 @@ for c in conclusions:
 
 doc.add_paragraph()
 add_para(doc, ("In summary, this 3U Lab-on-a-Chip CubeSat payload presents a highly feasible, scientifically valuable, and "
-               "mission parameters and paves the way for advanced micro-biological space research."))
 
 add_h2(doc, "8.2. Limitations")
 limitations = [
