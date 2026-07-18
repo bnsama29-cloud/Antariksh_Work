@@ -702,14 +702,58 @@ add_para(doc, "2026-07-15 23:22:52 - [run_experiment] - INFO - Starting LOC Cube
 
 add_h1(doc, "7. Results & Discussion")
 
-add_h2(doc, "7.1. Environment & Control Logic")
-doc.add_picture(str(BASE_DIR / "figures/fig1_environment.png"), width=Inches(6.0))
+add_h2(doc, "7.1. Radiation Flux Profile")
+add_para(doc, ("The simulated 48-hour LEO radiation flux profile successfully reproduces the characteristic "
+               "features of the ISS radiation environment: a GCR baseline of 200 uGy/hr with superimposed SAA "
+               "passage spikes reaching 650-700 uGy/hr approximately every 4 hours. This is consistent with "
+               "measurements reported by Cucinotta et al. (2011) using personal dosimeters aboard the ISS."))
+add_para(doc, ("The hysteresis controller correctly identifies 11 OPEN events over the 48-hour period, "
+               "corresponding to SAA passages where flux exceeds the 500 uGy/hr upper threshold. The deadband "
+               "(350-500 uGy/hr) prevents valve chatter during the decay phase of each SAA spike."))
+add_figure(doc, BASE_DIR / "src/figures/fig1_flux_valve.png",
+           "Fig 1: LEO Radiation Flux Profile over 48 hours with Hysteresis Valve State Overlay. "
+           "GCR baseline = 200 uGy/hr; SAA peaks reach ~672 uGy/hr. Red shaded regions indicate valve "
+           "OPEN events. Upper threshold (500 uGy/hr) and lower threshold (350 uGy/hr) shown as dashed lines.")
 
-add_h2(doc, "7.2. Biological Growth Kinetics")
-doc.add_picture(str(BASE_DIR / "figures/fig2_biology.png"), width=Inches(6.0))
+add_figure(doc, BASE_DIR / "src/figures/fig6_valve_timeline.png",
+           "Fig 2: Hysteresis Valve State Timeline. A discrete step-plot showing the precise timing and duration of valve actuations.")
 
-add_h2(doc, "7.3. Radiation Attenuation")
-doc.add_picture(str(BASE_DIR / "figures/fig3_attenuation.png"), width=Inches(6.0))
+add_figure(doc, BASE_DIR / "src/figures/fig6_valve_timeline.png",
+           "Fig 2: Hysteresis Valve State Timeline. A discrete step-plot showing the precise timing and duration of valve actuations.")
+
+
+add_h2(doc, "7.2. Fungal Growth Kinetics")
+add_para(doc, ("Both fungal strains follow the expected sigmoid (logistic) growth trajectory, reaching "
+               "near-saturation (N approx. 0.999 g/L) by t approx. 30 hours. The slightly higher growth rate "
+               "of C. sphaerospermum (r = 0.299 h^-1 vs 0.270 h^-1) causes it to enter the stationary phase "
+               "approximately 2 hours earlier. The valve-state modulation produces a modest but visible "
+               "inflection in the growth curve during SAA passage events, corresponding to the 50% "
+               "nutrient-restriction penalty applied during OPEN states."))
+add_figure(doc, BASE_DIR / "src/figures/fig2_growth_curves.png",
+           "Fig 3: Fungal Biomass Growth — Logistic ODE. Both strains approach K = 1.0 g/L. "
+           "Valve OPEN events produce slight growth suppression visible as slope changes.")
+add_figure(doc, BASE_DIR / "src/figures/fig4_od600_proxy.png",
+           "Fig 5: OD600 Optical Density Proxy — simulating auxiliary computer camera output. "
+           "OD = k.N where k = 3.0 OD.L/g.")
+
+add_h2(doc, "7.3. Attenuation Comparison & Primary Result")
+add_para(doc, ("The primary scientific result is presented in Fig 6. Both fungal chambers show monotonically "
+               "increasing radiation attenuation as melanin biomass accumulates, levelling off as the cultures "
+               "reach carrying capacity. The simulation result for CH-2 (2.169%) is in excellent agreement with "
+               "the ISS-measured value of 2.17% (Shunk et al., 2020), validating the Beer-Lambert model "
+               "calibration."))
+add_para(doc, ("W. dermatitidis (CH-3) achieves 2.593% peak attenuation — a 19.6% improvement over the "
+               "C. sphaerospermum baseline. This result is consistent with the higher melanin content per unit "
+               "biomass of W. dermatitidis reported by Dadachova et al. (2008), and supports the hypothesis "
+               "that strains with higher melanin density per cell are superior radiation shielding candidates."))
+
+tables_s7 = soup.find(id="s7").find_all("table", class_="data-table")
+if tables_s7:
+    add_data_table(doc, tables_s7[0], "Table 8: Key Simulation Results Summary")
+
+add_figure(doc, BASE_DIR / "src/figures/fig3_attenuation.png",
+           "Fig 6: Radiation Attenuation (%) vs Time — CH-2 vs CH-3 with ISS reference line (2.17%). "
+           "CH-3 (W. dermatitidis) consistently outperforms CH-2. Shaded area = differential advantage.")
 
 add_h2(doc, "7.4. 3D Structural Model — Autodesk Fusion 360")
 add_para(doc, ("The physical payload structure is modelled in Autodesk Fusion 360 to the 3U CubeSat standard "

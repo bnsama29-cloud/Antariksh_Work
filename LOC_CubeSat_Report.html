@@ -1346,7 +1346,7 @@
     <table class="fig-table">
       <tr>
         <td>
-          
+          <img src="src/figures/hysteresis_validation.png" alt="Hysteresis validation plot">
           <div class="fig-caption">Fig 8: Hysteresis Controller Validation — radiation flux (top) and valve state
             (bottom) over 48 hours. SAA spikes at t ≈ 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44 hr trigger OPEN events.
             Deadband prevents chatter in 350–500 μGy/hr range.</div>
@@ -1526,23 +1526,143 @@
 
 <h1>7. Results &amp; Discussion</h1>
 
-    <h2>7.1. Environment & Control Logic</h2>
-    <p>The integrated simulation validates the control logic against environmental fluctuations. The hysteresis valve operates flawlessly across the orbit.</p>
-    <img src="figures/fig1_environment.png" style="width:100%; max-width:800px; display:block; margin: 20px auto;">
+    <h2>7.1. Radiation Flux Profile</h2>
+    <p>
+      The simulated 48-hour LEO radiation flux profile successfully reproduces the characteristic features
+      of the ISS radiation environment: a GCR baseline of 200 μGy/hr with superimposed SAA passage spikes
+      reaching 650–700 μGy/hr approximately every 4 hours. This is consistent with measurements reported
+      by Cucinotta et al. (2011) using personal dosimeters aboard the ISS.
+    </p>
+    <p>
+      The hysteresis controller correctly identifies 11 OPEN events over the 48-hour period, corresponding
+      to SAA passages where flux exceeds the 500 μGy/hr upper threshold. The deadband (350–500 μGy/hr)
+      prevents valve chatter during the decay phase of each SAA spike.
+    </p>
 
-    <h2>7.2. Biological Growth Kinetics</h2>
-    <p>The system successfully simulates the differential growth rates of the fungi.</p>
-    <img src="figures/fig2_biology.png" style="width:100%; max-width:800px; display:block; margin: 20px auto;">
+    <table class="fig-table">
+      <tr>
+        <td>
+          <img src="src/figures/fig1_flux_valve.png" alt="Fig 1: LEO Radiation Flux and Valve State">
+          <div class="fig-caption">Fig 1: LEO Radiation Flux Profile over 48 hours with Hysteresis Valve State Overlay.
+            GCR baseline = 200 μGy/hr; SAA peaks reach ~672 μGy/hr. Red shaded regions indicate valve OPEN events (11
+            total). Upper threshold (500 μGy/hr) and lower threshold (350 μGy/hr) shown as dashed lines.</div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <img src="src/figures/fig6_valve_timeline.png" alt="Fig 2: Valve Timeline">
+          <div class="fig-caption">Fig 2: Hysteresis Valve State Timeline. A discrete step-plot showing the precise
+            timing and duration of valve actuations.</div>
+        </td>
+      </tr>
+    </table>
 
-    <h2>7.3. Radiation Attenuation</h2>
-    <p>Attenuation metrics indicate significant shielding provided by the biological payload.</p>
-    <img src="figures/fig3_attenuation.png" style="width:100%; max-width:800px; display:block; margin: 20px auto;">
+    <h2>7.2. Fungal Growth Kinetics</h2>
+    <p>
+      Both fungal strains follow the expected sigmoid (logistic) growth trajectory, reaching near-saturation
+      (N ≈ 0.999 g/L) by t ≈ 30 hours. The slightly higher growth rate of <em>C. sphaerospermum</em>
+      (r = 0.299 h⁻¹ vs 0.270 h⁻¹) causes it to enter the stationary phase approximately 2 hours earlier.
+      The valve-state modulation produces a modest but visible inflection in the growth curve during SAA
+      passage events, corresponding to the 50% nutrient-restriction penalty applied during OPEN states.
+    </p>
 
-    <div class="page-num">5</div>
+    <table class="fig-table">
+      <tr>
+        <td style="width:50%">
+          <img src="src/figures/fig2_growth_curves.png" alt="Fig 3: Growth curves">
+          <div class="fig-caption">Fig 3: Fungal Biomass Growth — Logistic ODE. CH-2 (solid) and CH-3 (dashed) both
+            approach K = 1.0 g/L. Valve OPEN events produce slight growth suppression visible as slope changes.</div>
+        </td>
+        <td style="width:50%">
+          <img src="src/figures/fig4_od600_proxy.png" alt="Fig 5: OD600 proxy">
+          <div class="fig-caption">Fig 5: OD600 Optical Density Proxy — simulating auxiliary computer camera output.
+            OD600 is proportional to biomass: OD = k·N, where k = 3.0 OD·L/g (empirical calibration).</div>
+        </td>
+      </tr>
+    </table>
+
+    <h2>7.3. Attenuation Comparison &amp; Primary Result</h2>
+    <p>
+      The primary scientific result is presented in Fig 6. Both fungal chambers show monotonically increasing
+      radiation attenuation as melanin biomass accumulates, levelling off as the cultures reach carrying
+      capacity. The simulation result for CH-2 (2.169%) is in excellent agreement with the ISS-measured
+      value of 2.17% (Shunk et al., 2020), validating the Beer-Lambert model calibration.
+    </p>
+    <p>
+      <strong>CH-3 (<em>W. dermatitidis</em>) achieves 2.593% peak attenuation</strong> — a 19.6% improvement
+      over the <em>C. sphaerospermum</em> baseline. This result is consistent with the higher melanin content
+      per unit biomass of <em>W. dermatitidis</em> reported by Dadachova et al. (2008), and supports the
+      hypothesis that strains with higher melanin density per cell are superior radiation shielding candidates.
+    </p>
+
+    <p class="table-caption"><strong>Table 8: Key Simulation Results Summary</strong></p>
+    <table class="data-table">
+      <tr>
+        <th>Metric</th>
+        <th>CH-1 (Control)</th>
+        <th>CH-2 (C. sphaerospermum)</th>
+        <th>CH-3 (W. dermatitidis)</th>
+      </tr>
+      <tr>
+        <td class="left">Peak Attn%</td>
+        <td>0.000%</td>
+        <td><strong>2.169%</strong></td>
+        <td><strong>2.593%</strong></td>
+      </tr>
+      <tr>
+        <td class="left">ISS reference</td>
+        <td>—</td>
+        <td>2.17% ✓</td>
+        <td>Not yet measured</td>
+      </tr>
+      <tr>
+        <td class="left">Final biomass N</td>
+        <td>—</td>
+        <td>0.9992 g/L</td>
+        <td>1.0007 g/L</td>
+      </tr>
+      <tr>
+        <td class="left">Peak OD600</td>
+        <td>—</td>
+        <td>2.998</td>
+        <td>3.015</td>
+      </tr>
+      <tr>
+        <td class="left">Melanin thickness at peak</td>
+        <td>—</td>
+        <td>0.3643 cm</td>
+        <td>0.4191 cm</td>
+      </tr>
+      <tr>
+        <td class="left"><strong>Verdict</strong></td>
+        <td>—</td>
+        <td>Baseline validated</td>
+        <td><strong>BETTER SHIELD ✓</strong></td>
+      </tr>
+    </table>
+
+    <table class="fig-table">
+      <tr>
+        <td>
+          <img src="src/figures/fig3_attenuation.png" alt="Fig 6: Attenuation comparison">
+          <div class="fig-caption">Fig 6: Radiation Attenuation (%) vs Time — CH-2 vs CH-3 comparison. The ISS reference
+            value (2.17%, Shunk 2020) is shown as a dotted horizontal line. CH-3 (W. dermatitidis) consistently
+            outperforms CH-2, confirming higher melanin density as the driving factor. Shaded region = differential
+            shielding advantage of CH-3.</div>
+        </td>
+      </tr>
+    </table>
+
+    <div class="page-num">6</div>
   </div>
-  
-  <div class="page" id="s7b">
+
+
+  <!-- ══════════════════════════════════════════════════════
+     SECTION 7.4 — FUSION 360 / CAD (PLACEHOLDERS)
+══════════════════════════════════════════════════════ -->
+  <div class="page" id="s7cad">
     <div class="page-header">LOC CubeSat Payload — Team Antariksh</div>
+
     <h2>7.4. 3D Structural Model — Autodesk Fusion 360</h2>
     <p>
       The physical payload structure is modelled in Autodesk Fusion 360 to the 3U CubeSat standard
