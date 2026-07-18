@@ -274,12 +274,7 @@ The virtual circuit includes:
 
 ---
 
-## 📐 3D CAD Model — Autodesk Fusion 360
-
-### Reference Layout
-
-![3U CubeSat Internal Layout Reference - 100x100x340.5mm chassis showing biology tray, dual Raspberry Pis, and sensors](src/figures/fig_cad_section.png)
-
+## 📐 3D CAD Model Specifications
 The 3D model follows the **3U CubeSat Design Specification (CDS Rev. 14)** — 100 × 100 × 340.5 mm:
 
 > **Note:** A 1U CubeSat is 10×10×11.35 cm. A 3U (three stacked units) is 10×10×34 cm. Given the payload complexity (dual Raspberry Pi, LOC chip, sensors, battery, camera), a 3U is the appropriate form factor for this experiment.
