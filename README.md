@@ -343,19 +343,6 @@ Without gravity, there is no settling — fungi grow as a **uniform monolayer**,
 
 ---
 
-## 👥 Team & Responsibilities
-
-| Branch | Responsibility |
-|--------|---------------|
-| **Biotechnology** | Strain selection, growth rate r & carrying capacity K from literature, validate μ and α parameters |
-| **Electronics** | `hysteresis.py`, Wokwi simulation, Fusion 360 CAD (with Aerospace) |
-| **AIML — Member 1** | `growth_model.py`, logistic ODE solver, OD600 proxy |
-| **AIML — Member 2** | `attenuation.py`, Beer-Lambert implementation, model calibration |
-| **Computer Science** | `integrate.py`, `dashboard.py`, CSV schema, final packaging |
-| **Aerospace** | Orbital parameters, SAA modelling, SPENVIS, Fusion 360 CAD (with EC) |
-
----
-
 ## 📄 Academic Report
 
 ## 💻 Academic Report
