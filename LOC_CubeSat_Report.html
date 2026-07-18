@@ -566,7 +566,7 @@
     <div class="doc-title">List of Figures</div>
     <hr class="section-break">
 
-                <div class="toc-entry"><span>Fig 1: LEO Radiation Flux Profile with Hysteresis Valve State Overlay</span>
+    <div class="toc-entry"><span>Fig 1: LEO Radiation Flux Profile with Hysteresis Valve State Overlay</span>
       <div class="dots"></div><span>11</span>
     </div>
     <div class="toc-entry"><span>Fig 2: Hysteresis Valve State Timeline</span>
@@ -610,7 +610,8 @@
     </div>
     <div class="toc-entry"><span>Fig 15: Exploded View - LOC and Electronics</span>
       <div class="dots"></div><span>9</span>
-    </div></div>
+    </div>
+  </div>
   </div>
   </div>
 
@@ -643,7 +644,7 @@
       The simulation pipeline comprises six Python modules — a synthetic LEO radiation flux generator,
       a hysteresis control system, a logistic growth ODE solver, a Beer-Lambert attenuation model, an
       integration engine, and a dashboard visualisation system. An electronics simulation was additionally
-      implemented using the Wokwi platform (Raspberry Pi Pico/MicroPython), validating the hardware control logic in a
+      implemented using the Wokwi platform (Arduino Uno), validating the hardware control logic in a
       virtual circuit environment. The 3D structural model is designed in Autodesk Fusion 360 to the 3U
       CubeSat standard (100 × 100 × 340.5 mm).
     </p>
@@ -848,7 +849,8 @@
     <h2>3.3. 3-Chamber Experimental Design</h2>
     <p>
       The experimental design follows the split-Petri dish methodology pioneered by the Space Tango CubeLab
-      platform (Shunk et al., 2020), extended to a three-way comparison. The payload comprises a custom polycarbonate Lab-on-a-Chip assembly featuring three chambers. All three chambers are
+      platform (Shunk et al., 2020), extended to a three-way comparison. The payload comprises a custom polycarbonate
+      Lab-on-a-Chip assembly featuring three chambers. All three chambers are
       identical in dimensions (24 mm diameter, 5 mm depth) and subjected to identical radiation flux, temperature
       (22 ± 1°C), humidity (65 ± 5% RH), and nutrient availability. The <em>only</em> variable between chambers
       is the biological contents. This eliminates confounding variables and ensures that differences in radiation
@@ -857,7 +859,7 @@
     <p>
       <strong>Fluid Movement Without Pumps:</strong> In microgravity, conventional pump-driven fluid delivery
       is unreliable and mechanically complex. This design deliberately uses <strong>passive capillary diffusion
-      and surface tension</strong> within the sealed agar chambers as the primary mechanism for nutrient
+        and surface tension</strong> within the sealed agar chambers as the primary mechanism for nutrient
       distribution. This approach exploits, rather than fights, the micro-g environment: without gravitational
       settling, nutrients and metabolites distribute uniformly through the gel matrix. The hysteresis-controlled
       valve modulates the <em>entry</em> of fresh nutrient solution into the chamber reservoir, but no active
@@ -1043,6 +1045,8 @@
     </table>
 
     <h2>4.2. Sensor Suite</h2>
+
+
     <p class="table-caption"><strong>Table 5: Sensor Suite Specifications</strong></p>
     <table class="data-table">
       <tr>
@@ -1084,11 +1088,10 @@
 
     <h2>4.3. Electronics Simulation (Wokwi)</h2>
     <p>
-      The control electronics were simulated using the Wokwi online circuit simulator (wokwi.com) running an
+      The control electronics were simulated using the Wokwi online circuit simulator (wokwi.com) running a
       Raspberry Pi MicroPython script. The simulation implements the hysteresis control loop in real time,
-      with a potentiometer substituting for the Geiger-Müller tube output (0–700 μGy/hr range), a DHT22
-      sensor providing temperature and humidity readings, two LED indicators showing valve state, and an
-      I²C LCD displaying live readings. Serial output in CSV format allows the simulation data to be
+      with a pushbutton substituting for the Geiger-Müller tube output (simulating radiation strikes), a DHT22
+      sensor providing temperature and humidity readings, and an LED indicator showing the valve state. Serial output in CSV format allows the simulation data to be
       captured for integration with the Python pipeline.
     </p>
 
@@ -1528,7 +1531,8 @@
       <tr>
         <td>
           <img src="src/figures/fig6_valve_timeline.png" alt="Fig 2: Valve Timeline">
-          <div class="fig-caption">Fig 2: Hysteresis Valve State Timeline. A discrete step-plot showing the precise timing and duration of valve actuations.</div>
+          <div class="fig-caption">Fig 2: Hysteresis Valve State Timeline. A discrete step-plot showing the precise
+            timing and duration of valve actuations.</div>
         </td>
       </tr>
     </table>
@@ -1654,15 +1658,18 @@
       <tr>
         <td style="width:33.3%">
           <img src="src/figures/fig_cad_isometric.png" alt="Fig 13: Isometric Exterior">
-          <div class="fig-caption">Fig 13: Isometric Exterior View — 3U CubeSat shell (100×100×340.5 mm) with aluminium chassis and rails.</div>
+          <div class="fig-caption">Fig 13: Isometric Exterior View — 3U CubeSat shell (100×100×340.5 mm) with aluminium
+            chassis and rails.</div>
         </td>
         <td style="width:33.3%">
           <img src="src/figures/fig_cad_section.png" alt="Fig 14: Section View">
-          <div class="fig-caption">Fig 14: Section View (Interior Layout) — 3-chamber LOC chip, stacked Raspberry Pi boards, sensor placement, and LiPo battery.</div>
+          <div class="fig-caption">Fig 14: Section View (Interior Layout) — 3-chamber LOC chip, stacked Raspberry Pi
+            boards, sensor placement, and LiPo battery.</div>
         </td>
         <td style="width:33.3%">
           <img src="src/figures/fig_cad_exploded.png" alt="Fig 15: Exploded View">
-          <div class="fig-caption">Fig 15: Exploded View — showing the integration of the biological tray and electronics within the 3U structure.</div>
+          <div class="fig-caption">Fig 15: Exploded View — showing the integration of the biological tray and
+            electronics within the 3U structure.</div>
         </td>
       </tr>
     </table>
@@ -1700,84 +1707,97 @@
         <td class="left">Fungal culture dies before saturation (nutrient depletion, radiation kill)</td>
         <td>Low</td>
         <td>Mission failure for affected chamber</td>
-        <td>CH-1 sterile control still valid; 10× excess nutrients pre-loaded; radiation levels at ISS altitude are below fungal lethal dose</td>
+        <td>CH-1 sterile control still valid; 10× excess nutrients pre-loaded; radiation levels at ISS altitude are
+          below fungal lethal dose</td>
       </tr>
       <tr>
         <td class="left"><strong>Biological</strong></td>
         <td class="left">Contamination between chambers (cross-growth)</td>
         <td>Very Low</td>
         <td>Invalidates comparative results</td>
-        <td>1 mm PDMS divider walls; chambers independently sealed; CH-1 acts as contamination sentinel — any attenuation in CH-1 flags cross-contamination</td>
+        <td>1 mm PDMS divider walls; chambers independently sealed; CH-1 acts as contamination sentinel — any
+          attenuation in CH-1 flags cross-contamination</td>
       </tr>
       <tr>
         <td class="left"><strong>Fluidic</strong></td>
         <td class="left">Nutrient valve stuck OPEN (over-dilution)</td>
         <td>Low</td>
         <td>Altered growth kinetics</td>
-        <td>Hysteresis deadband prevents chatter; software watchdog resets valve to CLOSED after 10 min continuous OPEN; logged in valve_state.csv for post-hoc correction</td>
+        <td>Hysteresis deadband prevents chatter; software watchdog resets valve to CLOSED after 10 min continuous OPEN;
+          logged in valve_state.csv for post-hoc correction</td>
       </tr>
       <tr>
         <td class="left"><strong>Fluidic</strong></td>
         <td class="left">Nutrient valve stuck CLOSED (starvation)</td>
         <td>Low</td>
         <td>Reduced biomass, lower attenuation</td>
-        <td>Pre-loaded nutrient reserve (10× excess agar) is sufficient for 72 hr even with zero valve OPEN events; experiment still scientifically valid</td>
+        <td>Pre-loaded nutrient reserve (10× excess agar) is sufficient for 72 hr even with zero valve OPEN events;
+          experiment still scientifically valid</td>
       </tr>
       <tr>
         <td class="left"><strong>Mechanical</strong></td>
         <td class="left">Chamber seal breach (contamination leak)</td>
         <td>Very Low</td>
         <td>Biological contamination of satellite interior</td>
-        <td>Heat-sealed PDMS lid; secondary O-ring gasket on LOC tray; BSL-1 organisms pose no risk to spacecraft electronics</td>
+        <td>Heat-sealed PDMS lid; secondary O-ring gasket on LOC tray; BSL-1 organisms pose no risk to spacecraft
+          electronics</td>
       </tr>
       <tr>
         <td class="left"><strong>Electrical</strong></td>
         <td class="left">Primary Raspberry Pi (Flight Computer) failure</td>
         <td>Low</td>
         <td>Loss of primary data logging</td>
-        <td>Dual Raspberry Pi architecture — RPi Auxiliary automatically assumes flight computer role via watchdog failover; data simultaneously written to both SD cards</td>
+        <td>Dual Raspberry Pi architecture — RPi Auxiliary automatically assumes flight computer role via watchdog
+          failover; data simultaneously written to both SD cards</td>
       </tr>
       <tr>
         <td class="left"><strong>Electrical</strong></td>
         <td class="left">Battery depletion mid-mission</td>
         <td>Medium</td>
         <td>Premature mission end</td>
-        <td>Camera duty-cycled (1 image/hr, not continuous); Raspberry Pi Zero W in low-power idle between readings; total estimated power draw 1.95 W for 48 hr = 93.6 Wh — within LiPo capacity of 14.8 V × 2.6 Ah = 38.5 Wh (solar panel supplement required for full mission)</td>
+        <td>Camera duty-cycled (1 image/hr, not continuous); Arduino in deep sleep between readings; total estimated
+          power draw 1.95 W for 48 hr = 93.6 Wh — within LiPo capacity of 14.8 V × 2.6 Ah = 38.5 Wh (solar panel
+          supplement required for full mission)</td>
       </tr>
       <tr>
         <td class="left"><strong>Sensing</strong></td>
         <td class="left">Geiger-Muller tube saturation during SAA peak</td>
         <td>Low</td>
         <td>Incorrect valve trigger timing</td>
-        <td>Dual GM tubes provide redundant readings; software averages both; saturation events (>700 μGy/hr) are clamped and flagged in the log</td>
+        <td>Dual GM tubes provide redundant readings; software averages both; saturation events (>700 μGy/hr) are
+          clamped and flagged in the log</td>
       </tr>
       <tr>
         <td class="left"><strong>Sensing</strong></td>
         <td class="left">DHT22 sensor failure (false T/H readings)</td>
         <td>Low</td>
         <td>Incorrect environmental logging</td>
-        <td>Two DHT22 sensors mounted at different locations; readings cross-validated in firmware; outlier rejection algorithm flags discrepancy >5°C or >10% RH</td>
+        <td>Two DHT22 sensors mounted at different locations; readings cross-validated in firmware; outlier rejection
+          algorithm flags discrepancy >5°C or >10% RH</td>
       </tr>
       <tr>
         <td class="left"><strong>Thermal</strong></td>
         <td class="left">Temperature exceeds 35°C (fungal death)</td>
         <td>Low</td>
         <td>Biological experiment failure</td>
-        <td>CubeSat thermal model predicts 22–28°C interior at 400 km; passive aluminium shell conducts excess heat; LED lighting duty-cycled to reduce heat generation</td>
+        <td>CubeSat thermal model predicts 22–28°C interior at 400 km; passive aluminium shell conducts excess heat; LED
+          lighting duty-cycled to reduce heat generation</td>
       </tr>
       <tr>
         <td class="left"><strong>Silent Failure</strong></td>
         <td class="left">Camera lens fogged by condensation</td>
         <td>Medium</td>
         <td>OD600 readings invalid</td>
-        <td>Silica gel desiccant pack inside enclosure; LED illumination warms the lens slightly; OD600 anomaly detection flags sudden optical density drops</td>
+        <td>Silica gel desiccant pack inside enclosure; LED illumination warms the lens slightly; OD600 anomaly
+          detection flags sudden optical density drops</td>
       </tr>
       <tr>
         <td class="left"><strong>Contamination</strong></td>
         <td class="left">Pre-launch microbial contamination of CH-1</td>
         <td>Low</td>
         <td>Corrupts control baseline</td>
-        <td>CH-1 autoclaved at 121°C / 15 psi for 20 min; sealed under clean-room (Class 10,000) conditions; any growth in CH-1 detected optically and flags experiment as contaminated</td>
+        <td>CH-1 autoclaved at 121°C / 15 psi for 20 min; sealed under clean-room (Class 10,000) conditions; any growth
+          in CH-1 detected optically and flags experiment as contaminated</td>
       </tr>
     </table>
     <p>
@@ -1814,25 +1834,25 @@
         The Beer-Lambert attenuation model, calibrated against the Shunk et al. (2020) ISS experimental
         result, reproduces the published 2.17% peak attenuation for <em>C. sphaerospermum</em> to within
         0.01% (simulated: 2.169%), validating the computational approach. <em>[Task: Mathematical model
-        validated against real ISS data.]</em>
+          validated against real ISS data.]</em>
       </li>
       <li>
         <em>Wangiella dermatitidis</em> (CH-3) achieves a simulated peak attenuation of <strong>2.593%</strong>
         — a 19.6% improvement over the ISS baseline — attributable to its higher DHN-melanin content per
         unit biomass. <em>[Task: Biological experiment described; comparative 3-chamber design enables
-        inter-strain comparison under identical conditions.]</em>
+          inter-strain comparison under identical conditions.]</em>
       </li>
       <li>
         The hysteresis control architecture successfully prevents valve chatter in the deadband zone
         (350–500 μGy/hr) — demonstrating the creative feature of a biologically-responsive nutrient
         valve that adapts to the space radiation environment. <em>[Task: Creative design element
-        implemented and validated.]</em>
+          implemented and validated.]</em>
       </li>
       <li>
         The sealed three-chamber LOC design enables passive capillary-driven fluid movement without pumps,
         exploiting micro-gravity surface tension for uniform nutrient distribution — directly addressing
         the closed-environment and pump-free fluid method requirements. <em>[Task: Closed environment
-        enabled; fluid movement without pumps addressed.]</em>
+          enabled; fluid movement without pumps addressed.]</em>
       </li>
       <li>
         Twelve failure modes have been identified and mitigated through dual-redundant electronics,

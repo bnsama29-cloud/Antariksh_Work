@@ -515,10 +515,10 @@ if len(tables_s4) >= 3:
 
 add_h2(doc, "4.3. Electronics Simulation (Wokwi)")
 add_para(doc, ("The control electronics were simulated using the Wokwi online circuit simulator (wokwi.com) "
-               "running an Raspberry Pi MicroPython script. The simulation implements the hysteresis control "
-               "loop in real time, with a potentiometer substituting for the Geiger-Muller tube output "
-               "(0-700 uGy/hr range), a DHT22 sensor providing temperature and humidity readings, two LED "
-               "indicators showing valve state, and an I2C LCD displaying live readings. Serial output in CSV "
+               "running a Raspberry Pi MicroPython script. The simulation implements the hysteresis control "
+               "loop in real time, with a pushbutton substituting for the Geiger-Muller tube output "
+               "(simulating radiation strikes), a DHT22 sensor providing temperature and humidity readings, "
+               "and an LED indicator showing the valve state. Serial output in CSV "
                "format allows the simulation data to be captured for integration with the Python pipeline."))
 
 # Wokwi figures (3 side by side — put as 3 separate figures)
@@ -857,6 +857,6 @@ for ref in refs:
 
 # ── Save ──────────────────────────────────────────────────────────────────────
 doc.save(str(OUT_FILE))
-print(f"\nSaved: {OUT_FILE}")
+print(f"\n✓ Saved: {OUT_FILE}")
 print(f"  Size: {OUT_FILE.stat().st_size // 1024} KB")
 print("  Open in Microsoft Word to review and finalise.")

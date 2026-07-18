@@ -7,7 +7,7 @@
 *3-Chamber Comparative Study | Full Python Simulation Pipeline | Electronics Virtual Twin | Fusion 360 CAD*
 
 ![Python](https://img.shields.io/badge/Python-3.10+-blue?style=for-the-badge&logo=python)
-![Raspberry Pi](https://img.shields.io/badge/Raspberry%20Pi-MicroPython-c51a4a?style=for-the-badge&logo=raspberry-pi)
+![Arduino](https://img.shields.io/badge/Arduino-Wokwi-teal?style=for-the-badge&logo=arduino)
 ![License](https://img.shields.io/badge/License-Academic-orange?style=for-the-badge)
 ![Status](https://img.shields.io/badge/Status-Complete-green?style=for-the-badge)
 
@@ -117,7 +117,7 @@ LOC_CubeSat/
 │
 ├── figures/                           ← Generated output plots
 │
-├── electronics_sim/                   ← Raspberry Pi Wokwi simulation (MicroPython)
+├── electronics_sim/                   ← Arduino Wokwi simulation
 │
 └── CAD_notes/                         ← Fusion 360 modelling guide
 ```
@@ -225,17 +225,20 @@ pytest tests/
 
 The hardware control logic was validated using Wokwi — a free online circuit simulator, using the Raspberry Pi Pico to emulate the flight computer's Python logic.
 
-The simulation proves that:
-1. The DHT22 reads environmental telemetry correctly using MicroPython.
-2. The Geiger Counter (simulated as an interrupt button) detects particle hits instantly.
-3. The control logic successfully opens the latching solenoid valve if constraints are violated.
+The virtual circuit includes:
 
-### How to run the simulation:
+| Component | Pin | Role |
+|-----------|-----|------|
+| DHT22 sensor | GP15 | Reads temperature & humidity |
+| Pushbutton | GP16 | Simulates Geiger counter (radiation hits) |
+| Red LED | GP14 | Glows when valve is OPEN (high radiation SAA anomaly) |
+
+### How to open and run:
 1. Go to [wokwi.com](https://wokwi.com) → **New Project → Raspberry Pi Pico (MicroPython)**
-2. Add a **DHT22 Sensor**, a **Pushbutton**, and an **LED** (representing the valve).
-3. Connect DHT22 SDA to GP15, Pushbutton to GP16, and LED to GP14.
-4. Copy the code from `electronics_sim/main.py` and paste it into the editor.
-5. Click **Play** and interact with the DHT22 to see the valve trigger in the serial console!
+2. Paste the code from `electronics_sim/main.py`
+3. Add components as listed above
+4. Click ▶️ Run → click the pushbutton to trigger a simulated radiation spike anomaly!
+
 ---
 
 ### Simulation in Action
@@ -410,7 +413,7 @@ These measures ensure that no single failure compromises the core scientific obj
 | Creative design feature | Hysteresis-controlled nutrient valve responding to real-time radiation levels |
 | Failures, redundancies, mitigations | 12 failure modes documented with explicit mitigations + system-level safeguards |
 | Mathematical model | Logistic ODE + Beer-Lambert Law, calibrated to ISS 2.17% result |
-| Electronics design | MicroPython hysteresis controller validated in Wokwi virtual circuit |
+| Electronics design | Arduino hysteresis controller validated in Wokwi virtual circuit |
 | 3D structural design | 3U CubeSat Fusion 360 model (in progress) following CDS Rev. 14 |
 
 ---
