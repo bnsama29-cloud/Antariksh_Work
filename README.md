@@ -31,6 +31,8 @@ We compare **two fungal strains** against a sterile control across 48 simulated 
 
 ![3U CubeSat Sectional View](src/figures/fig_cad_section.png)
 
+![3U CubeSat Exploded View](src/figures/fig_cad_exploded.png)
+
 ---
 
 ## 🧪 The 3-Chamber Design
@@ -439,3 +441,17 @@ These measures ensure that no single failure compromises the core scientific obj
 *Team Antariksh · RVCE · LOC CubeSat Group Task*
 
 </div>
+
+## 📜 Automated Simulation Logs
+
+The simulation pipeline runs autonomously, generating synthetic environmental conditions, solving the differential growth equations, and integrating the outputs into CSVs and telemetry files.
+
+```log
+2026-07-15 23:22:52,785 - [run_experiment] - INFO - Starting LOC CubeSat Experiment Pipeline
+2026-07-15 23:22:52,829 - [flux_generator] - INFO - Generating environmental data...
+2026-07-15 23:22:52,901 - [hysteresis] - INFO - Running hysteresis controller...
+2026-07-15 23:22:52,901 - [growth_model] - INFO - Running biological growth models...
+2026-07-15 23:22:52,926 - [attenuation] - INFO - Running radiation attenuation model...
+2026-07-15 23:22:52,950 - [metrics] - INFO - Running metrics integration...
+2026-07-15 23:23:04,137 - [run_experiment] - INFO - Experiment Pipeline Completed Successfully.
+```
