@@ -25,6 +25,14 @@ We compare **two fungal strains** against a sterile control across 48 simulated 
 
 ---
 
+## 🛰️ 3D Hardware Design (3U CubeSat)
+
+![3U CubeSat Isometric View](src/figures/fig_cad_isometric.png)
+
+![3U CubeSat Sectional View](src/figures/fig_cad_section.png)
+
+---
+
 ## 🧪 The 3-Chamber Design
 
 | Chamber | Contents | Purpose |
