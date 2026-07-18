@@ -913,7 +913,15 @@
   <div class="page" id="s4">
     <div class="page-header">LOC CubeSat Payload — Team Antariksh</div>
 
-    <h1>4. Hardware Architecture (Virtual Twin)</h1>
+    
+    <h2>3.4. 3D Hardware CAD Design</h2>
+    <p>The 3D model follows the 3U CubeSat Design Specification (100 × 100 × 340.5 mm). The hardware includes dual Raspberry Pis, a 3-chamber LOC biology tray, radiation sensors, and an optical density camera setup.</p>
+    
+    <img src="src/figures/fig_cad_isometric.png" style="width:100%; max-width:800px; display:block; margin: 20px auto;" alt="Isometric">
+    <img src="src/figures/fig_cad_section.png" style="width:100%; max-width:800px; display:block; margin: 20px auto;" alt="Section">
+    <img src="src/figures/fig_cad_exploded.png" style="width:100%; max-width:800px; display:block; margin: 20px auto;" alt="Exploded">
+
+<h1>4. Hardware Architecture (Virtual Twin)</h1>
 
     <h2>4.1. CubeSat Form Factor &amp; Payload Budget</h2>
     <p>
@@ -1505,7 +1513,20 @@
   <div class="page" id="s7">
     <div class="page-header">LOC CubeSat Payload — Team Antariksh</div>
 
-    <h1>7. Results &amp; Discussion</h1>
+    
+    <h2>6.3. Automated Simulation Logs</h2>
+    <p>The Python pipeline runs fully autonomously. Below is an excerpt from the execution log confirming the successful generation of environmental data, control states, and biological growth outputs.</p>
+    <pre style="background:#f4f4f4; padding:10px; font-size:12px; border-radius:5px; border:1px solid #ccc; white-space:pre-wrap; font-family:monospace;">
+2026-07-15 23:22:52,785 - [run_experiment] - INFO - Starting LOC CubeSat Experiment Pipeline
+2026-07-15 23:22:52,829 - [flux_generator] - INFO - Generating environmental data...
+2026-07-15 23:22:52,901 - [hysteresis] - INFO - Running hysteresis controller...
+2026-07-15 23:22:52,901 - [growth_model] - INFO - Running biological growth models...
+2026-07-15 23:22:52,926 - [attenuation] - INFO - Running radiation attenuation model...
+2026-07-15 23:22:52,950 - [metrics] - INFO - Running metrics integration...
+2026-07-15 23:23:04,137 - [run_experiment] - INFO - Experiment Pipeline Completed Successfully.
+    </pre>
+
+<h1>7. Results &amp; Discussion</h1>
 
     <h2>7.1. Radiation Flux Profile</h2>
     <p>

@@ -663,7 +663,15 @@ doc.add_page_break()
 # ══════════════════════════════════════════════════════════════════════════════
 # SECTION 7 — RESULTS
 # ══════════════════════════════════════════════════════════════════════════════
+
+add_h2(doc, "6.3. Automated Simulation Logs")
+add_para(doc, "The Python pipeline runs fully autonomously. Below is an excerpt from the execution log confirming the successful generation of environmental data, control states, and biological growth outputs.")
+add_para(doc, "2026-07-15 23:22:52 - [run_experiment] - INFO - Starting LOC CubeSat Experiment Pipeline\n"
+              "2026-07-15 23:22:52 - [flux_generator] - INFO - Generating environmental data...\n"
+              "2026-07-15 23:23:04 - [run_experiment] - INFO - Experiment Pipeline Completed Successfully.")
+
 add_h1(doc, "7. Results & Discussion")
+
 add_h2(doc, "7.1. Radiation Flux Profile")
 add_para(doc, ("The simulated 48-hour LEO radiation flux profile successfully reproduces the characteristic "
                "features of the ISS radiation environment: a GCR baseline of 200 uGy/hr with superimposed SAA "
