@@ -12,15 +12,28 @@ geiger_pin = machine.Pin(16, machine.Pin.IN, machine.Pin.PULL_UP)
 # Valve/LED on Pin 14
 valve = machine.Pin(14, machine.Pin.OUT)
 
+# State Variables
 radiation_count = 0
+in_radiation_anomaly = False
 
-def radiation_detected(pin):
-    global radiation_count
-    radiation_count += 1
-    print(f"[ALERT] Radiation particle detected! Total count: {radiation_count}")
+def geiger_triggered(pin):
+    global radiation_count, in_radiation_anomaly
+    radiation_count += 150  # Simulate a massive spike in flux hits
+    in_radiation_anomaly = not in_radiation_anomaly # Toggle anomaly state
+    
+    print(f"\n[ALERT] Geiger Counter Triggered! Rad Count Spike: {radiation_count}")
+    
+    # Update Valve based on radiation anomaly state
+    if in_radiation_anomaly:
+        valve.value(1)
+        print(">> SAA Anomaly Detected: Radiation HIGH. Valve OPENED (LED ON) <<")
+    else:
+        valve.value(0)
+        print(">> Left SAA Anomaly: Radiation Normal. Valve CLOSED (LED OFF) <<")
+    print("--------------------------------------------------")
 
-# Attach an interrupt to trigger instantly when the "Geiger" button is pressed
-geiger_pin.irq(trigger=machine.Pin.IRQ_FALLING, handler=radiation_detected)
+# Attach an interrupt to trigger instantly when the button is pressed
+geiger_pin.irq(trigger=machine.Pin.IRQ_FALLING, handler=geiger_triggered)
 
 print("CubeSat Payload Boot Sequence Complete.")
 print("Starting telemetry loop...\n")
@@ -32,18 +45,12 @@ while True:
         temp = sensor.temperature()
         hum = sensor.humidity()
         
-        # 2. Print telemetry to the ground station (serial monitor)
-        print(f"TELEMETRY | Temp: {temp:.1f}°C | Hum: {hum:.1f}% | Rad Count: {radiation_count}")
-        
-        # 3. Basic Logic: If it gets too hot, open the valve (turn on LED)
-        if temp > 30.0:
-            valve.value(1)
-            print(">> WARNING: High Temp! Valve OPEN.")
-        else:
-            valve.value(0)
+        # 2. Print telemetry to the ground station
+        valve_status = "OPEN" if in_radiation_anomaly else "CLOSED"
+        print(f"TELEMETRY | Temp: {temp:.1f}°C | Hum: {hum:.1f}% | Rad Count: {radiation_count} | Valve: {valve_status}")
             
     except OSError as e:
         print("Sensor read error.")
         
-    # Wait 2 seconds before the next reading (DHT22 limit)
+    # Wait 2 seconds before the next reading
     time.sleep(2)
