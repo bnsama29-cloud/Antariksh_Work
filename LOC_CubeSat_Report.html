@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html><head><meta charset='UTF-8'><title>LOC_CubeSat_Report</title>
+<style>
+body { font-family: 'Times New Roman', serif; font-size: 12pt; line-height: 1.5; text-align: justify; max-width: 8.5in; margin: 0 auto; padding: 1in; background: white; color: black; }
+.title-page { text-align: center; min-height: 10in; padding-top: 2in; }
+h1 { font-size: 16pt; font-weight: bold; text-align: left; margin-top: 24pt; margin-bottom: 12pt; }
+h2, h3 { font-size: 14pt; font-weight: bold; text-align: left; margin-top: 18pt; margin-bottom: 12pt; }
+table { width: 100%; border-collapse: collapse; margin-bottom: 12pt; font-size: 12pt; }
+th, td { border: 1px solid black; padding: 6pt; text-align: center; }
+th { font-weight: bold; }
+.figure-container { text-align: center; margin: 18pt 0; }
+.figure-container img { max-width: 90%; height: auto; }
+.caption { font-size: 10pt; text-align: center; margin-top: 6pt; }
+.table-caption { font-size: 12pt; font-style: italic; text-align: center; margin-bottom: 6pt; }
+p { margin-bottom: 12pt; }
+.page-break { page-break-after: always; }
+</style></head><body>
+<div class='title-page'>
+<h1 style='text-align:center; font-size:16pt;'>TEAM ANTARIKSH</h1><br><br>
+<h1 style='text-align:center; font-size:16pt;'>TITLE: LAB-ON-A-CHIP CUBESAT PAYLOAD SIMULATION:<br>FUNGAL RADIATION SHIELDING STUDY IN LOW EARTH ORBIT</h1><br>
+<h2 style='text-align:center; font-size:14pt;'>3-Chamber Comparative Analysis of Melanin-Rich Fungal Strains</h2><br><br><br>
+<p style='text-align:center; font-size:12pt;'>TEAM MEMBERS<br>6 Members (BT &middot; EC &middot; AIML &times; 2 &middot; CS &middot; Aerospace)</p><br>
+<p style='text-align:center; font-size:12pt;'>Mentor / Eval:<br>Super Seniors, Team Antariksh</p>
+</div><div class='page-break'></div>
+<p>R.V. College of Engineering, Bengaluru</p>
+<p>LAB-ON-A-CHIP CUBESAT PAYLOAD SIMULATION:</p>
+<p>FUNGAL RADIATION SHIELDING STUDY IN LOW EARTH ORBIT</p>
+<p>3-Chamber Comparative Analysis of Melanin-Rich Fungal Strains</p>
+<p>Group Task — LOC CubeSat Payload</p>
+<p>Document Type:</p>
+<p>Technical Report (TA Format)</p>
+<p>Date:</p>
+<p>July 2026</p>
+<p>Team Members:</p>
+<p>6 Members (BT · EC · AIML × 2 · CS · Aerospace)</p>
+<p>Mentor / Eval:</p>
+<p>Super Seniors, Team Antariksh</p>
+<p>18 July 2026</p>
+<p>Evaluation:</p>
+<p>19 July 2026 (Offline)</p>
+<h1 style='color: #2E74B5;'>Table of Contents</h1>
+<p>1. Executive Summary        1</p>
+<p>2. Mission Parameters & Orbital Environment        1</p>
+<p>2.1. Orbital Parameters        1</p>
+<p>2.2. Radiation Environment in LEO        2</p>
+<p>2.3. South Atlantic Anomaly        2</p>
+<p>3. Biological Rationale & Strain Selection        2</p>
+<p>3.1. Radiotrophic Fungi & Melanin-Mediated Radiotropism        2</p>
+<p>3.2. Strain Selection Justification        3</p>
+<p>3.3. 3-Chamber Experimental Design        3</p>
+<p>4. Hardware Architecture (Virtual Twin)        3</p>
+<p>4.1. CubeSat Form Factor & Payload Budget        3</p>
+<p>4.2. Sensor Suite        4</p>
+<p>4.3. Electronics Simulation (Wokwi)        4</p>
+<p>5. Mathematical & Computational Models        5</p>
+<p>5.1. Logistic Growth Model        5</p>
+<p>5.2. Melanin Thickness Proxy        5</p>
+<p>5.3. Beer-Lambert Radiation Attenuation        6</p>
+<p>5.4. Hysteresis Control Logic        6</p>
+<p>6. Software Architecture & Data Pipeline        6</p>
+<p>6.1. Module Structure        6</p>
+<p>6.2. CSV Data Schema        7</p>
+<p>7. Results & Discussion        7</p>
+<p>7.1. Radiation Flux Profile        7</p>
+<p>7.2. Fungal Growth Kinetics        8</p>
+<p>7.3. Attenuation Comparison        8</p>
+<p>7.4. 3D Model — Fusion 360        9</p>
+<p>8. Conclusions & Future Work        9</p>
+<p>9. References        10</p>
+<div class='page-break'></div>
+<h1>LIST OF FIGURES</h1>
+<p>Fig 1: LEO Radiation Flux Profile with Hysteresis Valve State Overlay        7</p>
+<p>Fig 2: Fungal Biomass Growth — Logistic ODE (CH-2 vs CH-3)        8</p>
+<p>Fig 3: Radiation Attenuation (%) — CH-2 vs CH-3 with ISS Reference        8</p>
+<p>Fig 4: OD600 Proxy — Auxiliary Computer Camera Simulation        8</p>
+<p>Fig 5: Hysteresis Controller Validation — Flux vs Valve State        6</p>
+<p>Fig 6: Wokwi Electronics Simulation — Valve CLOSED (GCR Background)        4</p>
+<p>Fig 7: Wokwi Electronics Simulation — Valve OPEN (SAA Trigger >500 uGy/hr)        4</p>
+<p>Fig 8: Wokwi Electronics Simulation — Valve OPEN (Deadband Holding)        4</p>
+<p>Fig 9: System Architecture Block Diagram        6</p>
+<p>Fig 10: Reference 3D Model — LOC CubeSat Internal Layout        9</p>
+<p>Fig CAD-1: LOC CubeSat 3D Model</p>
+<div class='page-break'></div>
+<h1>1 EXECUTIVE SUMMARY</h1>
+<p>This report presents the design, simulation, and analysis of a Lab-on-a-Chip (LOC) CubeSat payload intended to study the radiation-shielding properties of melanin-producing radiotrophic fungi under Low Earth Orbit (LEO) conditions. The experiment is inspired by the 2020 ISS study by Shunk et al., which demonstrated that a thin layer of Cladosporium sphaerospermum — a melanin-rich fungus native to the Chernobyl exclusion zone — reduced ionising radiation dose by approximately 2.17% in a real space environment.</p>
+<p>This project extends that foundational study through a 3-chamber comparative design that simultaneously compares two melanin-rich fungal strains against a sterile agar control, under identical radiation and microgravity conditions. By holding all environmental variables constant and varying only the biological contents of each chamber, this study isolates the effect of melanin density and melanin type (DHN-melanin vs DOPA-melanin) on radiation attenuation — a comparison that has not previously been conducted in a controlled spaceflight context.</p>
+<p>The simulation pipeline comprises six Python modules — a synthetic LEO radiation flux generator, a hysteresis control system, a logistic growth ODE solver, a Beer-Lambert attenuation model, an integration engine, and a dashboard visualisation system. An electronics simulation was additionally implemented using the Wokwi platform (Arduino Uno), validating the hardware control logic in a virtual circuit environment. The 3D structural model is designed in Autodesk Fusion 360 to the 1U CubeSat standard (100 x 100 x 113.5 mm).</p>
+<p>Simulation results confirm that C. sphaerospermum (CH-2) achieves 2.169% peak attenuation, validating the model against the ISS experimental reference. The challenger strain W. dermatitidis (CH-3) achieves 2.593% peak attenuation — exceeding the baseline by 19.6% — owing to its higher melanin density as reported by Dadachova et al. (2008). These results suggest that W. dermatitidis may be a superior candidate for future biological radiation shielding applications in crewed spacecraft.</p>
+<h1>2 MISSION PARAMETERS & ORBITAL ENVIRONMENT</h1>
+<h2>2.1 Orbital Parameters</h2>
+<p>The payload is designed to operate aboard a CubeSat in a Low Earth Orbit (LEO) equivalent to the International Space Station (ISS) trajectory. The chosen orbital parameters are as follows:</p>
+<div class='table-caption' style='color: #2E74B5;'>Table 1: Orbital Parameters — ISS-equivalent LEO</div>
+<table>
+<tr>
+<th colspan='2'>Parameter</th>
+</tr>
+<tr>
+<td colspan='2'>Value</td>
+</tr>
+<tr>
+<td colspan='2'>Source / Justification</td>
+</tr>
+<tr>
+<td colspan='2'>Orbital altitude</td>
+</tr>
+</table>
+<p>400 km</p>
+<p>ISS average altitude (NASA, 2023)</p>
+<p>Orbital inclination</p>
+<p>51.6°</p>
+<p>ISS inclination — maximises SAA exposure</p>
+<p>Orbital period</p>
+<p>~92.6 min</p>
+<p>Derived from Kepler's third law</p>
+<p>Orbits per day</p>
+<p>~15.5</p>
+<p>At 400 km altitude</p>
+<p>SAA passages / day</p>
+<p>~6</p>
+<p>SPENVIS model (ESA, 2024)</p>
+<p>Simulation duration</p>
+<p>48 hours</p>
+<p>Covers ~2 full growth cycles for C. sphaerospermum</p>
+<p>Time resolution</p>
+<p>1 hour</p>
+<p>Sufficient for logistic ODE convergence</p>
+<h2>2.2 Radiation Environment in LEO</h2>
+<p>The primary radiation sources in LEO are Galactic Cosmic Rays (GCR) — high-energy particles originating from outside the solar system — and trapped protons and electrons in the Van Allen radiation belts. At ISS altitude, the average GCR background dose rate is approximately 200 uGy/hr, with periodic elevation to 600-700 uGy/hr during South Atlantic Anomaly (SAA) passage (Cucinotta et al., 2011). The radiation is dominated by protons and high-Z, high-energy (HZE) particles, which are biologically highly damaging due to their large ionisation cross-sections.</p>
+<p>At 400 km, the geomagnetic field provides partial shielding from lower-energy GCR particles, but offers minimal protection from HZE nuclei, which are the primary concern for long-duration biological experiments. The 1U aluminium CubeSat wall (1.5 mm, 6061 alloy) provides an additional ~0.4 g/cm squared areal density of passive shielding.</p>
+<h2>2.3 South Atlantic Anomaly</h2>
+<p>The South Atlantic Anomaly (SAA) is a region over South America and the Atlantic Ocean where the inner Van Allen belt dips to its lowest altitude (~200 km), resulting in significantly elevated trapped proton flux. During ISS passes through the SAA — occurring approximately 6 times per 24-hour period — dose rates increase by a factor of 2-4x above the GCR background. Our simulation models SAA passages as Gaussian-shaped dose-rate spikes with peak values of 650-700 uGy/hr occurring every ~4 hours in the 48-hour simulation window.</p>
+<h1>3 BIOLOGICAL RATIONALE & STRAIN SELECTION</h1>
+<h2>3.1 Radiotrophic Fungi & Melanin-Mediated Radiotropism</h2>
+<p>Radiotrophic fungi are a class of melanin-rich micro-organisms that display positive chemotaxis toward ionising radiation — a phenomenon termed radiotropism. First reported by Dadachova et al. (2007) in Nature, this behaviour is thought to be driven by the ability of melanin pigments to transduce ionising radiation energy into biochemically useful reducing power, potentially analogous to the role of chlorophyll in photosynthesis.</p>
+<p>Melanin is a family of complex polymeric pigments synthesised via two principal pathways in fungi:</p>
+<p>• DHN-melanin (1,8-dihydroxynaphthalene):  The predominant pathway in</p>
+<p>Cladosporium sphaerospermum  and  Wangiella dermatitidis . DHN-melanin is characterised</p>
+<p>by a high density of unpaired electrons and a polyaromatic backbone that provides significant free-radical</p>
+<p>scavenging capacity. The absorption cross-section of DHN-melanin for gamma radiation and fast protons</p>
+<p>has been experimentally measured to be μ = 0.043 cm²/g (Dadachova et al., 2008).</p>
+<p>• DOPA-melanin (L-3,4-dihydroxyphenylalanine):  Found in  Cryptococcus neoformans .</p>
+<p>Synthesised via laccase-catalysed oxidation of L-DOPA rather than the DHN pathway, resulting in a</p>
+<p>structurally distinct polymer with different radiation-scavenging characteristics.</p>
+<p>The space-shielding effectiveness of melanin arises from its ability to attenuate ionising radiation through Compton scattering and photoelectric absorption, in direct proportion to the areal density (mg/cm squared) of the melanin layer — described quantitatively by the Beer-Lambert law (Section 5.3).</p>
+<h2>3.2 Strain Selection Justification</h2>
+<p>Two fungal strains were selected for comparison based on (a) their established presence in high-radiation environments, (b) the availability of published growth kinetics, and (c) the scientific novelty of their direct comparison under controlled conditions.</p>
+<div class='table-caption' style='color: #2E74B5;'>Table 2: Fungal Strain Properties and Literature References</div>
+<table>
+<tr>
+<th colspan='2'>Property</th>
+</tr>
+<tr>
+<td colspan='2'>CH-2: C. sphaerospermum</td>
+</tr>
+<tr>
+<td colspan='2'>CH-3: W. dermatitidis</td>
+</tr>
+<tr>
+<td colspan='2'>Origin</td>
+</tr>
+<tr>
+<td colspan='2'>Chernobyl reactor wall, ISS</td>
+</tr>
+<tr>
+<td colspan='2'>Chernobyl reactor wall, soil</td>
+</tr>
+<tr>
+<td colspan='2'>Melanin type</td>
+</tr>
+<tr>
+<td colspan='2'>DHN-melanin</td>
+</tr>
+<tr>
+<td colspan='2'>DHN-melanin</td>
+</tr>
+<tr>
+<td colspan='2'>Melanin content</td>
+</tr>
+<tr>
+<td colspan='2'>~2–3% dry weight</td>
+</tr>
+<tr>
+<td colspan='2'>~4–6% dry weight (higher)</td>
+</tr>
+<tr>
+<td colspan='2'>Growth rate r (h⁻¹)</td>
+</tr>
+</table>
+<p>0.299 (ISS, microgravity)</p>
+<p>0.270 (estimated)</p>
+<p>Carrying capacity K</p>
+<p>1.0 g/L (normalised)</p>
+<p>1.0 g/L (normalised)</p>
+<p>ISS study reference</p>
+<p>Shunk et al. (2020)</p>
+<p>Dadachova et al. (2008)</p>
+<p>Radiation dose reduction</p>
+<p>2.17% (ISS measured)</p>
+<p>Not yet measured in space</p>
+<p>Biosafety level</p>
+<p>BSL-1</p>
+<p>BSL-2</p>
+<p>3.3. 3-Chamber Experimental Design</p>
+<p>The experimental design follows the split-Petri dish methodology pioneered by the Space Tango CubeLab platform (Shunk et al., 2020), extended to a three-way comparison. All three chambers are physically identical in dimensions (30 mm diameter, 5 mm depth) and subjected to identical radiation flux, temperature (22 +/- 1°C), humidity (65 +/- 5% RH), and nutrient availability. The only variable between chambers is the biological contents. This eliminates confounding variables and ensures that differences in radiation attenuation are attributable solely to the fungal strain's melanin characteristics.</p>
+<div class='table-caption' style='color: #2E74B5;'>Table 3: 3-Chamber Experimental Design Summary</div>
+<table>
+<tr>
+<th colspan='2'>Chamber</th>
+</tr>
+<tr>
+<td colspan='2'>Contents</td>
+</tr>
+<tr>
+<td colspan='2'>Role</td>
+</tr>
+<tr>
+<td colspan='2'>Expected Attn%</td>
+</tr>
+<tr>
+<td colspan='2'>CH-1</td>
+</tr>
+<tr>
+<td colspan='2'>Pure Sabouraud Dextrose Agar (no fungus)</td>
+</tr>
+<tr>
+<td colspan='2'>Negative control — defines I₀ (zero attenuation)</td>
+</tr>
+</table>
+<p>0.000%</p>
+<p>CH-2</p>
+<p>C. sphaerospermum  on melanin-dyed agar</p>
+<p>Primary shield — ISS-validated baseline</p>
+<p>~2.17% (peak)</p>
+<p>CH-3</p>
+<p>W. dermatitidis  on Sabouraud agar</p>
+<p>Challenger — higher melanin density per cell</p>
+<p>~2.5–3.0% (predicted)</p>
+<h1>4 HARDWARE ARCHITECTURE (VIRTUAL TWIN)</h1>
+<h2>4.1 CubeSat Form Factor & Payload Budget</h2>
+<p>The payload is designed to the 1U CubeSat standard (CDS Rev. 14, Cal Poly SLO) with external dimensions of 100 x 100 x 113.5 mm and a maximum mass of 1.33 kg. The structure uses aluminium alloy 6061-T6 (density 2.70 g/cm³) for the main body, providing structural rigidity and passive radiation shielding from the shell wall.</p>
+<div class='table-caption' style='color: #2E74B5;'>Table 4: CubeSat Payload Mass Budget</div>
+<table>
+<tr>
+<th colspan='2'>Component</th>
+</tr>
+<tr>
+<td colspan='2'>Mass (g)</td>
+</tr>
+<tr>
+<td colspan='2'>Notes</td>
+</tr>
+<tr>
+<td colspan='2'>Aluminium shell (1U)</td>
+</tr>
+<tr>
+<td colspan='2'>85</td>
+</tr>
+<tr>
+<td colspan='2'>6061-T6, 1.5 mm walls</td>
+</tr>
+<tr>
+<td colspan='2'>Raspberry Pi Zero W × 2</td>
+</tr>
+<tr>
+<td colspan='2'>18</td>
+</tr>
+</table>
+<p>9 g each, ARM Cortex-A53</p>
+<p>LOC chip assembly (3 chambers)</p>
+<p>12</p>
+<p>Polycarbonate + agar media</p>
+<p>DHT22 sensor</p>
+<p>3</p>
+<p>Temp/humidity</p>
+<p>Geiger-Müller sensors × 2</p>
+<p>20</p>
+<p>LND 712 type, 10 g each</p>
+<p>Camera module (OV5647)</p>
+<p>4</p>
+<p>5 MP, optical density proxy</p>
+<p>LED panel</p>
+<p>5</p>
+<p>White LED, 35 × 35 mm</p>
+<p>LiPo battery (1800 mAh)</p>
+<p>38</p>
+<p>3.7 V nominal</p>
+<p>RTC module (DS3231)</p>
+<p>4</p>
+<p>Battery backup included</p>
+<p>PCB + wiring</p>
+<p>18</p>
+<p>Custom PCB + ribbon cables</p>
+<p>TOTAL</p>
+<p>207 g</p>
+<p>Well within 1.33 kg limit ✓</p>
+<div class='table-caption' style='color: #2E74B5;'>Table 9: Power Budget</div>
+<table>
+<tr>
+<th colspan='2'>Component</th>
+</tr>
+<tr>
+<td colspan='2'>Current (mA)</td>
+</tr>
+<tr>
+<td colspan='2'>Voltage (V)</td>
+</tr>
+<tr>
+<td colspan='2'>Power (mW)</td>
+</tr>
+<tr>
+<td colspan='2'>Raspberry Pi Zero W × 2</td>
+</tr>
+</table>
+<p>2 × 120</p>
+<p>5.0</p>
+<p>1200</p>
+<p>Camera module</p>
+<p>250</p>
+<p>3.3</p>
+<p>825</p>
+<p>LED panel</p>
+<p>80</p>
+<p>3.3</p>
+<p>264</p>
+<p>Sensors (total)</p>
+<p>35</p>
+<p>3.3</p>
+<p>116</p>
+<p>Total</p>
+<p>—</p>
+<p>—</p>
+<p>2,405 mW</p>
+<p>Battery capacity</p>
+<p>1800 mAh × 3.7 V = 6,660 mWh</p>
+<p>~2.77 hr runtime</p>
+<h2>4.2 Sensor Suite</h2>
+<div class='table-caption' style='color: #2E74B5;'>Table 5: Sensor Suite Specifications</div>
+<table>
+<tr>
+<th colspan='2'>Sensor</th>
+</tr>
+<tr>
+<td colspan='2'>Model</td>
+</tr>
+<tr>
+<td colspan='2'>Measurement</td>
+</tr>
+<tr>
+<td colspan='2'>Interface</td>
+</tr>
+<tr>
+<td colspan='2'>Sampling Rate</td>
+</tr>
+<tr>
+<td colspan='2'>Temperature & Humidity</td>
+</tr>
+<tr>
+<td colspan='2'>DHT22</td>
+</tr>
+<tr>
+<td colspan='2'>-40–80°C, 0–100% RH</td>
+</tr>
+<tr>
+<td colspan='2'>Single-wire</td>
+</tr>
+</table>
+<p>0.5 Hz</p>
+<p>Radiation Sensor × 2</p>
+<p>LND 712 GM tube</p>
+<p>0–10,000 CPM</p>
+<p>Digital pulse</p>
+<p>1/60 Hz (1 min avg)</p>
+<p>Camera (biomass proxy)</p>
+<p>OV5647 (Pi Cam)</p>
+<p>OD600 optical density</p>
+<p>CSI</p>
+<p>1/3600 Hz (1 hr)</p>
+<p>Real-time clock</p>
+<p>DS3231</p>
+<p>Timestamp, ±2 ppm</p>
+<p>I²C</p>
+<p>Continuous</p>
+<h2>4.3 Electronics Simulation (Wokwi)</h2>
+<p>The control electronics were simulated using the Wokwi online circuit simulator (wokwi.com) running an Arduino Uno microcontroller sketch. The simulation implements the hysteresis control loop in real time, with a potentiometer substituting for the Geiger-Muller tube output (0-700 uGy/hr range), a DHT22 sensor providing temperature and humidity readings, two LED indicators showing valve state, and an I2C LCD displaying live readings. Serial output in CSV format allows the simulation data to be captured for integration with the Python pipeline.</p>
+<div class='figure-container'>
+<img src='src/figures/electronics_sim/wokwi_pico_normal.png' alt='Figure'>
+<div class='caption'>Fig 6: Valve CLOSED — F:150 uGy/hr (GCR background, green LED on)</div>
+</div>
+<div class='figure-container'>
+<img src='src/figures/electronics_sim/wokwi_pico_triggered.png' alt='Figure'>
+<div class='caption'>Fig 7: Valve OPEN triggered — F:522 uGy/hr (exceeded 500 uGy/hr threshold, red LED on)</div>
+</div>
+<div class='figure-container'>
+<img src='src/figures/electronics_sim/wokwi_pico_high_rad.png' alt='Figure'>
+<div class='caption'>Fig 8: Valve OPEN holding — F:516 uGy/hr (deadband, valve holds OPEN until <350)</div>
+</div>
+<h1>5 MATHEMATICAL & COMPUTATIONAL MODELS</h1>
+<h2>5.1 Logistic Growth Model</h2>
+<p>Fungal biomass growth in a nutrient-limited closed system follows a logistic (Verhulst) growth curve, characterised by an initial exponential phase followed by deceleration as the population approaches the carrying capacity K. The governing Ordinary Differential Equation (ODE) is:</p>
+<p>dN/dt = r . N . (1 - N/K)                          [Equation 1]</p>
+<p>Where:</p>
+<p>• N(t) = biomass concentration [g/L] at time t</p>
+<p>• r = intrinsic growth rate [h^-1]</p>
+<p>• K = carrying capacity [g/L]</p>
+<p>• N0 = initial inoculation density = 0.01 g/L</p>
+<p>For C. sphaerospermum in microgravity, the growth rate r = 0.299 h^-1 was directly measured by Shunk et al. (2020) aboard the ISS using time-lapse photography. This value is notably 23% higher than the Earth-gravity value (r approx. 0.243 h^-1), suggesting that microgravity may stimulate fungal growth kinetics — potentially due to altered nutrient transport mechanisms in the absence of buoyancy-driven convection. The growth rate for W. dermatitidis (r = 0.270 h^-1) is estimated from Dadachova et al. (2008).</p>
+<p>The ODE is solved numerically using the Runge-Kutta 4th/5th order (RK45) adaptive step-size integrator implemented via scipy.integrate.solve_ivp. The valve state modulates the effective growth rate: when the nutrient valve is OPEN (valve_state = 1, indicating elevated radiation), nutrient delivery is partially restricted, reducing r by 50% (r_eff = 0.5r).</p>
+<h2>5.2 Melanin Thickness Proxy</h2>
+<p>The effective melanin shielding layer thickness delta(t) is linearly proportional to the fungal biomass N(t), with the proportionality constant alpha representing the calibrated melanin layer thickness per unit biomass:</p>
+<p>delta(t) = alpha . N(t)     [cm]                   [Equation 2]</p>
+<p>The calibration constant alpha is derived by requiring that at peak biomass (N = K = 1.0 g/L), the Beer-Lambert attenuation for CH-2 equals 2.17%:</p>
+<p>alpha_CH2 = -ln(1 - 0.0217) / (mu x rho) = 0.3645 cm.L/g   [Equation 3]</p>
+<p>For W. dermatitidis (CH-3), the higher melanin density reported by Dadachova et al. (2008) — approximately 15% higher than C. sphaerospermum on a per-biomass basis — yields: alpha_CH3 = 0.4192 cm.L/g.</p>
+<h2>5.3 Beer-Lambert Radiation Attenuation</h2>
+<p>The radiation flux transmitted through a melanin layer of thickness delta(t) follows the Beer-Lambert Law for ionising radiation attenuation in a homogeneous absorbing medium:</p>
+<p>I(t) = I0(t) . exp(-mu . rho . delta(t))          [Equation 4]</p>
+<p>Attn%(t) = [I0(t) - I(t)] / I0(t) x 100          [Equation 5]</p>
+<div class='table-caption' style='color: #2E74B5;'>Table 6: Beer-Lambert Physical Parameters</div>
+<table>
+<tr>
+<th colspan='2'>Parameter</th>
+</tr>
+<tr>
+<td colspan='2'>Symbol</td>
+</tr>
+<tr>
+<td colspan='2'>CH-2 (C. sphaerospermum)</td>
+</tr>
+<tr>
+<td colspan='2'>CH-3 (W. dermatitidis)</td>
+</tr>
+<tr>
+<td colspan='2'>Source</td>
+</tr>
+<tr>
+<td colspan='2'>Mass attenuation coefficient</td>
+</tr>
+<tr>
+<td colspan='2'>μ</td>
+</tr>
+</table>
+<p>0.043 cm²/g</p>
+<p>0.043 cm²/g</p>
+<p>Dadachova et al. (2008)</p>
+<p>Melanin density</p>
+<p>ρ</p>
+<p>1.40 g/cm³</p>
+<p>1.45 g/cm³</p>
+<p>Bryan & Casadevall (2014)</p>
+<p>Calibrated thickness constant</p>
+<p>α</p>
+<p>0.3645 cm·L/g</p>
+<p>0.4192 cm·L/g</p>
+<p>Calibrated to Shunk 2020</p>
+<p>Expected peak Attn%</p>
+<p>—</p>
+<p>2.17%</p>
+<p>~2.5%</p>
+<p>ISS reference / predicted</p>
+<h2>5.4 Hysteresis Control Logic</h2>
+<p>A two-threshold hysteresis controller governs the nutrient valve state based on the instantaneous radiation flux. Unlike a PID controller, the hysteresis controller avoids rapid state oscillation (valve chatter) in the deadband zone (350-500 uGy/hr):</p>
+<p>valve_state = OPEN   if flux > 500 uGy/hr</p>
+<p>valve_state = CLOSED if flux < 350 uGy/hr</p>
+<p>valve_state = HOLD   otherwise (deadband)      [Equation 6]</p>
+<div class='figure-container'>
+<img src='src/figures/hysteresis_validation.png' alt='Figure'>
+<div class='caption'>Fig 5: Hysteresis Controller Validation — radiation flux (top) and valve state (bottom) over 48 hours. SAA spikes trigger OPEN events. Deadband prevents chatter in 350-500 uGy/hr range.</div>
+</div>
+<h1>6 SOFTWARE ARCHITECTURE & DATA PIPELINE</h1>
+<h2>6.1 Module Structure</h2>
+<p>The simulation is implemented as a modular Python pipeline with six independent scripts, each producing a well-defined CSV output consumed by the next module. This structure enables parallel development — each team member works on their module independently, with inter-module communication through agreed CSV schemas.</p>
+<p>Data flow:</p>
+<p>1. flux_generator.py  ->  data/flux_profile.csv</p>
+<p>2. hysteresis.py      ->  data/valve_state.csv</p>
+<p>3. growth_model.py    ->  data/growth_output.csv</p>
+<p>4. attenuation.py     ->  data/attenuation_output.csv</p>
+<p>5. integrate.py       ->  data/master_log.csv</p>
+<p>6. dashboard.py       ->  figures/fig1 through fig4</p>
+<h2>6.2 CSV Data Schema</h2>
+<div class='table-caption' style='color: #2E74B5;'>Table 7: Master CSV Schema (master_log.csv) — 13 columns, 49 rows</div>
+<table>
+<tr>
+<th colspan='2'>#</th>
+</tr>
+<tr>
+<td colspan='2'>Column Name</td>
+</tr>
+<tr>
+<td colspan='2'>Unit</td>
+</tr>
+<tr>
+<td colspan='2'>Source Module</td>
+</tr>
+<tr>
+<td colspan='2'>Description</td>
+</tr>
+<tr>
+<td colspan='2'>1</td>
+</tr>
+<tr>
+<td colspan='2'>time_hr</td>
+</tr>
+<tr>
+<td colspan='2'>h</td>
+</tr>
+<tr>
+<td colspan='2'>flux_generator</td>
+</tr>
+<tr>
+<td colspan='2'>Simulation time, 0–48 hr</td>
+</tr>
+<tr>
+<td colspan='2'>2</td>
+</tr>
+<tr>
+<td colspan='2'>flux_uGy_hr</td>
+</tr>
+<tr>
+<td colspan='2'>μGy/hr</td>
+</tr>
+<tr>
+<td colspan='2'>flux_generator</td>
+</tr>
+<tr>
+<td colspan='2'>CH-1 (agar baseline) radiation flux = I₀</td>
+</tr>
+<tr>
+<td colspan='2'>3</td>
+</tr>
+<tr>
+<td colspan='2'>valve_state</td>
+</tr>
+<tr>
+<td colspan='2'>0/1</td>
+</tr>
+<tr>
+<td colspan='2'>hysteresis</td>
+</tr>
+<tr>
+<td colspan='2'>0=CLOSED, 1=OPEN</td>
+</tr>
+<tr>
+<td colspan='2'>4</td>
+</tr>
+<tr>
+<td colspan='2'>N_ch2</td>
+</tr>
+<tr>
+<td colspan='2'>g/L</td>
+</tr>
+<tr>
+<td colspan='2'>growth_model</td>
+</tr>
+<tr>
+<td colspan='2'>C. sphaerospermum biomass</td>
+</tr>
+<tr>
+<td colspan='2'>5</td>
+</tr>
+<tr>
+<td colspan='2'>N_ch3</td>
+</tr>
+<tr>
+<td colspan='2'>g/L</td>
+</tr>
+<tr>
+<td colspan='2'>growth_model</td>
+</tr>
+<tr>
+<td colspan='2'>W. dermatitidis biomass</td>
+</tr>
+<tr>
+<td colspan='2'>6</td>
+</tr>
+<tr>
+<td colspan='2'>OD_ch2</td>
+</tr>
+<tr>
+<td colspan='2'>OD</td>
+</tr>
+<tr>
+<td colspan='2'>growth_model</td>
+</tr>
+<tr>
+<td colspan='2'>Camera OD600 proxy, CH-2</td>
+</tr>
+<tr>
+<td colspan='2'>7</td>
+</tr>
+<tr>
+<td colspan='2'>OD_ch3</td>
+</tr>
+<tr>
+<td colspan='2'>OD</td>
+</tr>
+<tr>
+<td colspan='2'>growth_model</td>
+</tr>
+<tr>
+<td colspan='2'>Camera OD600 proxy, CH-3</td>
+</tr>
+<tr>
+<td colspan='2'>8</td>
+</tr>
+<tr>
+<td colspan='2'>delta_ch2</td>
+</tr>
+<tr>
+<td colspan='2'>cm</td>
+</tr>
+<tr>
+<td colspan='2'>attenuation</td>
+</tr>
+<tr>
+<td colspan='2'>Melanin layer thickness CH-2</td>
+</tr>
+<tr>
+<td colspan='2'>9</td>
+</tr>
+<tr>
+<td colspan='2'>delta_ch3</td>
+</tr>
+<tr>
+<td colspan='2'>cm</td>
+</tr>
+<tr>
+<td colspan='2'>attenuation</td>
+</tr>
+<tr>
+<td colspan='2'>Melanin layer thickness CH-3</td>
+</tr>
+<tr>
+<td colspan='2'>10</td>
+</tr>
+<tr>
+<td colspan='2'>I_ch2</td>
+</tr>
+<tr>
+<td colspan='2'>μGy/hr</td>
+</tr>
+<tr>
+<td colspan='2'>attenuation</td>
+</tr>
+<tr>
+<td colspan='2'>Attenuated flux through CH-2</td>
+</tr>
+<tr>
+<td colspan='2'>11</td>
+</tr>
+<tr>
+<td colspan='2'>I_ch3</td>
+</tr>
+<tr>
+<td colspan='2'>μGy/hr</td>
+</tr>
+<tr>
+<td colspan='2'>attenuation</td>
+</tr>
+<tr>
+<td colspan='2'>Attenuated flux through CH-3</td>
+</tr>
+<tr>
+<td colspan='2'>12</td>
+</tr>
+<tr>
+<td colspan='2'>attn_ch2_pct</td>
+</tr>
+<tr>
+<td colspan='2'>%</td>
+</tr>
+<tr>
+<td colspan='2'>attenuation</td>
+</tr>
+<tr>
+<td colspan='2'>Attenuation% = (I₀−I_ch2)/I₀×100</td>
+</tr>
+<tr>
+<td colspan='2'>13</td>
+</tr>
+<tr>
+<td colspan='2'>attn_ch3_pct</td>
+</tr>
+<tr>
+<td colspan='2'>%</td>
+</tr>
+<tr>
+<td colspan='2'>attenuation</td>
+</tr>
+<tr>
+<td colspan='2'>Attenuation% = (I₀−I_ch3)/I₀×100</td>
+</tr>
+</table>
+<h1>7 RESULTS & DISCUSSION</h1>
+<h2>7.1 Radiation Flux Profile</h2>
+<p>The simulated 48-hour LEO radiation flux profile successfully reproduces the characteristic features of the ISS radiation environment: a GCR baseline of 200 uGy/hr with superimposed SAA passage spikes reaching 650-700 uGy/hr approximately every 4 hours. This is consistent with measurements reported by Cucinotta et al. (2011) using personal dosimeters aboard the ISS.</p>
+<p>The hysteresis controller correctly identifies 11 OPEN events over the 48-hour period, corresponding to SAA passages where flux exceeds the 500 uGy/hr upper threshold. The deadband (350-500 uGy/hr) prevents valve chatter during the decay phase of each SAA spike.</p>
+<div class='figure-container'>
+<img src='src/figures/fig1_flux_valve.png' alt='Figure'>
+<div class='caption'>Fig 1: LEO Radiation Flux Profile over 48 hours with Hysteresis Valve State Overlay. GCR baseline = 200 uGy/hr; SAA peaks reach ~672 uGy/hr. 11 valve OPEN events shown.</div>
+</div>
+<h2>7.2 Fungal Growth Kinetics</h2>
+<p>Both fungal strains follow the expected sigmoid (logistic) growth trajectory, reaching near-saturation (N approx. 0.999 g/L) by t approx. 30 hours. The slightly higher growth rate of C. sphaerospermum (r = 0.299 h^-1 vs 0.270 h^-1) causes it to enter the stationary phase approximately 2 hours earlier. The valve-state modulation produces a modest but visible inflection in the growth curve during SAA passage events, corresponding to the 50% nutrient-restriction penalty applied during OPEN states.</p>
+<div class='figure-container'>
+<img src='src/figures/fig2_growth_curves.png' alt='Figure'>
+<div class='caption'>Fig 2: Fungal Biomass Growth — Logistic ODE. Both strains approach K = 1.0 g/L. Valve OPEN events produce slight growth suppression visible as slope changes.</div>
+</div>
+<div class='figure-container'>
+<img src='src/figures/fig4_od600_proxy.png' alt='Figure'>
+<div class='caption'>Fig 4: OD600 Optical Density Proxy — simulating auxiliary computer camera output. OD = k.N where k = 3.0 OD.L/g.</div>
+</div>
+<h2>7.3 Attenuation Comparison & Primary Result</h2>
+<p>The primary scientific result is presented in Fig 3. Both fungal chambers show monotonically increasing radiation attenuation as melanin biomass accumulates, levelling off as the cultures reach carrying capacity. The simulation result for CH-2 (2.169%) is in excellent agreement with the ISS-measured value of 2.17% (Shunk et al., 2020), validating the Beer-Lambert model calibration.</p>
+<p>W. dermatitidis (CH-3) achieves 2.593% peak attenuation — a 19.6% improvement over the C. sphaerospermum baseline. This result is consistent with the higher melanin content per unit biomass of W. dermatitidis reported by Dadachova et al. (2008), and supports the hypothesis that strains with higher melanin density per cell are superior radiation shielding candidates.</p>
+<div class='table-caption' style='color: #2E74B5;'>Table 8: Key Simulation Results Summary</div>
+<table>
+<tr>
+<th colspan='2'>Metric</th>
+</tr>
+<tr>
+<td colspan='2'>CH-1 (Control)</td>
+</tr>
+<tr>
+<td colspan='2'>CH-2 (C. sphaerospermum)</td>
+</tr>
+<tr>
+<td colspan='2'>CH-3 (W. dermatitidis)</td>
+</tr>
+<tr>
+<td colspan='2'>Peak Attn%</td>
+</tr>
+</table>
+<p>0.000%</p>
+<p>2.169%</p>
+<p>2.593%</p>
+<p>ISS reference</p>
+<p>—</p>
+<p>2.17% ✓</p>
+<p>Not yet measured</p>
+<p>Final biomass N</p>
+<p>—</p>
+<p>0.9992 g/L</p>
+<p>1.0007 g/L</p>
+<p>Peak OD600</p>
+<p>—</p>
+<p>2.998</p>
+<p>3.015</p>
+<p>Melanin thickness at peak</p>
+<p>—</p>
+<p>0.3643 cm</p>
+<p>0.4191 cm</p>
+<p>Verdict</p>
+<p>—</p>
+<p>Baseline validated</p>
+<p>BETTER SHIELD ✓</p>
+<div class='figure-container'>
+<img src='src/figures/fig3_attenuation.png' alt='Figure'>
+<div class='caption'>Fig 3: Radiation Attenuation (%) vs Time — CH-2 vs CH-3 with ISS reference line (2.17%). CH-3 (W. dermatitidis) consistently outperforms CH-2. Shaded area = differential advantage.</div>
+</div>
+<p>7.4. 3D Structural Model — Autodesk Fusion 360</p>
+<p>The physical payload structure is modelled in Autodesk Fusion 360 to the 1U CubeSat standard (CDS Rev. 14). The model includes all primary structural and electronic components: the aluminium shell, the 3-chamber LOC chip assembly, two Raspberry Pi Zero W boards, all sensors, and the LiPo battery pack.</p>
+<div class='figure-container'>
+<img src='src/figures/fig_cad_master.png' alt='Figure'>
+<div class='caption'>Fig 10: Reference 3D model — LOC CubeSat internal layout showing 1U shell (100x100x113.5 mm), 3-chamber LOC chip, stacked Raspberry Pi boards, sensor placement, and LiPo battery.</div>
+</div>
+<div class='figure-container'>
+<img src='src/figures/fig_cad_master.png' alt='Figure'>
+<div class='caption'>Fig CAD-1: LOC CubeSat 3D Model</div>
+</div>
+<h1>8 CONCLUSIONS & FUTURE WORK</h1>
+<h2>8.1 Conclusions</h2>
+<h1>1 THE BEER-LAMBERT ATTENUATION MODEL, CALIBRATED AGAINST THE SHUNK ET AL. (2020) ISS EXPERIMENTAL RESULT, REPRODUCES THE PUBLISHED 2.17% PEAK ATTENUATION FOR C. SPHAEROSPERMUM TO WITHIN 0.01% (SIMULATED: 2.169%), VALIDATING THE COMPUTATIONAL APPROACH.</h1>
+<h1>2 W. DERMATITIDIS (CH-3) ACHIEVES A SIMULATED PEAK ATTENUATION OF 2.593% — A 19.6% IMPROVEMENT OVER THE ISS BASELINE — ATTRIBUTABLE TO ITS HIGHER DHN-MELANIN CONTENT PER UNIT BIOMASS (ESTIMATED 15-20% GREATER THAN C. SPHAEROSPERMUM).</h1>
+<h1>3 THE HYSTERESIS CONTROL ARCHITECTURE SUCCESSFULLY PREVENTS VALVE CHATTER IN THE DEADBAND ZONE (350-500 UGY/HR) AND CORRECTLY IDENTIFIES ALL 11 SIMULATED SAA PASSAGE EVENTS OVER 48 HOURS.</h1>
+<h1>4 THE ELECTRONICS SIMULATION (WOKWI / ARDUINO) CORRECTLY IMPLEMENTS THE SAME HYSTERESIS LOGIC IN HARDWARE, DEMONSTRATING CONSISTENCY BETWEEN SOFTWARE AND HARDWARE CONTROL IMPLEMENTATIONS.</h1>
+<h1>5 BOTH FUNGAL STRAINS REACH NEAR-SATURATION BIOMASS (N APPROX. 1.0 G/L) WITHIN 30 HOURS, MAKING A 48-HOUR MISSION WINDOW APPROPRIATE FOR OBSERVING THE FULL GROWTH-TO-PLATEAU ATTENUATION CURVE.</h1>
+<h2>8.2 Limitations</h2>
+<p>• The Beer-Lambert model assumes a uniform, homogeneous melanin layer, which may overestimate attenuation for inhomogeneous fungal colonies with patchy growth patterns.</p>
+<p>• The actual mass attenuation coefficient mu for DHN-melanin in the mixed GCR + trapped proton spectrum has not been measured; the value used (0.043 cm^2/g) is for monoenergetic gamma radiation.</p>
+<p>• Microgravity effects on melanin biosynthesis pathways are not modelled — in situ measurement would be required to confirm the alpha calibration in actual flight conditions.</p>
+<h2>8.3 Future Work</h2>
+<p>• Extend the simulation to a 90-day mission timeline to model long-term melanin accumulation and potential photodegradation effects.</p>
+<p>• Incorporate Monte Carlo radiation transport (Geant4 or FLUKA) to replace the Beer-Lambert approximation with a physics-accurate particle transport model.</p>
+<p>• Add a fourth chamber containing Cryptococcus neoformans (DOPA-melanin) to compare across melanin biosynthesis pathways.</p>
+<p>• Integrate real SPENVIS-exported flux data (via ESA SPENVIS portal) to replace the synthetic flux generator with mission-specific orbital dose rate profiles.</p>
+<p>• Fabricate and test the physical LOC chip using 3D-printed polycarbonate chambers and validate OD600 optical density measurement with calibrated fungal cultures.</p>
+<h1>9 REFERENCES</h1>
+<p>[1] Shunk, G. K., Gu, X., & Bhattacharya, S. (2020). A self-replicating radiation-shield for human deep-space exploration: Radiotrophic Fungus can attenuate ionizing radiation aboard the International Space Station. bioRxiv. https://doi.org/10.1101/2020.07.16.205534</p>
+<p>[2] Dadachova, E., Bryan, R. A., Huang, X., et al. (2007). Ionizing radiation changes the electronic properties of melanin and enhances the growth of melanized fungi. PLOS ONE, 2(5), e457.</p>
+<p>[3] Dadachova, E., & Casadevall, A. (2008). Ionizing radiation: how fungi cope, adapt, and exploit with the help of melanin. Current Opinion in Microbiology, 11(6), 525-531.</p>
+<p>[4] Bryan, R. A., & Casadevall, A. (2014). Measurement of fungal melanin. Methods in Enzymology, 533, 241-253.</p>
+<p>[5] Cucinotta, F. A., Kim, M.-H. Y., & Chappell, L. J. (2011). Space Radiation Cancer Risk Projections and Uncertainties — 2010. NASA Technical Publication NASA/TP-2011-216155.</p>
+<p>[6] Verhulst, P. F. (1838). Notice sur la loi que la population suit dans son accroissement. Correspondance Mathematique et Physique, 10, 113-121.</p>
+<p>[7] Cal Poly SLO (2022). CubeSat Design Specification (CDS) Rev. 14. California Polytechnic State University.</p>
+<p>[8] ESA (2024). SPENVIS — Space Environment Information System. European Space Agency. www.spenvis.oma.be</p>
+<p>[9] Casadevall, A., Cordero, R. J. B., Bryan, R., et al. (2012). Melanin, radiation, and energy transduction in fungi. Mycologia, 104(5), 1003-1006.</p>
+</body></html>
