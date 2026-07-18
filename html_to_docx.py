@@ -857,6 +857,6 @@ for ref in refs:
 
 # ── Save ──────────────────────────────────────────────────────────────────────
 doc.save(str(OUT_FILE))
-print(f"\n✓ Saved: {OUT_FILE}")
+print(f"\nSaved: {OUT_FILE}")
 print(f"  Size: {OUT_FILE.stat().st_size // 1024} KB")
 print("  Open in Microsoft Word to review and finalise.")
