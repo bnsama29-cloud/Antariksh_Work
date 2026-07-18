@@ -401,7 +401,7 @@ add_para(doc, ("This project extends that foundational study through a 3-chamber
 add_para(doc, ("The simulation pipeline comprises six Python modules — a synthetic LEO radiation flux generator, "
                "a hysteresis control system, a logistic growth ODE solver, a Beer-Lambert attenuation model, an "
                "integration engine, and a dashboard visualisation system. An electronics simulation was additionally "
-               "implemented using the Wokwi platform (Arduino Uno), validating the hardware control logic in a "
+               "implemented using the Wokwi platform (Raspberry Pi Pico/MicroPython), validating the hardware control logic in a "
                "virtual circuit environment. The 3D structural model is designed in Autodesk Fusion 360 to the 3U "
                "CubeSat standard (100 x 100 x 340.5 mm)."))
 add_para(doc, ("Simulation results confirm that C. sphaerospermum (CH-2) achieves 2.169% peak attenuation, "
@@ -515,7 +515,7 @@ if len(tables_s4) >= 3:
 
 add_h2(doc, "4.3. Electronics Simulation (Wokwi)")
 add_para(doc, ("The control electronics were simulated using the Wokwi online circuit simulator (wokwi.com) "
-               "running an Arduino Uno microcontroller sketch. The simulation implements the hysteresis control "
+               "running an Raspberry Pi MicroPython script. The simulation implements the hysteresis control "
                "loop in real time, with a potentiometer substituting for the Geiger-Muller tube output "
                "(0-700 uGy/hr range), a DHT22 sensor providing temperature and humidity readings, two LED "
                "indicators showing valve state, and an I2C LCD displaying live readings. Serial output in CSV "

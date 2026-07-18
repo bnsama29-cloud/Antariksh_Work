@@ -643,7 +643,7 @@
       The simulation pipeline comprises six Python modules — a synthetic LEO radiation flux generator,
       a hysteresis control system, a logistic growth ODE solver, a Beer-Lambert attenuation model, an
       integration engine, and a dashboard visualisation system. An electronics simulation was additionally
-      implemented using the Wokwi platform (Arduino Uno), validating the hardware control logic in a
+      implemented using the Wokwi platform (Raspberry Pi Pico/MicroPython), validating the hardware control logic in a
       virtual circuit environment. The 3D structural model is designed in Autodesk Fusion 360 to the 3U
       CubeSat standard (100 × 100 × 340.5 mm).
     </p>
@@ -1085,7 +1085,7 @@
     <h2>4.3. Electronics Simulation (Wokwi)</h2>
     <p>
       The control electronics were simulated using the Wokwi online circuit simulator (wokwi.com) running an
-      Arduino Uno microcontroller sketch. The simulation implements the hysteresis control loop in real time,
+      Raspberry Pi MicroPython script. The simulation implements the hysteresis control loop in real time,
       with a potentiometer substituting for the Geiger-Müller tube output (0–700 μGy/hr range), a DHT22
       sensor providing temperature and humidity readings, two LED indicators showing valve state, and an
       I²C LCD displaying live readings. Serial output in CSV format allows the simulation data to be
@@ -1742,7 +1742,7 @@
         <td class="left">Battery depletion mid-mission</td>
         <td>Medium</td>
         <td>Premature mission end</td>
-        <td>Camera duty-cycled (1 image/hr, not continuous); Arduino in deep sleep between readings; total estimated power draw 1.95 W for 48 hr = 93.6 Wh — within LiPo capacity of 14.8 V × 2.6 Ah = 38.5 Wh (solar panel supplement required for full mission)</td>
+        <td>Camera duty-cycled (1 image/hr, not continuous); Raspberry Pi Zero W in low-power idle between readings; total estimated power draw 1.95 W for 48 hr = 93.6 Wh — within LiPo capacity of 14.8 V × 2.6 Ah = 38.5 Wh (solar panel supplement required for full mission)</td>
       </tr>
       <tr>
         <td class="left"><strong>Sensing</strong></td>

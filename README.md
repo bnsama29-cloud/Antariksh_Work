@@ -7,7 +7,7 @@
 *3-Chamber Comparative Study | Full Python Simulation Pipeline | Electronics Virtual Twin | Fusion 360 CAD*
 
 ![Python](https://img.shields.io/badge/Python-3.10+-blue?style=for-the-badge&logo=python)
-![Arduino](https://img.shields.io/badge/Arduino-Wokwi-teal?style=for-the-badge&logo=arduino)
+![Raspberry Pi](https://img.shields.io/badge/Raspberry%20Pi-MicroPython-c51a4a?style=for-the-badge&logo=raspberry-pi)
 ![License](https://img.shields.io/badge/License-Academic-orange?style=for-the-badge)
 ![Status](https://img.shields.io/badge/Status-Complete-green?style=for-the-badge)
 
@@ -117,7 +117,7 @@ LOC_CubeSat/
 │
 ├── figures/                           ← Generated output plots
 │
-├── electronics_sim/                   ← Arduino Wokwi simulation
+├── electronics_sim/                   ← Raspberry Pi Wokwi simulation (MicroPython)
 │
 └── CAD_notes/                         ← Fusion 360 modelling guide
 ```
@@ -221,28 +221,21 @@ pytest tests/
 ![Fig 8: Hysteresis validation plot](src/figures/hysteresis_validation.png)
 
 ---
+## 🔌 Electronics Simulation (Wokwi — Raspberry Pi Pico)
 
-## 🔌 Electronics Simulation (Wokwi — Arduino)
+The hardware control logic was validated using Wokwi — a free online circuit simulator, using the Raspberry Pi Pico to emulate the flight computer's Python logic.
 
-The hardware control logic was validated using Wokwi — a free online Arduino circuit simulator.
-🔗 **[View and run the live simulation here](https://wokwi.com/projects/469545305911934977)**
+The simulation proves that:
+1. The DHT22 reads environmental telemetry correctly using MicroPython.
+2. The Geiger Counter (simulated as an interrupt button) detects particle hits instantly.
+3. The control logic successfully opens the latching solenoid valve if constraints are violated.
 
-The virtual circuit includes:
-
-| Component | Pin | Role |
-|-----------|-----|------|
-| DHT22 sensor | Pin 2 | Reads temperature & humidity |
-| Potentiometer | A0 | Simulates Geiger counter (radiation level) |
-| Red LED | Pin 8 | Glows when valve is OPEN (high radiation) |
-| Green LED | Pin 9 | Glows when valve is CLOSED (safe) |
-| LCD 16×2 (I²C) | SDA/SCL | Shows live readings |
-
-### How to open and run:
-1. Go to [wokwi.com](https://wokwi.com) → **New Project → Arduino Uno**
-2. Paste the code from `electronics_sim/cubesat_electronics.ino`
-3. Add components as listed above
-4. Click ▶️ Run → twist the potentiometer to simulate radiation changes
-
+### How to run the simulation:
+1. Go to [wokwi.com](https://wokwi.com) → **New Project → Raspberry Pi Pico (MicroPython)**
+2. Add a **DHT22 Sensor**, a **Pushbutton**, and an **LED** (representing the valve).
+3. Connect DHT22 SDA to GP15, Pushbutton to GP16, and LED to GP14.
+4. Copy the code from `electronics_sim/main.py` and paste it into the editor.
+5. Click **Play** and interact with the DHT22 to see the valve trigger in the serial console!
 ---
 
 ### Simulation in Action
@@ -417,7 +410,7 @@ These measures ensure that no single failure compromises the core scientific obj
 | Creative design feature | Hysteresis-controlled nutrient valve responding to real-time radiation levels |
 | Failures, redundancies, mitigations | 12 failure modes documented with explicit mitigations + system-level safeguards |
 | Mathematical model | Logistic ODE + Beer-Lambert Law, calibrated to ISS 2.17% result |
-| Electronics design | Arduino hysteresis controller validated in Wokwi virtual circuit |
+| Electronics design | MicroPython hysteresis controller validated in Wokwi virtual circuit |
 | 3D structural design | 3U CubeSat Fusion 360 model (in progress) following CDS Rev. 14 |
 
 ---
