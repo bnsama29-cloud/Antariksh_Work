@@ -658,8 +658,6 @@ add_para(doc, ("A two-threshold hysteresis controller governs the nutrient valve
 add_equation(doc, ("valve_state = OPEN   if flux > 500 uGy/hr\n"
                    "valve_state = CLOSED if flux < 350 uGy/hr\n"
                    "valve_state = HOLD   otherwise (deadband)      [Equation 6]"))
-           "Fig 8: Hysteresis Controller Validation — radiation flux (top) and valve state (bottom) over 48 hours. "
-           "SAA spikes trigger OPEN events. Deadband prevents chatter in 350-500 uGy/hr range.")
 
 doc.add_page_break()
 
