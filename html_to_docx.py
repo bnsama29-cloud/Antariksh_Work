@@ -523,11 +523,11 @@ add_para(doc, ("The control electronics were simulated using the Wokwi online ci
 
 # Wokwi figures (3 side by side — put as 3 separate figures)
 wokwi_figs = [
-    (BASE_DIR / "src/figures/electronics_sim/fig5_wokwi_valve_closed.png",
-     "Fig 9: Valve CLOSED — F:150 uGy/hr (GCR background, green LED on)"),
-    (BASE_DIR / "src/figures/electronics_sim/fig6_wokwi_valve_open_trigger.png",
-     "Fig 10: Valve OPEN triggered — F:522 uGy/hr (exceeded 500 uGy/hr threshold, red LED on)"),
-    (BASE_DIR / "src/figures/electronics_sim/fig7_wokwi_valve_open_hold.png",
+    (BASE_DIR / "src/figures/electronics_sim/wokwi_pico_normal.png",
+     "Fig 9: Valve CLOSED — Normal Operation (LED off)"),
+    (BASE_DIR / "src/figures/electronics_sim/wokwi_pico_triggered.png",
+     "Fig 10: Valve OPEN triggered — Radiation spike detected"),
+    (BASE_DIR / "src/figures/electronics_sim/wokwi_pico_high_rad.png",
      "Fig 11: Valve OPEN holding — F:516 uGy/hr (deadband, valve holds OPEN until <350)"),
 ]
 for img_path, caption in wokwi_figs:
