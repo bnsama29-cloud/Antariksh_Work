@@ -13,7 +13,7 @@
       --page-width: 210mm;
       --page-padding: 25mm 30mm 25mm 35mm;
       --font: 'Times New Roman', Times, serif;
-      --h1-size: 14pt;
+      --h1-size: 16pt;
       --h2-size: 14pt;
       --h3-size: 14pt;
       --body-size: 12pt;
@@ -31,7 +31,7 @@
       font-family: var(--font);
       font-size: var(--body-size);
       line-height: var(--line-height);
-      background: #e8e8e8;
+      background: #ffffff;
       color: #000;
     }
 
@@ -42,7 +42,7 @@
       margin: 12px auto;
       background: #fff;
       padding: var(--page-padding);
-      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+      box-shadow: 0 0 10px rgba(0,0,0,0.1); border: 1px solid #ccc;
       page-break-after: always;
       position: relative;
     }
@@ -233,8 +233,8 @@
     .fig-table td {
       text-align: center;
       padding: 8px 4px 4px;
-      border: 1px solid #ccc;
-      background: #fafafa;
+      border: 1px solid #000;
+      background: #ffffff;
     }
 
     .fig-table img {
@@ -283,23 +283,23 @@
     }
 
     .data-table th {
-      background: #1a1a2e;
-      color: #fff;
+      background: #ffffff;
+      color: #000000;
       font-weight: bold;
       padding: 8px 10px;
-      border: 1px solid #333;
+      border: 1px solid #000;
       text-align: center;
     }
 
     .data-table td {
       padding: 7px 10px;
-      border: 1px solid #bbb;
+      border: 1px solid #000;
       text-align: center;
       vertical-align: top;
     }
 
     .data-table tr:nth-child(even) td {
-      background: #f5f5f5;
+      background: #ffffff;
     }
 
     .data-table td.left {
@@ -412,10 +412,13 @@
 ══════════════════════════════════════════════════════ -->
   <div class="page" id="cover">
     <div class="cover">
-      <div class="cover-logo">TA</div>
-      <div class="cover-org">TEAM ANTARIKSH - RVCE</div>
-      <div class="cover-subtitle">R.V. College of Engineering, Bengaluru</div>
-      <div class="cover-divider"></div>
+            <img src="src/figures/rvce_header.png" style="width: 100%; margin-bottom: 30px;">
+      <div style="display: flex; justify-content: flex-end; width: 100%; margin-bottom: 20px;">
+          <div style="text-align: center;">
+              <img src="src/figures/antariksh_logo.png" style="width: 120px; margin-bottom: 5px;">
+          </div>
+      </div>
+      <div class="doc-title" style="margin-bottom: 30px;">TEAM ANTARIKSH</div>
 
       <div class="cover-title">
         Lab-on-a-Chip CubeSat Payload Simulation:<br>
@@ -566,43 +569,43 @@
     <div class="doc-title">List of Figures</div>
     <hr class="section-break">
 
-    <div class="toc-entry"><span>Fig 1: LEO Radiation Flux Profile with Hysteresis Valve State Overlay</span>
+    <div class="toc-entry"><span>Fig 6: LEO Radiation Flux Profile with Hysteresis Valve State Overlay</span>
       <div class="dots"></div><span>11</span>
     </div>
-    <div class="toc-entry"><span>Fig 2: Hysteresis Valve State Timeline</span>
+    <div class="toc-entry"><span>Fig 7: Hysteresis Valve State Timeline</span>
       <div class="dots"></div><span>11</span>
     </div>
-    <div class="toc-entry"><span>Fig 3: Fungal Biomass Growth - Logistic ODE (CH-2 vs CH-3)</span>
+    <div class="toc-entry"><span>Fig 8: Fungal Biomass Growth - Logistic ODE (CH-2 vs CH-3)</span>
       <div class="dots"></div><span>12</span>
     </div>
     <div class="toc-entry"><span>Fig 4: OD600 vs Biomass Linear Calibration</span>
       <div class="dots"></div><span>12</span>
     </div>
-    <div class="toc-entry"><span>Fig 5: OD600 Proxy - Auxiliary Computer Camera Simulation</span>
+    <div class="toc-entry"><span>Fig 9: OD600 Proxy - Auxiliary Computer Camera Simulation</span>
       <div class="dots"></div><span>12</span>
     </div>
-    <div class="toc-entry"><span>Fig 6: Radiation Attenuation (%) - CH-2 vs CH-3 with ISS Reference</span>
+    <div class="toc-entry"><span>Fig 10: Radiation Attenuation (%) - CH-2 vs CH-3 with ISS Reference</span>
       <div class="dots"></div><span>12</span>
     </div>
     <div class="toc-entry"><span>Fig 7: Power Budget Feasibility (48h)</span>
       <div class="dots"></div><span>13</span>
     </div>
-    <div class="toc-entry"><span>Fig 8: Hysteresis Controller Validation - Flux vs Valve State</span>
+    <div class="toc-entry"><span>Fig 4: Hysteresis Controller Validation - Flux vs Valve State</span>
       <div class="dots"></div><span>6</span>
     </div>
-    <div class="toc-entry"><span>Fig 9: Wokwi Electronics Simulation - Valve CLOSED (GCR Background)</span>
+    <div class="toc-entry"><span>Fig 1: Wokwi Electronics Simulation - Valve CLOSED (GCR Background)</span>
       <div class="dots"></div><span>7</span>
     </div>
-    <div class="toc-entry"><span>Fig 10: Wokwi Electronics Simulation - Valve OPEN (SAA Trigger &gt;500 μGy/hr)</span>
+    <div class="toc-entry"><span>Fig 2: Wokwi Electronics Simulation - Valve OPEN (SAA Trigger &gt;500 μGy/hr)</span>
       <div class="dots"></div><span>7</span>
     </div>
-    <div class="toc-entry"><span>Fig 11: Wokwi Electronics Simulation - Valve OPEN (Deadband Holding)</span>
+    <div class="toc-entry"><span>Fig 3: Wokwi Electronics Simulation - Valve OPEN (Deadband Holding)</span>
       <div class="dots"></div><span>7</span>
     </div>
-    <div class="toc-entry"><span>Fig 12: System Architecture Block Diagram</span>
+    <div class="toc-entry"><span>Fig 5: System Architecture Block Diagram</span>
       <div class="dots"></div><span>8</span>
     </div>
-    <div class="toc-entry"><span>Fig 13: Exploded View - LOC and Electronics</span>
+    <div class="toc-entry"><span>Fig 11: Exploded View - LOC and Electronics</span>
       <div class="dots"></div><span>9</span>
     </div>
   </div>
@@ -1106,7 +1109,7 @@
             <div class="ph-icon">📷</div>
             <div>Save your screenshot as:<br><strong>wokwi_pico_normal.png</strong></div>
           </div>
-          <div class="fig-caption">Fig 9: Valve CLOSED - Normal Operation (LED off)</div>
+          <div class="fig-caption">Fig 1: Valve CLOSED - Normal Operation (LED off)</div>
         </td>
         <td style="width:33.3%">
           <img src="src/figures/electronics_sim/wokwi_pico_triggered.png"
@@ -1116,7 +1119,7 @@
             <div class="ph-icon">📷</div>
             <div>Save your screenshot as:<br><strong>wokwi_pico_triggered.png</strong></div>
           </div>
-          <div class="fig-caption">Fig 10: Valve OPEN triggered - F:522 μGy/hr (&gt;500 threshold)</div>
+          <div class="fig-caption">Fig 2: Valve OPEN triggered - F:522 μGy/hr (&gt;500 threshold)</div>
         </td>
         <td style="width:33.3%">
           <img src="src/figures/electronics_sim/wokwi_pico_high_rad.png"
@@ -1125,7 +1128,7 @@
             <div class="ph-icon">📷</div>
             <div>Save your screenshot as:<br><strong>wokwi_pico_high_rad.png</strong></div>
           </div>
-          <div class="fig-caption">Fig 11: Valve OPEN hold - Sustained high radiation</div>
+          <div class="fig-caption">Fig 3: Valve OPEN hold - Sustained high radiation</div>
         </td>
       </tr>
     </table>
@@ -1341,7 +1344,7 @@
       <tr>
         <td>
           <img src="src/figures/hysteresis_validation.png" alt="Hysteresis validation plot">
-          <div class="fig-caption">Fig 8: Hysteresis Controller Validation - radiation flux (top) and valve state
+          <div class="fig-caption">Fig 4: Hysteresis Controller Validation - radiation flux (top) and valve state
             (bottom) over 48 hours. SAA spikes at t ≈ 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44 hr trigger OPEN events.
             Deadband prevents chatter in 350-500 μGy/hr range.</div>
         </td>
@@ -1382,7 +1385,7 @@
             <span style="color:#f38ba8">├── utils/metrics.py</span> → master_log.csv & summary.json<br>
             <span style="color:#a6e3a1">└── dashboard/dashboard.py</span> → Figures (PNGs)
           </div>
-          <div class="fig-caption">Fig 12: Software Pipeline Architecture - modular orchestration</div>
+          <div class="fig-caption">Fig 5: Software Pipeline Architecture - modular orchestration</div>
         </td>
       </tr>
     </table>
@@ -1536,16 +1539,16 @@
     <table class="fig-table">
       <tr>
         <td>
-          <img src="src/figures/fig1_flux_valve.png" alt="Fig 1: LEO Radiation Flux and Valve State">
-          <div class="fig-caption">Fig 1: LEO Radiation Flux Profile over 48 hours with Hysteresis Valve State Overlay.
+          <img src="src/figures/fig1_flux_valve.png" alt="Fig 6: LEO Radiation Flux and Valve State">
+          <div class="fig-caption">Fig 6: LEO Radiation Flux Profile over 48 hours with Hysteresis Valve State Overlay.
             GCR baseline = 200 μGy/hr; SAA peaks reach ~672 μGy/hr. Red shaded regions indicate valve OPEN events (11
             total). Upper threshold (500 μGy/hr) and lower threshold (350 μGy/hr) shown as dashed lines.</div>
         </td>
       </tr>
       <tr>
         <td>
-          <img src="src/figures/fig6_valve_timeline.png" alt="Fig 2: Valve Timeline">
-          <div class="fig-caption">Fig 2: Hysteresis Valve State Timeline. A discrete step-plot showing the precise
+          <img src="src/figures/fig6_valve_timeline.png" alt="Fig 7: Valve Timeline">
+          <div class="fig-caption">Fig 7: Hysteresis Valve State Timeline. A discrete step-plot showing the precise
             timing and duration of valve actuations.</div>
         </td>
       </tr>
@@ -1563,13 +1566,13 @@
     <table class="fig-table">
       <tr>
         <td style="width:50%">
-          <img src="src/figures/fig2_growth_curves.png" alt="Fig 3: Growth curves">
-          <div class="fig-caption">Fig 3: Fungal Biomass Growth - Logistic ODE. CH-2 (solid) and CH-3 (dashed) both
+          <img src="src/figures/fig2_growth_curves.png" alt="Fig 8: Growth curves">
+          <div class="fig-caption">Fig 8: Fungal Biomass Growth - Logistic ODE. CH-2 (solid) and CH-3 (dashed) both
             approach K = 1.0 g/L. Valve OPEN events produce slight growth suppression visible as slope changes.</div>
         </td>
         <td style="width:50%">
-          <img src="src/figures/fig4_od600_proxy.png" alt="Fig 5: OD600 proxy">
-          <div class="fig-caption">Fig 5: OD600 Optical Density Proxy - simulating auxiliary computer camera output.
+          <img src="src/figures/fig4_od600_proxy.png" alt="Fig 9: OD600 proxy">
+          <div class="fig-caption">Fig 9: OD600 Optical Density Proxy - simulating auxiliary computer camera output.
             OD600 is proportional to biomass: OD = k·N, where k = 3.0 OD·L/g (empirical calibration).</div>
         </td>
       </tr>
@@ -1577,7 +1580,7 @@
 
     <h2>7.3. Attenuation Comparison &amp; Primary Result</h2>
     <p>
-      The primary scientific result is presented in Fig 6. Both fungal chambers show monotonically increasing
+      The primary scientific result is presented in Fig 10. Both fungal chambers show monotonically increasing
       radiation attenuation as melanin biomass accumulates, levelling off as the cultures reach carrying
       capacity. The simulation result for CH-2 (2.169%) is in excellent agreement with the ISS-measured
       value of 2.17% (Shunk et al., 2020), validating the Beer-Lambert model calibration.
@@ -1638,8 +1641,8 @@
     <table class="fig-table">
       <tr>
         <td>
-          <img src="src/figures/fig3_attenuation.png" alt="Fig 6: Attenuation comparison">
-          <div class="fig-caption">Fig 6: Radiation Attenuation (%) vs Time - CH-2 vs CH-3 comparison. The ISS reference
+          <img src="src/figures/fig3_attenuation.png" alt="Fig 10: Attenuation comparison">
+          <div class="fig-caption">Fig 10: Radiation Attenuation (%) vs Time - CH-2 vs CH-3 comparison. The ISS reference
             value (2.17%, Shunk 2020) is shown as a dotted horizontal line. CH-3 (W. dermatitidis) consistently
             outperforms CH-2, confirming higher melanin density as the driving factor. Shaded region = differential
             shielding advantage of CH-3.</div>
@@ -1672,7 +1675,7 @@
       <tr>
         <td style="width:33.3%">
           <img src="src/figures/fig_cad_master.png" style="width:100%; max-width:800px; display:block; margin: 20px auto;" alt="3U CubeSat Payload Stack Cutaway">
-          <div class="fig-caption">Fig 13: Exploded View - showing the integration of the biological tray and
+          <div class="fig-caption">Fig 11: Exploded View - showing the integration of the biological tray and
             electronics within the 3U structure.</div>
         </td>
       </tr>
