@@ -6,7 +6,7 @@
 **Fungal Radiation Shielding in Low Earth Orbit**  
 *3-Chamber Comparative Study | Full Python Simulation Pipeline | Electronics Virtual Twin | Fusion 360 CAD*
 
-![3U CubeSat Payload Stack - Cutaway](src/figures/fig_cad_master_v2.png)
+![3U CubeSat Payload Stack - Cutaway](src/figures/fig_cad_master_v2.jpg)
 
 </div>
 ---
