@@ -8,6 +8,7 @@
 
 ![3U CubeSat Payload Stack - Cutaway](src/figures/fig_cad_master.png)
 
+</div>
 ---
 
 ## 🧪 The 3-Chamber Design
@@ -345,8 +346,6 @@ Without gravity, there is no settling - fungi grow as a **uniform monolayer**, m
 
 ## 📄 Academic Report
 
-## 💻 Academic Report
-
 The full TA-format report can be viewed interactively in your browser here:
 👉 **[View Interactive Web Report](https://raw.githack.com/bnsama29-cloud/Antariksh_Work/main/LOC_CubeSat_Report.html)**
 
@@ -443,7 +442,7 @@ These measures ensure that no single failure compromises the core scientific obj
 
 <div align="center">
 
-**Submit: 18 July 2026 
+**Submit: 18 July 2026**<br>
 *Team Antariksh · RVCE · LOC CubeSat Group Task*
 
 </div>
