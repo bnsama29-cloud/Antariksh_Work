@@ -305,6 +305,7 @@ The 3D model follows the **3U CubeSat Design Specification (CDS Rev. 14)** - 100
 |-----------|-----------|----------|
 | Aluminium shell | 100 × 100 × 340.5 mm | Outer structure |
 | LOC chip (3 chambers) | 80 × 60 × 5 mm | Centre, Z=80mm |
+| Nutrient reservoir | 40 × 40 × 20 mm | Integrated below LOC tray |
 | Raspberry Pi × 2 | 85 × 56 × 1.5 mm each | Stacked, Z=20 & 50mm |
 | Radiation sensors × 2 | 20 × 20 × 5 mm | Below LOC tray |
 | Camera module | 25 × 25 × 8 mm | Below LOC tray, centred |
